@@ -91,7 +91,8 @@ public void Should_Return_False_If_Hello_File_Exists_But_Contains_The_Word_Goodb
 
 ## Building from source
 
-We're using [Cake](Cake) as a local dotnet tool for building. So make sure that you've restored Cake by running the following in the repository root:
+We're using [Cake](https://github.com/cake-build/cake) as a local dotnet tool for building. 
+So make sure that you've restored Cake by running the following in the repository root:
 
 ```
 > dotnet tool restore
@@ -105,6 +106,8 @@ After that, running the build is as easy as writing:
 
 ## License
 
-Spectre.IO is provided as-is under the MIT license and is based upon the IO abstractions in [Cake](https://github.com/cake-build/cake) that [Patrik Svensson](https://github.com/patriksvensson) (the author of this library) previously implemented as part of that project.
+Spectre.IO is provided as-is under the MIT license and is based upon the IO abstractions in 
+[Cake](https://github.com/cake-build/cake) that [Patrik Svensson](https://github.com/patriksvensson) 
+(the author of this library) previously implemented as part of that project.
 
 For more information see LICENSE.
