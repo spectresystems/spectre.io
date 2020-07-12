@@ -1,5 +1,7 @@
 # Spectre.IO
 
+_[![Spectre.IO NuGet Version](https://img.shields.io/nuget/v/spectre.io.svg?style=flat&label=NuGet%3A%20Spectre.IO)](https://www.nuget.org/packages/spectre.io)_
+
 Spectre.IO is a .NET library containing cross-platform abstractions and implementations for IO. It also comes with a library that includes an in-memory implementation of a 
 file system to use when writing tests.
 
