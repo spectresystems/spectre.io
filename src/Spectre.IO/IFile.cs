@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Spectre.IO
 {
@@ -24,6 +25,11 @@ namespace Spectre.IO
         /// </summary>
         /// <value>The file attributes.</value>
         FileAttributes Attributes { get; set; }
+
+        /// <summary>
+        /// Gets the last write time.
+        /// </summary>
+        public DateTime LastWritetime { get; }
 
         /// <summary>
         /// Copies the file to the specified destination path.

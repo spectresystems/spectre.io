@@ -25,6 +25,8 @@ namespace Spectre.IO.Internal
             set { _file.Attributes = value; }
         }
 
+        public DateTime LastWritetime => _file.LastWriteTime;
+
         public File(FilePath path)
         {
             Path = path;
