@@ -122,6 +122,10 @@ namespace Spectre.IO
             return new FilePath(string.Concat(FullPath, extension));
         }
 
+        /// <summary>
+        /// Removes the file extension from the path.
+        /// </summary>
+        /// <returns>A new <see cref="FilePath"/> with the extension removed.</returns>
         public FilePath RemoveExtension()
         {
             var filename = PathHelper.GetFileNameWithoutExtension(this);

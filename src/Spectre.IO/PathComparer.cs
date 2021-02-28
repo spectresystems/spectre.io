@@ -69,7 +69,7 @@ namespace Spectre.IO
         }
 
         /// <inheritdoc/>
-        public int GetHashCode(Path obj)
+        public int GetHashCode(Path? obj)
         {
             if (obj == null)
             {
