@@ -122,6 +122,17 @@ namespace Spectre.IO
             return new FilePath(string.Concat(FullPath, extension));
         }
 
+        public FilePath RemoveExtension()
+        {
+            var filename = PathHelper.GetFileNameWithoutExtension(this);
+            if (filename == null)
+            {
+                return new FilePath(FullPath);
+            }
+
+            return GetDirectory().CombineWithFilePath(new FilePath(filename));
+        }
+
         /// <summary>
         /// Makes the path absolute (if relative) using the current working directory.
         /// </summary>

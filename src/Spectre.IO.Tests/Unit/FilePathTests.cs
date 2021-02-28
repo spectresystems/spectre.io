@@ -88,6 +88,50 @@ namespace Spectre.IO.Tests.Unit.IO
             }
         }
 
+        public sealed class TheRemoveExtensionMethod
+        {
+            [Theory]
+            [InlineData("assets/shaders/basic.frag", "assets/shaders/basic")]
+            [InlineData("assets/shaders/basic.frag/test.vert", "assets/shaders/basic.frag/test")]
+            [InlineData("assets/shaders/basic.frag/test.foo.vert", "assets/shaders/basic.frag/test.foo")]
+            [InlineData("assets/shaders/basic", "assets/shaders/basic")]
+            [InlineData("assets/shaders/basic.frag/test", "assets/shaders/basic.frag/test")]
+            public void Should_Remove_Extension(string fullPath, string expected)
+            {
+                // Given
+                var path = new FilePath(fullPath);
+
+                // When
+                var result = path.RemoveExtension();
+
+                // Then
+                result.FullPath.ShouldBe(expected);
+            }
+
+            [WindowsTheory]
+            [InlineData("C:/foo/bar/baz.txt", "C:/foo/bar/baz")]
+            [InlineData("C:/foo/bar/baz.txt/qux.md", "C:/foo/bar/baz.txt/qux")]
+            [InlineData("C:/foo/bar/baz.txt/qux.md.rs", "C:/foo/bar/baz.txt/qux.md")]
+            [InlineData("C:/foo/bar/baz", "C:/foo/bar/baz")]
+            [InlineData("C:/foo/bar/baz.txt/qux", "C:/foo/bar/baz.txt/qux")]
+            [InlineData(@"\\foo\bar\baz.txt", @"\\foo\bar\baz")]
+            [InlineData(@"\\foo\bar\baz.txt\qux.md", @"\\foo\bar\baz.txt\qux")]
+            [InlineData(@"\\foo\bar\baz.txt\qux.md.rs", @"\\foo\bar\baz.txt\qux.md")]
+            [InlineData(@"\\foo\bar\baz", @"\\foo\bar\baz")]
+            [InlineData(@"\\foo\bar\baz.txt\qux", @"\\foo\bar\baz.txt\qux")]
+            public void Should_Remove_Windows_Extension(string fullPath, string expected)
+            {
+                // Given
+                var path = new FilePath(fullPath);
+
+                // When
+                var result = path.RemoveExtension();
+
+                // Then
+                result.FullPath.ShouldBe(expected);
+            }
+        }
+
         public sealed class TheGetDirectoryMethod
         {
             [Theory]
