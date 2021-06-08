@@ -16,7 +16,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 public void Should_Throw_If_File_Is_Null()
                 {
                     // Given, When
-                    var result = Record.Exception(() => FileExtensions.Open(null, FileMode.Create));
+                    var result = Record.Exception(() => IFileExtensions.Open(null, FileMode.Create));
 
                     // Then
                     result.ShouldBeOfType<ArgumentNullException>()
@@ -49,7 +49,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 public void Should_Throw_If_File_Is_Null()
                 {
                     // Given, When
-                    var result = Record.Exception(() => FileExtensions.Open(null, FileMode.Create, FileAccess.Write));
+                    var result = Record.Exception(() => IFileExtensions.Open(null, FileMode.Create, FileAccess.Write));
 
                     // Then
                     result.ShouldBeOfType<ArgumentNullException>()
@@ -83,7 +83,7 @@ namespace Spectre.IO.Tests.Unit.IO
             public void Should_Throw_If_File_Is_Null()
             {
                 // Given, When
-                var result = Record.Exception(() => FileExtensions.OpenRead(null));
+                var result = Record.Exception(() => IFileExtensions.OpenRead(null));
 
                 // Then
                 result.ShouldBeOfType<ArgumentNullException>()
@@ -110,7 +110,7 @@ namespace Spectre.IO.Tests.Unit.IO
             public void Should_Throw_If_File_Is_Null()
             {
                 // Given, When
-                var result = Record.Exception(() => FileExtensions.OpenWrite(null));
+                var result = Record.Exception(() => IFileExtensions.OpenWrite(null));
 
                 // Then
                 result.ShouldBeOfType<ArgumentNullException>()

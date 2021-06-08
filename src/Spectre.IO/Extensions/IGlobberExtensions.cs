@@ -7,7 +7,7 @@ namespace Spectre.IO
     /// <summary>
     /// Contains extensions for <see cref="IGlobber"/>.
     /// </summary>
-    public static class GlobberExtensions
+    public static class IGlobberExtensions
     {
         /// <summary>
         /// Gets all files matching the specified pattern.

@@ -6,7 +6,7 @@ namespace Spectre.IO
     /// <summary>
     /// Contains extensions for <see cref="IFileProvider"/>.
     /// </summary>
-    public static class FileProviderExtensions
+    public static class IFileProviderExtensions
     {
         /// <summary>
         /// Gets whether or not the specified file exists.

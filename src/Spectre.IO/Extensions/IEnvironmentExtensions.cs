@@ -5,7 +5,7 @@ namespace Spectre.IO
     /// <summary>
     /// Contains extensions for <see cref="IEnvironment"/>.
     /// </summary>
-    public static class EnvironmentExtensions
+    public static class IEnvironmentExtensions
     {
         private static readonly Regex _regex = new Regex("%(.*?)%");
 

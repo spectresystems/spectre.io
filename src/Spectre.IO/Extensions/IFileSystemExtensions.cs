@@ -5,7 +5,7 @@ namespace Spectre.IO
     /// <summary>
     /// Contains extensions for <see cref="IFileSystem"/>.
     /// </summary>
-    public static class FileSystemExtensions
+    public static class IFileSystemExtensions
     {
         /// <summary>
         /// Gets a <see cref="IFile"/> instance from the file system.

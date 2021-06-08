@@ -61,7 +61,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 public void Should_Throw_If_FileSystem_Is_Null()
                 {
                     // Given, When
-                    var result = Record.Exception(() => FileSystemExtensions.Exist(null, (FilePath)"file.txt"));
+                    var result = Record.Exception(() => IFileSystemExtensions.Exist(null, (FilePath)"file.txt"));
 
                     // Then
                     result.ShouldBeOfType<ArgumentNullException>()
@@ -121,7 +121,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 public void Should_Throw_If_FileSystem_Is_Null()
                 {
                     // Given, When
-                    var result = Record.Exception(() => FileSystemExtensions.Exist(null, (DirectoryPath)"/Target"));
+                    var result = Record.Exception(() => IFileSystemExtensions.Exist(null, (DirectoryPath)"/Target"));
 
                     // Then
                     result.ShouldBeOfType<ArgumentNullException>()

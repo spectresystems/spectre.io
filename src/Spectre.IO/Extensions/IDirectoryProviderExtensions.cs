@@ -5,7 +5,7 @@ namespace Spectre.IO
     /// <summary>
     /// Contains extensions for <see cref="IDirectoryProvider"/>.
     /// </summary>
-    public static class DirectoryProviderExtensions
+    public static class IDirectoryProviderExtensions
     {
         /// <summary>
         /// Gets whether or not the specified directory exists.

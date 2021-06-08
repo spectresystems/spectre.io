@@ -6,7 +6,7 @@ namespace Spectre.IO
     /// <summary>
     /// Contains extension methods for <see cref="IFile"/>.
     /// </summary>
-    public static class FileExtensions
+    public static class IFileExtensions
     {
         /// <summary>
         /// Opens the file using the specified options.

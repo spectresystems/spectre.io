@@ -6,7 +6,7 @@ namespace Spectre.IO
     /// <summary>
     /// Contains extension methods for <see cref="IPlatform"/>.
     /// </summary>
-    public static class PlatformExtensions
+    public static class IPlatformExtensions
     {
         /// <summary>
         /// Determines whether the specified platform is a Unix platform.
