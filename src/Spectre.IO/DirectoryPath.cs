@@ -109,7 +109,7 @@ namespace Spectre.IO
 
             return IsRelative
                 ? path.Combine(this).Collapse()
-                : new DirectoryPath(FullPath);
+                : new DirectoryPath(FullPath).Collapse();
         }
 
         /// <summary>
@@ -124,18 +124,34 @@ namespace Spectre.IO
                 throw new ArgumentNullException(nameof(environment));
             }
 
-            return IsRelative
-                ? environment.WorkingDirectory.Combine(this).Collapse()
-                : new DirectoryPath(FullPath);
+            // First expand the directory (convert ~ into correct path)
+            var result = Expand(environment);
+
+            // Combine it with the working directory if relative
+            result = result.IsRelative ? environment.WorkingDirectory.Combine(result) : result;
+
+            // Collapse the path
+            return result.Collapse();
         }
 
         /// <summary>
         /// Collapses a <see cref="DirectoryPath"/> containing ellipses.
         /// </summary>
-        /// <returns>A collapsed <see cref="DirectoryPath"/>.</returns>
+        /// <returns>A collapsed <see cref="FilePath"/>.</returns>
         public DirectoryPath Collapse()
         {
             return new DirectoryPath(PathCollapser.Collapse(this));
+        }
+
+        /// <summary>
+        /// Expands a <see cref="DirectoryPath"/> containing placeholders
+        /// such as <c>~</c>.
+        /// </summary>
+        /// <param name="environment">The environment.</param>
+        /// <returns>An expanded <see cref="FilePath"/>.</returns>
+        public DirectoryPath Expand(IEnvironment environment)
+        {
+            return new DirectoryPath(PathExpander.Expand(this, environment));
         }
 
         /// <summary>

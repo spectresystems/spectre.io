@@ -79,6 +79,7 @@ namespace Spectre.IO.Tests.Fixtures
 
             // Directories
             filesystem.CreateDirectory("/RootDir");
+            filesystem.CreateDirectory("/home/Patrik");
             filesystem.CreateDirectory("/Working");
             filesystem.CreateDirectory("/Working/Foo");
             filesystem.CreateDirectory("/Working/Foo/Bar");
@@ -91,6 +92,9 @@ namespace Spectre.IO.Tests.Fixtures
 
             // Files
             filesystem.CreateFile("/RootFile.sh");
+            filesystem.CreateFile("/home/Patrik/foobar.rs");
+            filesystem.CreateFile("/home/Patrik/foobaz.rs");
+            filesystem.CreateFile("/home/Patrik/foobax.rs");
             filesystem.CreateFile("/Working/Foo/Bar/Qux.c");
             filesystem.CreateFile("/Working/Foo/Bar/Qex.c");
             filesystem.CreateFile("/Working/Foo/Bar/Qux.h");

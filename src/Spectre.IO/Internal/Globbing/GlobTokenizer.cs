@@ -70,6 +70,11 @@ namespace Spectre.IO.Internal
                 reader.Read();
                 return new GlobToken(GlobTokenKind.CharacterWildcard, "?");
             }
+            else if (current == '~')
+            {
+                reader.Read();
+                return new GlobToken(GlobTokenKind.HomeDirectory, "~");
+            }
             else if (current == '*')
             {
                 reader.Read();

@@ -7,19 +7,6 @@ namespace Spectre.IO.Tests.Unit.IO
 {
     public sealed class PathCollectionTests
     {
-        public sealed class TheConstructor
-        {
-            [Fact]
-            public void Should_Use_PathComparer_Default_If_Comparer_Is_Null()
-            {
-                // Given
-                var collection = new PathCollection();
-
-                // Then
-                collection.Comparer.ShouldBeSameAs(PathComparer.Default);
-            }
-        }
-
         public sealed class TheCountProperty
         {
             [Fact]

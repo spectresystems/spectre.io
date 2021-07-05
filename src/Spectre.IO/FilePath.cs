@@ -138,23 +138,6 @@ namespace Spectre.IO
         }
 
         /// <summary>
-        /// Makes the path absolute (if relative) using the current working directory.
-        /// </summary>
-        /// <param name="environment">The environment.</param>
-        /// <returns>An absolute path.</returns>
-        public FilePath MakeAbsolute(IEnvironment environment)
-        {
-            if (environment == null)
-            {
-                throw new ArgumentNullException(nameof(environment));
-            }
-
-            return IsRelative
-                ? environment.WorkingDirectory.CombineWithFilePath(this).Collapse()
-                : new FilePath(FullPath);
-        }
-
-        /// <summary>
         /// Makes the path absolute (if relative) using the specified directory path.
         /// </summary>
         /// <param name="path">The path.</param>
@@ -173,7 +156,29 @@ namespace Spectre.IO
 
             return IsRelative
                 ? path.CombineWithFilePath(this).Collapse()
-                : new FilePath(FullPath);
+                : new FilePath(FullPath).Collapse();
+        }
+
+        /// <summary>
+        /// Makes the path absolute (if relative) using the current working directory.
+        /// </summary>
+        /// <param name="environment">The environment.</param>
+        /// <returns>An absolute path.</returns>
+        public FilePath MakeAbsolute(IEnvironment environment)
+        {
+            if (environment == null)
+            {
+                throw new ArgumentNullException(nameof(environment));
+            }
+
+            // First expand the directory (convert ~ into correct path)
+            var result = Expand(environment);
+
+            // Combine it with the working directory if relative
+            result = result.IsRelative ? environment.WorkingDirectory.CombineWithFilePath(result) : result;
+
+            // Collapse the path
+            return result.Collapse();
         }
 
         /// <summary>
@@ -183,6 +188,17 @@ namespace Spectre.IO
         public FilePath Collapse()
         {
             return new FilePath(PathCollapser.Collapse(this));
+        }
+
+        /// <summary>
+        /// Expands a <see cref="FilePath"/> containing placeholders
+        /// such as <c>~</c>.
+        /// </summary>
+        /// <param name="environment">The environment.</param>
+        /// <returns>An expanded <see cref="FilePath"/>.</returns>
+        public FilePath Expand(IEnvironment environment)
+        {
+            return new FilePath(PathExpander.Expand(this, environment));
         }
 
         /// <summary>

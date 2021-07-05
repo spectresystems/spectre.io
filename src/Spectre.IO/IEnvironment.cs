@@ -10,13 +10,16 @@ namespace Spectre.IO
         /// <summary>
         /// Gets the working directory.
         /// </summary>
-        /// <value>The working directory.</value>
         DirectoryPath WorkingDirectory { get; }
+
+        /// <summary>
+        /// Gets the users home directory.
+        /// </summary>
+        DirectoryPath HomeDirectory { get; }
 
         /// <summary>
         /// Gets the platform we're running on.
         /// </summary>
-        /// <value>The platform we're running on.</value>
         IPlatform Platform { get; }
 
         /// <summary>

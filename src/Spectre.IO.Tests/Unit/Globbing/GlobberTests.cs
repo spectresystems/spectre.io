@@ -591,6 +591,21 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
                 result.ShouldContainFilePath("/Working/foobar.rs");
                 result.ShouldContainFilePath("/Working/foobaz.rs");
             }
+
+            [Fact]
+            public void Should_Return_Files_In_Home_Directory()
+            {
+                // Given
+                var fixture = GlobberFixture.UnixLike();
+
+                // When
+                var result = fixture.Match("~/fooba[!x].rs");
+
+                // Then
+                result.Length.ShouldBe(2);
+                result.ShouldContainFilePath("/home/Patrik/foobar.rs");
+                result.ShouldContainFilePath("/home/Patrik/foobaz.rs");
+            }
         }
     }
 }

@@ -49,6 +49,12 @@ namespace Spectre.IO.Internal
                 return new RelativeRootNode();
             }
 
+            if (context.CurrentToken.Kind == GlobTokenKind.HomeDirectory)
+            {
+                context.Accept(GlobTokenKind.HomeDirectory);
+                return new HomeDirectoryNode();
+            }
+
             if (_environment.Platform.IsUnix())
             {
                 // Starts with a separator?

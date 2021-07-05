@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SystemDirectory = System.IO.Directory;
+using SystemEnv = System.Environment;
+using SystemFolder = System.Environment.SpecialFolder;
 
 namespace Spectre.IO
 {
@@ -13,7 +16,13 @@ namespace Spectre.IO
         /// <inheritdoc/>
         public DirectoryPath WorkingDirectory
         {
-            get { return new DirectoryPath(System.IO.Directory.GetCurrentDirectory()); }
+            get { return new DirectoryPath(SystemDirectory.GetCurrentDirectory()); }
+        }
+
+        /// <inheritdoc/>
+        public DirectoryPath HomeDirectory
+        {
+            get { return new DirectoryPath(SystemEnv.GetFolderPath(SystemFolder.UserProfile)); }
         }
 
         /// <inheritdoc/>
@@ -35,19 +44,19 @@ namespace Spectre.IO
         {
             Platform = platform;
 
-            SetWorkingDirectory(new DirectoryPath(System.IO.Directory.GetCurrentDirectory()));
+            SetWorkingDirectory(new DirectoryPath(SystemDirectory.GetCurrentDirectory()));
         }
 
         /// <inheritdoc/>
         public string? GetEnvironmentVariable(string variable)
         {
-            return System.Environment.GetEnvironmentVariable(variable);
+            return SystemEnv.GetEnvironmentVariable(variable);
         }
 
         /// <inheritdoc/>
         public IDictionary<string, string?> GetEnvironmentVariables()
         {
-            return System.Environment.GetEnvironmentVariables()
+            return SystemEnv.GetEnvironmentVariables()
                 .Cast<System.Collections.DictionaryEntry>()
                 .Aggregate(
                     new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase),
@@ -77,7 +86,7 @@ namespace Spectre.IO
                 throw new IOException("Working directory can not be set to a relative path.");
             }
 
-            System.IO.Directory.SetCurrentDirectory(path.FullPath);
+            SystemDirectory.SetCurrentDirectory(path.FullPath);
         }
     }
 }

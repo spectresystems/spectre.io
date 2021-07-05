@@ -1,6 +1,7 @@
 ﻿using System;
 using NSubstitute;
 using Shouldly;
+using Spectre.IO.Testing;
 using Spectre.IO.Testing.Xunit;
 using Xunit;
 
@@ -458,6 +459,20 @@ namespace Spectre.IO.Tests.Unit.IO
                     result.FullPath.ShouldBe(expected);
                     result.ShouldNotBeSameAs(path);
                 }
+
+                [Fact]
+                public void Should_Expand_Home_Directory()
+                {
+                    // Given
+                    var path = new FilePath("~/test.txt");
+                    var environment = new FakeEnvironment(PlatformFamily.Linux);
+
+                    // When
+                    var result = path.MakeAbsolute(environment);
+
+                    // Then
+                    result.FullPath.ShouldBe("/home/Patrik/test.txt");
+                }
             }
 
             public sealed class WithDirectoryPath
@@ -518,6 +533,133 @@ namespace Spectre.IO.Tests.Unit.IO
                     // Then
                     result.FullPath.ShouldBe("/test.txt");
                 }
+            }
+        }
+
+        public sealed class TheCollapseMethod
+        {
+            [Fact]
+            public void Should_Collapse_Relative_Path()
+            {
+                // Given, When
+                var path = new FilePath("hello/temp/test/../../world/foo.txt").Collapse();
+
+                // Then
+                path.FullPath.ShouldBe("hello/world/foo.txt");
+            }
+
+            [Fact]
+            public void Should_Collapse_Path_With_Separated_Ellipsis()
+            {
+                // Given, When
+                var path = new FilePath("hello/temp/../temp2/../world/foo.txt").Collapse();
+
+                // Then
+                path.FullPath.ShouldBe("hello/world/foo.txt");
+            }
+
+            [WindowsFact]
+            public void Should_Collapse_Path_With_Windows_Root()
+            {
+                // Given, When
+                var path = new FilePath("c:/hello/temp/test/../../world/foo.txt").Collapse();
+
+                // Then
+                path.FullPath.ShouldBe("c:/hello/world/foo.txt");
+            }
+
+            [Fact]
+            public void Should_Collapse_Path_With_Non_Windows_Root()
+            {
+                // Given, When
+                var path = new FilePath("/hello/temp/test/../../world/foo.txt").Collapse();
+
+                // Then
+                path.FullPath.ShouldBe("/hello/world/foo.txt");
+            }
+
+            [WindowsFact]
+            public void Should_Stop_Collapsing_When_Windows_Root_Is_Reached()
+            {
+                // Given, When
+                var path = new FilePath("c:/../../../../../../temp/foo.txt").Collapse();
+
+                // Then
+                path.FullPath.ShouldBe("c:/temp/foo.txt");
+            }
+
+            [Fact]
+            public void Should_Stop_Collapsing_When_Root_Is_Reached()
+            {
+                // Given, When
+                var path = new FilePath("/hello/../../../../../../temp/foo.txt").Collapse();
+
+                // Then
+                path.FullPath.ShouldBe("/temp/foo.txt");
+            }
+
+            [Theory]
+            [InlineData(".")]
+            [InlineData("./")]
+            [InlineData("/.")]
+            public void Should_Collapse_Single_Dot_To_Single_Dot(string uncollapsedPath)
+            {
+                // Given, When
+                var path = new FilePath(uncollapsedPath).Collapse();
+
+                // Then
+                path.FullPath.ShouldBe(".");
+            }
+
+            [Fact]
+            public void Should_Collapse_Single_Dot_With_Ellipsis()
+            {
+                // Given, When
+                var path = new FilePath("./../foo.txt").Collapse();
+
+                // Then
+                path.FullPath.ShouldBe("foo.txt");
+            }
+
+            [Theory]
+            [InlineData("./a", "a")]
+            [InlineData("a/./b", "a/b")]
+            [InlineData("/a/./b", "/a/b")]
+            [InlineData("a/b/.", "a/b")]
+            [InlineData("/a/b/.", "/a/b")]
+            [InlineData("/./a/b", "/a/b")]
+            public void Should_Collapse_Single_Dot(string uncollapsedPath, string collapsedPath)
+            {
+                // Given, When
+                var path = new DirectoryPath(uncollapsedPath).Collapse();
+
+                // Then
+                path.FullPath.ShouldBe(collapsedPath);
+            }
+        }
+
+        public sealed class TheExpandMethod
+        {
+            [Theory]
+            [InlineData(PlatformFamily.Windows, "", "")]
+            [InlineData(PlatformFamily.Windows, "~", "C:/Users/Patrik")]
+            [InlineData(PlatformFamily.Windows, "~/", "C:/Users/Patrik")]
+            [InlineData(PlatformFamily.Windows, "~/lol", "C:/Users/Patrik/lol")]
+            [InlineData(PlatformFamily.Linux, "", "")]
+            [InlineData(PlatformFamily.Linux, "~", "/home/Patrik")]
+            [InlineData(PlatformFamily.Linux, "~/", "/home/Patrik")]
+            [InlineData(PlatformFamily.Linux, "~/lol", "/home/Patrik/lol")]
+            public void Should_Expand_Home_Directory_If_First_In_Path(PlatformFamily family, string input, string expected)
+            {
+                // Given
+                var environment = new FakeEnvironment(family);
+                var path = new FilePath(input);
+
+                // When
+                var result = path.Expand(environment);
+
+                // Then
+                result.FullPath.ShouldBe(expected);
             }
         }
 

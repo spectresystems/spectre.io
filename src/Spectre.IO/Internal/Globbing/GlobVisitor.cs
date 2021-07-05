@@ -145,6 +145,16 @@ namespace Spectre.IO.Internal
             }
         }
 
+        public void VisitHomeDirectory(HomeDirectoryNode node, GlobVisitorContext context)
+        {
+            if (node.Next != null)
+            {
+                context.Push(_environment.HomeDirectory.FullPath);
+                node.Next.Accept(this, context);
+                context.Pop();
+            }
+        }
+
         public void VisitUnixRoot(UnixRootNode node, GlobVisitorContext context)
         {
             if (node.Next != null)

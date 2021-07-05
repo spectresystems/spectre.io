@@ -5,9 +5,9 @@ namespace Spectre.IO.Internal
 {
     internal static class PathHelper
     {
-        private const char _backslash = '\\';
-        private const char _slash = '/';
-        private const string _uncPrefix = @"\\";
+        private const char Backslash = '\\';
+        private const char Slash = '/';
+        private const string UncPrefix = @"\\";
 
         private static readonly bool _isWindows = EnvironmentHelper.GetPlatformFamily() == PlatformFamily.Windows;
 
@@ -57,19 +57,19 @@ namespace Spectre.IO.Internal
                 return first;
             }
 
-            var isUnc = first.StartsWith(_uncPrefix, StringComparison.OrdinalIgnoreCase);
+            var isUnc = first.StartsWith(UncPrefix, StringComparison.OrdinalIgnoreCase);
 
             // Trim separators.
-            first = first.TrimEnd(_backslash, _slash);
-            second = second.TrimStart(_backslash, _slash).TrimEnd(_backslash, _slash);
+            first = first.TrimEnd(Backslash, Slash);
+            second = second.TrimStart(Backslash, Slash).TrimEnd(Backslash, Slash);
 
             // UNC root only?
             if (isUnc && string.IsNullOrWhiteSpace(first))
             {
-                return string.Concat(_uncPrefix, second);
+                return string.Concat(UncPrefix, second);
             }
 
-            var separator = isUnc ? _backslash : _slash;
+            var separator = isUnc ? Backslash : Slash;
             return string.Concat(first, separator, second);
         }
 

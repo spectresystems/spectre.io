@@ -14,6 +14,9 @@ namespace Spectre.IO.Testing
         public DirectoryPath WorkingDirectory { get; private set; }
 
         /// <inheritdoc/>
+        public DirectoryPath HomeDirectory { get; }
+
+        /// <inheritdoc/>
         IPlatform IEnvironment.Platform => Platform;
 
         /// <summary>
@@ -34,10 +37,12 @@ namespace Spectre.IO.Testing
             if (family == PlatformFamily.Windows)
             {
                 WorkingDirectory = new DirectoryPath("C:/Working");
+                HomeDirectory = new DirectoryPath("C:/Users/Patrik");
             }
             else
             {
                 WorkingDirectory = new DirectoryPath("/Working");
+                HomeDirectory = new DirectoryPath("/home/Patrik");
             }
 
             Platform = new FakePlatform(family, is64Bit);

@@ -14,8 +14,7 @@ namespace Spectre.IO.Internal
             }
 
             var stack = new Stack<string>();
-            var segments = path.FullPath.Split('/', '\\');
-            foreach (var segment in segments)
+            foreach (var segment in path.FullPath.Split('/', '\\'))
             {
                 if (segment == ".")
                 {
@@ -35,7 +34,8 @@ namespace Spectre.IO.Internal
                 stack.Push(segment);
             }
 
-            string collapsed = string.Join("/", stack.Reverse());
+            var separator = path.Separator.ToString();
+            var collapsed = string.Join(separator, stack.Reverse());
             return string.IsNullOrEmpty(collapsed) ? "." : collapsed;
         }
     }

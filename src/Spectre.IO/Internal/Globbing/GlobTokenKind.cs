@@ -6,6 +6,7 @@
         CharacterWildcard,
         PathSeparator,
         Text,
+        HomeDirectory,
         WindowsRoot,
         Parent,
         Current,
