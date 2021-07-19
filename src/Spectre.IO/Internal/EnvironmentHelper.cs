@@ -15,38 +15,27 @@ namespace Spectre.IO.Internal
 
         public static PlatformFamily GetPlatformFamily()
         {
-            try
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    return PlatformFamily.MacOs;
-                }
-            }
-            catch (PlatformNotSupportedException)
-            {
+                return PlatformFamily.MacOs;
             }
 
-            try
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    return PlatformFamily.Linux;
-                }
-            }
-            catch (PlatformNotSupportedException)
-            {
+                return PlatformFamily.Linux;
             }
 
-            try
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    return PlatformFamily.Windows;
-                }
+                return PlatformFamily.Windows;
             }
-            catch (PlatformNotSupportedException)
+
+#if NET5_0_OR_GREATER
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
             {
+                return PlatformFamily.FreeBSD;
             }
+#endif
 
             return PlatformFamily.Unknown;
         }
