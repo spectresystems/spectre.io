@@ -264,6 +264,41 @@ namespace Spectre.IO.Testing
             }
         }
 
+        public void CreateSymbolicLink(FakeFile file, FilePath destination)
+        {
+            if (!file.Exists)
+            {
+                throw new FileNotFoundException("File does not exist.");
+            }
+
+            // Already exists?
+            var destinationFile = FindFile(destination);
+            if (destinationFile != null)
+            {
+                const string format = "{0} exists. Cannot create symbolic link.";
+                var message = string.Format(CultureInfo.InvariantCulture, format, destination.FullPath);
+                throw new IOException(message);
+            }
+
+            // Directory exists?
+            var directory = FindDirectory(destination.GetDirectory());
+            if (directory?.Exists != true)
+            {
+                throw new DirectoryNotFoundException("The destination path {0} does not exist.");
+            }
+
+            // Make sure the file exist.
+            if (destinationFile == null)
+            {
+                directory.Content.Add(new FakeFile(this, destination)
+                {
+                    Exists = true,
+                    SymbolicLink = file,
+                    Attributes = FileAttributes.ReparsePoint,
+                });
+            }
+        }
+
         public void MoveFile(FakeFile fakeFile, FilePath destination)
         {
             // Copy the file to the new location.

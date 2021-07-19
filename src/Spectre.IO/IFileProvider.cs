@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Spectre.IO
+﻿namespace Spectre.IO
 {
     /// <summary>
     /// Represents a file provider.
@@ -12,7 +10,6 @@ namespace Spectre.IO
         /// </summary>
         /// <param name="path">The file path.</param>
         /// <returns>An <see cref="IFile"/> instance.</returns>
-        [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords")]
         IFile Retrieve(FilePath path);
     }
 }

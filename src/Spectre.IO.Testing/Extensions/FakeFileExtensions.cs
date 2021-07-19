@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 
@@ -17,7 +16,6 @@ namespace Spectre.IO.Testing
         /// <param name="content">The content.</param>
         /// <param name="encoding">The text encoding to use, or <c>null</c> to use the default encoding.</param>
         /// <returns>The same <see cref="FakeFile"/> instance so that multiple calls can be chained.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public static FakeFile SetTextContent(this FakeFile file, string content, Encoding? encoding = null)
         {
             if (file == null)
@@ -45,7 +43,6 @@ namespace Spectre.IO.Testing
         /// </summary>
         /// <param name="file">The file.</param>
         /// <returns>The binary content of the specified file.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public static byte[] GetBinaryContent(this FakeFile file)
         {
             if (file == null)
@@ -73,7 +70,6 @@ namespace Spectre.IO.Testing
         /// <param name="file">The file.</param>
         /// <param name="encoding">The text encoding to use, or <c>null</c> to use the default encoding.</param>
         /// <returns>The text content of the file.</returns>
-        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public static string GetTextContent(this FakeFile file, Encoding? encoding = null)
         {
             if (file == null)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Spectre.IO.Testing
@@ -16,6 +15,11 @@ namespace Spectre.IO.Testing
         /// </summary>
         /// <value>The path.</value>
         public FilePath Path { get; }
+
+        /// <summary>
+        /// Gets the source path for a symbolic link.
+        /// </summary>
+        public FakeFile? SymbolicLink { get; internal set; }
 
         /// <inheritdoc/>
         Path IFileSystemInfo.Path => Path;
@@ -51,7 +55,6 @@ namespace Spectre.IO.Testing
         /// Gets the content.
         /// </summary>
         /// <value>The content.</value>
-        [SuppressMessage("Performance", "CA1819:Properties should not return arrays")]
         public byte[] Content { get; internal set; }
 
         internal object ContentLock { get; } = new object();
@@ -59,6 +62,7 @@ namespace Spectre.IO.Testing
         internal FakeFile(FakeFileSystemTree tree, FilePath path)
         {
             _tree = tree;
+
             Path = path;
             Exists = false;
             Hidden = false;
@@ -77,6 +81,17 @@ namespace Spectre.IO.Testing
         }
 
         /// <inheritdoc/>
+        public void CreateSymbolicLink(FilePath destination)
+        {
+            if (destination is null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
+            _tree.CreateSymbolicLink(this, destination);
+        }
+
+        /// <inheritdoc/>
         public void Move(FilePath destination)
         {
             _tree.MoveFile(this, destination);
@@ -85,6 +100,11 @@ namespace Spectre.IO.Testing
         /// <inheritdoc/>
         public Stream Open(FileMode fileMode, FileAccess fileAccess, FileShare fileShare)
         {
+            if (SymbolicLink != null)
+            {
+                return SymbolicLink.Open(fileMode, fileAccess, fileShare);
+            }
+
             var position = GetPosition(fileMode, out bool fileWasCreated);
             if (fileWasCreated)
             {
@@ -106,6 +126,12 @@ namespace Spectre.IO.Testing
         /// <param name="offset">The offset.</param>
         public void Resize(long offset)
         {
+            if (SymbolicLink != null)
+            {
+                SymbolicLink.Resize(offset);
+                return;
+            }
+
             if (Length < offset)
             {
                 Length = offset;

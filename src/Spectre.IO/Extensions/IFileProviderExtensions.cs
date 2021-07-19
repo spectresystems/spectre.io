@@ -102,6 +102,26 @@ namespace Spectre.IO
         }
 
         /// <summary>
+        /// Creates a symbolic link to the specified destination path.
+        /// </summary>
+        /// <param name="provider">The file provider.</param>
+        /// <param name="source">The source file path.</param>
+        /// <param name="destination">The destination path.</param>
+        public static void CreateSymbolicLink(
+            this IFileProvider provider,
+            FilePath source,
+            FilePath destination)
+        {
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            var file = provider.Retrieve(source);
+            file.CreateSymbolicLink(destination);
+        }
+
+        /// <summary>
         /// Moves the file to the specified destination path.
         /// </summary>
         /// <param name="provider">The file provider.</param>

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
+using Mono.Unix.Native;
 
 namespace Spectre.IO.Internal
 {
@@ -66,6 +68,39 @@ namespace Spectre.IO.Internal
         public Stream Open(FileMode fileMode, FileAccess fileAccess, FileShare fileShare)
         {
             return _file.Open(fileMode, fileAccess, fileShare);
+        }
+
+        public void CreateSymbolicLink(FilePath destination)
+        {
+            if (destination is null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
+            if (Path.IsRelative)
+            {
+                throw new InvalidOperationException("Source path cannot be relative");
+            }
+
+            if (destination.IsRelative)
+            {
+                throw new InvalidOperationException("Detination path cannot be relative");
+            }
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                if (!Win32.CreateSymbolicLink(destination.FullPath, Path.FullPath, Win32.SymbolicLink.File))
+                {
+                    throw new IOException($"Could not create symbolic link from {Path.FullPath} to {destination.FullPath}");
+                }
+            }
+            else
+            {
+                if (Syscall.symlink(Path.FullPath, destination.FullPath) != 0)
+                {
+                    throw new IOException($"Could not create symbolic link from {Path.FullPath} to {destination.FullPath}");
+                }
+            }
         }
     }
 }

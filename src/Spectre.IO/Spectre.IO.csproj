@@ -9,6 +9,10 @@
     <Description>A library containing cross platform abstractions and implementations for IO.</Description>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
+  </ItemGroup>
+
   <ItemGroup Label="StyleCop">
     <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
   </ItemGroup>

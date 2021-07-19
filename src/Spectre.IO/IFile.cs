@@ -39,6 +39,12 @@ namespace Spectre.IO
         void Copy(FilePath destination, bool overwrite);
 
         /// <summary>
+        /// Creates a symbolic link to the specified destination path.
+        /// </summary>
+        /// <param name="destination">The destination path.</param>
+        void CreateSymbolicLink(FilePath destination);
+
+        /// <summary>
         /// Moves the file to the specified destination path.
         /// </summary>
         /// <param name="destination">The destination path.</param>
