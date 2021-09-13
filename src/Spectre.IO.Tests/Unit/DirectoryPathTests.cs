@@ -318,7 +318,7 @@ namespace Spectre.IO.Tests.Unit.IO
                     var result = path.MakeAbsolute(environment);
 
                     // Then
-                    result.FullPath.ShouldBe("/home/Patrik/test");
+                    result.FullPath.ShouldBe("/home/JohnDoe/test");
                 }
             }
 
@@ -487,13 +487,13 @@ namespace Spectre.IO.Tests.Unit.IO
         {
             [Theory]
             [InlineData(PlatformFamily.Windows, "", "")]
-            [InlineData(PlatformFamily.Windows, "~", "C:/Users/Patrik")]
-            [InlineData(PlatformFamily.Windows, "~/", "C:/Users/Patrik")]
-            [InlineData(PlatformFamily.Windows, "~/lol", "C:/Users/Patrik/lol")]
+            [InlineData(PlatformFamily.Windows, "~", "C:/Users/JohnDoe")]
+            [InlineData(PlatformFamily.Windows, "~/", "C:/Users/JohnDoe")]
+            [InlineData(PlatformFamily.Windows, "~/lol", "C:/Users/JohnDoe/lol")]
             [InlineData(PlatformFamily.Linux, "", "")]
-            [InlineData(PlatformFamily.Linux, "~", "/home/Patrik")]
-            [InlineData(PlatformFamily.Linux, "~/", "/home/Patrik")]
-            [InlineData(PlatformFamily.Linux, "~/lol", "/home/Patrik/lol")]
+            [InlineData(PlatformFamily.Linux, "~", "/home/JohnDoe")]
+            [InlineData(PlatformFamily.Linux, "~/", "/home/JohnDoe")]
+            [InlineData(PlatformFamily.Linux, "~/lol", "/home/JohnDoe/lol")]
             public void Should_Expand_Home_Directory_If_First_In_Path(PlatformFamily family, string input, string expected)
             {
                 // Given

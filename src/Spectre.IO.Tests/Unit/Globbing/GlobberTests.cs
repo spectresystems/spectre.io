@@ -603,8 +603,8 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
 
                 // Then
                 result.Length.ShouldBe(2);
-                result.ShouldContainFilePath("/home/Patrik/foobar.rs");
-                result.ShouldContainFilePath("/home/Patrik/foobaz.rs");
+                result.ShouldContainFilePath("/home/JohnDoe/foobar.rs");
+                result.ShouldContainFilePath("/home/JohnDoe/foobaz.rs");
             }
         }
     }

@@ -74,12 +74,12 @@ namespace Spectre.IO.Tests.Fixtures
 
         public static GlobberFixture UnixLike()
         {
-            var environment = FakeEnvironment.CreateUnixEnvironment();
+            var environment = FakeEnvironment.CreateLinuxEnvironment();
             var filesystem = new FakeFileSystem(environment);
 
             // Directories
             filesystem.CreateDirectory("/RootDir");
-            filesystem.CreateDirectory("/home/Patrik");
+            filesystem.CreateDirectory("/home/JohnDoe");
             filesystem.CreateDirectory("/Working");
             filesystem.CreateDirectory("/Working/Foo");
             filesystem.CreateDirectory("/Working/Foo/Bar");
@@ -92,9 +92,9 @@ namespace Spectre.IO.Tests.Fixtures
 
             // Files
             filesystem.CreateFile("/RootFile.sh");
-            filesystem.CreateFile("/home/Patrik/foobar.rs");
-            filesystem.CreateFile("/home/Patrik/foobaz.rs");
-            filesystem.CreateFile("/home/Patrik/foobax.rs");
+            filesystem.CreateFile("/home/JohnDoe/foobar.rs");
+            filesystem.CreateFile("/home/JohnDoe/foobaz.rs");
+            filesystem.CreateFile("/home/JohnDoe/foobax.rs");
             filesystem.CreateFile("/Working/Foo/Bar/Qux.c");
             filesystem.CreateFile("/Working/Foo/Bar/Qex.c");
             filesystem.CreateFile("/Working/Foo/Bar/Qux.h");

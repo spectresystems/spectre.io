@@ -29,43 +29,77 @@ namespace Spectre.IO.Testing
         /// Initializes a new instance of the <see cref="FakeEnvironment"/> class.
         /// </summary>
         /// <param name="family">The platform family.</param>
-        /// <param name="is64Bit">if set to <c>true</c>, the platform is 64 bit.</param>
-        public FakeEnvironment(PlatformFamily family, bool is64Bit = true)
+        /// <param name="architecture">The platform processor architecture.</param>
+        public FakeEnvironment(PlatformFamily family, PlatformArchitecture architecture = PlatformArchitecture.X64)
         {
             _environmentVariables = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
 
             if (family == PlatformFamily.Windows)
             {
                 WorkingDirectory = new DirectoryPath("C:/Working");
-                HomeDirectory = new DirectoryPath("C:/Users/Patrik");
+                HomeDirectory = new DirectoryPath("C:/Users/JohnDoe");
+            }
+            else if (family == PlatformFamily.MacOs)
+            {
+                WorkingDirectory = new DirectoryPath("/Working");
+                HomeDirectory = new DirectoryPath("/Users/JohnDoe");
+            }
+            else if (family == PlatformFamily.FreeBSD)
+            {
+                WorkingDirectory = new DirectoryPath("/Working");
+                HomeDirectory = new DirectoryPath("/usr/home/JohnDoe");
+            }
+            else if (family == PlatformFamily.Linux)
+            {
+                WorkingDirectory = new DirectoryPath("/Working");
+                HomeDirectory = new DirectoryPath("/home/JohnDoe");
             }
             else
             {
-                WorkingDirectory = new DirectoryPath("/Working");
-                HomeDirectory = new DirectoryPath("/home/Patrik");
+                throw new ArgumentException("Unknown platform family", nameof(family));
             }
 
-            Platform = new FakePlatform(family, is64Bit);
+            Platform = new FakePlatform(family, architecture);
         }
 
         /// <summary>
-        /// Creates a Unix environment.
+        /// Creates a Linux environment.
         /// </summary>
-        /// <param name="is64Bit">if set to <c>true</c> the platform is 64 bit.</param>
-        /// <returns>A Unix environment.</returns>
-        public static FakeEnvironment CreateUnixEnvironment(bool is64Bit = true)
+        /// <param name="architecture">The platform processor architecture.</param>
+        /// <returns>A Linux environment.</returns>
+        public static FakeEnvironment CreateLinuxEnvironment(PlatformArchitecture architecture = PlatformArchitecture.X64)
         {
-            return new FakeEnvironment(PlatformFamily.Linux, is64Bit);
+            return new FakeEnvironment(PlatformFamily.Linux, architecture);
+        }
+
+        /// <summary>
+        /// Creates a macOS environment.
+        /// </summary>
+        /// <param name="architecture">The platform processor architecture.</param>
+        /// <returns>A macOS environment.</returns>
+        public static FakeEnvironment CreateMacOSEnvironment(PlatformArchitecture architecture = PlatformArchitecture.X64)
+        {
+            return new FakeEnvironment(PlatformFamily.MacOs, architecture);
         }
 
         /// <summary>
         /// Creates a Windows environment.
         /// </summary>
-        /// <param name="is64Bit">if set to <c>true</c> the platform is 64 bit.</param>
+        /// <param name="architecture">The platform processor architecture.</param>
         /// <returns>A Windows environment.</returns>
-        public static FakeEnvironment CreateWindowsEnvironment(bool is64Bit = true)
+        public static FakeEnvironment CreateWindowsEnvironment(PlatformArchitecture architecture = PlatformArchitecture.X64)
         {
-            return new FakeEnvironment(PlatformFamily.Windows, is64Bit);
+            return new FakeEnvironment(PlatformFamily.Windows, architecture);
+        }
+
+        /// <summary>
+        /// Creates a FreeBSD environment.
+        /// </summary>
+        /// <param name="architecture">The platform processor architecture.</param>
+        /// <returns>A Windows environment.</returns>
+        public static FakeEnvironment CreateFreeBSDEnvironment(PlatformArchitecture architecture = PlatformArchitecture.X64)
+        {
+            return new FakeEnvironment(PlatformFamily.FreeBSD, architecture);
         }
 
         /// <inheritdoc/>
@@ -86,21 +120,55 @@ namespace Spectre.IO.Testing
         }
 
         /// <summary>
-        /// Changes the operative system bitness.
+        /// Creates a Unix environment.
         /// </summary>
-        /// <param name="is64Bit">if set to <c>true</c>, this is a 64-bit operative system.</param>
-        public void ChangeOperativeSystemBitness(bool is64Bit)
+        /// <param name="architecture">The platform processor architecture.</param>
+        /// <returns>A Unix environment.</returns>
+        [Obsolete("Use CreateLinuxEnvironment instead")]
+        public static FakeEnvironment CreateUnixEnvironment(PlatformArchitecture architecture = PlatformArchitecture.X64)
         {
-            Platform.Is64Bit = is64Bit;
+            return new FakeEnvironment(PlatformFamily.Linux, architecture);
         }
 
         /// <summary>
-        /// Change the operating system platform family.
+        /// Changess the operative system bitness.
+        /// </summary>
+        /// <param name="is64Bit">if set to <c>true</c>, this is a 64-bit operative system.</param>
+        [Obsolete("Use ChangePlatformArchitectureInstead")]
+        public void ChangeOperativeSystemBitness(bool is64Bit)
+        {
+            Platform.Architecture = is64Bit
+                ? PlatformArchitecture.X64
+                : PlatformArchitecture.X86;
+        }
+
+        /// <summary>
+        /// Changes the operating system platform family.
         /// </summary>
         /// <param name="family">The platform family.</param>
+        [Obsolete("Use ChangePlatformFamilyInstead")]
         public void ChangeOperatingSystemFamily(PlatformFamily family)
         {
             Platform.Family = family;
+        }
+
+        /// <summary>
+        /// Changes the platform family.
+        /// </summary>
+        /// <param name="family">The platform family.</param>
+        [Obsolete("Use ChangePlatformFamilyInstead")]
+        public void ChangePlatformSystemFamily(PlatformFamily family)
+        {
+            Platform.Family = family;
+        }
+
+        /// <summary>
+        /// Changes the platform processor architecture.
+        /// </summary>
+        /// <param name="architecture">The platform processor architecture.</param>
+        public void ChangePlatformArchitecture(PlatformArchitecture architecture)
+        {
+            Platform.Architecture = architecture;
         }
 
         /// <summary>

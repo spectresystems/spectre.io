@@ -9,17 +9,20 @@
         public PlatformFamily Family { get; set; }
 
         /// <inheritdoc/>
-        public bool Is64Bit { get; set; }
+        public PlatformArchitecture Architecture { get; set; }
+
+        /// <inheritdoc/>
+        public bool Is64Bit => Architecture == PlatformArchitecture.X64;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FakePlatform"/> class.
         /// </summary>
-        /// <param name="family">The family.</param>
-        /// <param name="is64Bit">if set to <c>true</c>, the platform is 64-bit.</param>
-        public FakePlatform(PlatformFamily family, bool is64Bit = true)
+        /// <param name="family">The platform family.</param>
+        /// <param name="architecture">The platform processor architecture.</param>
+        public FakePlatform(PlatformFamily family, PlatformArchitecture architecture = PlatformArchitecture.X64)
         {
             Family = family;
-            Is64Bit = is64Bit;
+            Architecture = architecture;
         }
     }
 }

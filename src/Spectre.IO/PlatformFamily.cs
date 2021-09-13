@@ -25,11 +25,9 @@ namespace Spectre.IO
         /// </summary>
         MacOs = 3,
 
-#if NET5_0_OR_GREATER
         /// <summary>
         /// Represents the FreeBSD platform family.
         /// </summary>
         FreeBSD = 4,
-#endif
     }
 }

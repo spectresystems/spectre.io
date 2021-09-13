@@ -1,18 +1,9 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace Spectre.IO.Internal
 {
     internal static class EnvironmentHelper
     {
-        private static bool? _isCoreClr;
-
-        public static bool Is64BitOperativeSystem()
-        {
-            return RuntimeInformation.OSArchitecture == Architecture.X64
-                   || RuntimeInformation.OSArchitecture == Architecture.Arm64;
-        }
-
         public static PlatformFamily GetPlatformFamily()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -40,9 +31,19 @@ namespace Spectre.IO.Internal
             return PlatformFamily.Unknown;
         }
 
-        public static bool IsCoreClr()
+        public static PlatformArchitecture GetPlatformArchitecture()
         {
-            return _isCoreClr ?? (_isCoreClr = RuntimeInformation.FrameworkDescription.StartsWith(".NET Core", StringComparison.OrdinalIgnoreCase)).Value;
+            return RuntimeInformation.OSArchitecture switch
+            {
+                Architecture.X86 => PlatformArchitecture.X86,
+                Architecture.X64 => PlatformArchitecture.X64,
+                Architecture.Arm => PlatformArchitecture.Arm,
+                Architecture.Arm64 => PlatformArchitecture.Arm64,
+#if NET5_0_OR_GREATER
+                Architecture.Wasm => PlatformArchitecture.Wasm,
+#endif
+                _ => PlatformArchitecture.Unknown,
+            };
         }
 
         public static bool IsUnix()
