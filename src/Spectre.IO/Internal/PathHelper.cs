@@ -9,8 +9,6 @@ namespace Spectre.IO.Internal
         private const char Slash = '/';
         private const string UncPrefix = @"\\";
 
-        private static readonly bool _isWindows = EnvironmentHelper.GetPlatformFamily() == PlatformFamily.Windows;
-
         public static string Combine(params string[] paths)
         {
             if (paths.Length == 0)
@@ -280,13 +278,10 @@ namespace Spectre.IO.Internal
                     }
                 }
 
-                if (_isWindows)
+                // Windows drive?
+                if (length >= 2 && path[1] == ':')
                 {
-                    // Windows drive?
-                    if (length >= 2 && path[1] == ':')
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 

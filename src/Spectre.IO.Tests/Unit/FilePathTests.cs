@@ -2,7 +2,6 @@
 using NSubstitute;
 using Shouldly;
 using Spectre.IO.Testing;
-using Spectre.IO.Testing.Xunit;
 using Xunit;
 
 namespace Spectre.IO.Tests.Unit.IO
@@ -26,7 +25,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 path.HasExtension.ShouldBe(expected);
             }
 
-            [WindowsTheory]
+            [Theory]
             [InlineData("C:/foo/bar/baz.txt", true)]
             [InlineData("C:/foo/bar/baz", false)]
             [InlineData("C:/foo/bar.baz/qux", false)]
@@ -65,7 +64,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 result.ShouldBe(expected);
             }
 
-            [WindowsTheory]
+            [Theory]
             [InlineData("C:/foo/bar/baz.txt", ".txt")]
             [InlineData("C:/foo/bar/baz.txt/qux.md", ".md")]
             [InlineData("C:/foo/bar/baz.txt/qux.md.rs", ".rs")]
@@ -109,7 +108,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 result.FullPath.ShouldBe(expected);
             }
 
-            [WindowsTheory]
+            [Theory]
             [InlineData("C:/foo/bar/baz.txt", "C:/foo/bar/baz")]
             [InlineData("C:/foo/bar/baz.txt/qux.md", "C:/foo/bar/baz.txt/qux")]
             [InlineData("C:/foo/bar/baz.txt/qux.md.rs", "C:/foo/bar/baz.txt/qux.md")]
@@ -149,7 +148,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 result.FullPath.ShouldBe(expected);
             }
 
-            [WindowsTheory]
+            [Theory]
             [InlineData("C:/temp/hello.txt", "C:/temp")]
             [InlineData(@"\\temp\hello.txt", @"\\temp")]
             public void Can_Get_Directory_For_Windows_File_Path(string fullPath, string expected)
@@ -190,7 +189,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 result.FullPath.ShouldBe("/");
             }
 
-            [WindowsTheory]
+            [Theory]
             [InlineData("C:/hello.txt", "C:/")]
             [InlineData(@"\\hello.txt", @"\\")]
             public void Can_Get_Directory_For_Absolute_File_Path_In_Windows_Root(string fullPath, string expected)
@@ -227,7 +226,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 path.ToString().ShouldBe(expected);
             }
 
-            [WindowsTheory]
+            [Theory]
             [InlineData("C:/temp/hello.txt", ".dat", "C:/temp/hello.dat")]
             [InlineData("C:/temp/hello", ".dat", "C:/temp/hello.dat")]
             [InlineData("C:/", ".dat", "C:/.dat")]
@@ -278,7 +277,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 path.ToString().ShouldBe(expected);
             }
 
-            [WindowsTheory]
+            [Theory]
             [InlineData("C:/temp/hello.txt", ".dat", "C:/temp/hello.txt.dat")]
             [InlineData(@"\\temp\hello.txt", ".dat", @"\\temp\hello.txt.dat")]
             public void Can_Append_Extension_To_Windows_Path(string fullPath, string extension, string expected)
@@ -318,7 +317,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 result.FullPath.ShouldBe(expected);
             }
 
-            [WindowsTheory]
+            [Theory]
             [InlineData("C:/input/test.txt", "test.txt")]
             [InlineData("C:/input/test.foo.txt", "test.foo.txt")]
             [InlineData("C:/input/test", "test")]
@@ -367,7 +366,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 result.FullPath.ShouldBe(expected);
             }
 
-            [WindowsTheory]
+            [Theory]
             [InlineData("C:/input/test.txt", "test")]
             [InlineData("C:/input/test.foo.txt", "test.foo")]
             [InlineData("C:/input/test", "test")]
@@ -442,7 +441,7 @@ namespace Spectre.IO.Tests.Unit.IO
                     result.FullPath.ShouldBe(expected);
                 }
 
-                [WindowsTheory]
+                [Theory]
                 [InlineData("C:/foo/bar.txt")]
                 [InlineData(@"\\foo\bar.txt")]
                 public void Should_Create_New_Absolute_Windows_Path_Identical_To_The_Path(string expected)
@@ -558,7 +557,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 path.FullPath.ShouldBe("hello/world/foo.txt");
             }
 
-            [WindowsFact]
+            [Fact]
             public void Should_Collapse_Path_With_Windows_Root()
             {
                 // Given, When
@@ -578,7 +577,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 path.FullPath.ShouldBe("/hello/world/foo.txt");
             }
 
-            [WindowsFact]
+            [Fact]
             public void Should_Stop_Collapsing_When_Windows_Root_Is_Reached()
             {
                 // Given, When
@@ -669,7 +668,7 @@ namespace Spectre.IO.Tests.Unit.IO
             {
                 public sealed class InWindowsFormat
                 {
-                    [WindowsTheory]
+                    [Theory]
                     [InlineData("C:/A/B/C/hello.txt", "C:/A/B/C", ".")]
                     [InlineData("C:/hello.txt", "C:/", ".")]
                     [InlineData("C:/A/B/C/hello.txt", "C:/A/D/E", "../../D/E")]
@@ -694,7 +693,7 @@ namespace Spectre.IO.Tests.Unit.IO
                         relativePath.FullPath.ShouldBe(expected);
                     }
 
-                    [WindowsTheory]
+                    [Theory]
                     [InlineData("C:/A/B/C/hello.txt", "D:/A/B/C")]
                     [InlineData("C:/A/B/hello.txt", "D:/E/")]
                     [InlineData("C:/hello.txt", "B:/")]
@@ -714,7 +713,7 @@ namespace Spectre.IO.Tests.Unit.IO
                             .And().Message.ShouldBe("Paths must share a common prefix.");
                     }
 
-                    [WindowsFact]
+                    [Fact]
                     public void Should_Throw_If_Target_DirectoryPath_Is_Null()
                     {
                         // Given
@@ -728,7 +727,7 @@ namespace Spectre.IO.Tests.Unit.IO
                             .And().ParamName.ShouldBe("to");
                     }
 
-                    [WindowsFact]
+                    [Fact]
                     public void Should_Throw_If_Source_DirectoryPath_Is_Relative()
                     {
                         // Given
@@ -742,7 +741,7 @@ namespace Spectre.IO.Tests.Unit.IO
                             .And().Message.ShouldBe("Source path must be an absolute path.");
                     }
 
-                    [WindowsTheory]
+                    [Theory]
                     [InlineData("C:/A/B/C/hello.txt")]
                     [InlineData(@"\\A\B\C\hello.txt")]
                     public void Should_Throw_If_Target_DirectoryPath_Is_Relative(string input)
@@ -845,7 +844,7 @@ namespace Spectre.IO.Tests.Unit.IO
             {
                 public sealed class InWindowsFormat
                 {
-                    [WindowsTheory]
+                    [Theory]
                     [InlineData("C:/A/B/C/hello.txt", "C:/A/B/C/hello.txt", "hello.txt")]
                     [InlineData("C:/hello.txt", "C:/hello.txt", "hello.txt")]
                     [InlineData("C:/hello.txt", "C:/world.txt", "world.txt")]
@@ -872,7 +871,7 @@ namespace Spectre.IO.Tests.Unit.IO
                         relativePath.FullPath.ShouldBe(expected);
                     }
 
-                    [WindowsTheory]
+                    [Theory]
                     [InlineData("C:/A/B/C/hello.txt", "D:/A/B/C/hello.txt")]
                     [InlineData("C:/A/B/hello.txt", "D:/E/hello.txt")]
                     [InlineData("C:/hello.txt", "B:/hello.txt")]
@@ -892,7 +891,7 @@ namespace Spectre.IO.Tests.Unit.IO
                             .And().Message.ShouldBe("Paths must share a common prefix.");
                     }
 
-                    [WindowsFact]
+                    [Fact]
                     public void Should_Throw_If_Target_FilePath_Is_Null()
                     {
                         // Given
@@ -906,7 +905,7 @@ namespace Spectre.IO.Tests.Unit.IO
                             .And().ParamName.ShouldBe("to");
                     }
 
-                    [WindowsFact]
+                    [Fact]
                     public void Should_Throw_If_Source_DirectoryPath_Is_Relative()
                     {
                         // Given
@@ -920,7 +919,7 @@ namespace Spectre.IO.Tests.Unit.IO
                             .And().Message.ShouldBe("Source path must be an absolute path.");
                     }
 
-                    [WindowsTheory]
+                    [Theory]
                     [InlineData("C:/A/B/C/hello.txt")]
                     [InlineData(@"\\A\B\C\hello.txt")]
                     public void Should_Throw_If_Target_FilePath_Is_Relative(string input)

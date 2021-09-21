@@ -1,5 +1,4 @@
 ﻿using Shouldly;
-using Spectre.IO.Testing.Xunit;
 using Spectre.IO.Tests.Fixtures;
 using Xunit;
 
@@ -7,7 +6,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
 {
     public sealed class UncGlobberTests
     {
-        [WindowsFact]
+        [Fact]
         public void Should_Return_Files_And_Folders_For_Pattern_Ending_With_Wildcard()
         {
             // Given
@@ -35,7 +34,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\Server\Bar\Qux.h");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Throw_If_No_Share_Name_Has_Been_Specified()
         {
             // Given
@@ -49,7 +48,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.Message.ShouldBe(@"The pattern '\\' has no server part specified.");
         }
 
-        [WindowsTheory]
+        [Theory]
         [InlineData(@"\\fo?")]
         [InlineData(@"\\fo*")]
         [InlineData(@"\\fo?\bar")]
@@ -67,7 +66,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.Message.ShouldBe($"The pattern '{input}' has an invalid server part specified.");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Can_Traverse_Recursively()
         {
             // Given
@@ -85,7 +84,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\Server\Bar\Qux.c");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Be_Able_To_Visit_Parent_Using_Double_Dots()
         {
             // Given
@@ -99,7 +98,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\Server\Foo\Bar\Qux.c");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Return_Single_Path_For_Absolute_File_Path_Without_Glob_Pattern()
         {
             // Given
@@ -113,7 +112,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\Server\Foo\Bar\Qux.c");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Return_Single_Path_For_Absolute_Directory_Path_Without_Glob_Pattern()
         {
             // Given
@@ -127,7 +126,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainDirectoryPath(@"\\Server\Foo\Bar");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Return_Files_And_Folders_For_Pattern_Containing_Wildcard()
         {
             // Given
@@ -142,7 +141,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\Server\Foo\Baz\Qux.c");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Return_Files_And_Folders_For_Pattern_Ending_With_Character_Wildcard()
         {
             // Given
@@ -157,7 +156,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\Server\Foo\Bar\Qex.c");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Return_Files_And_Folders_For_Pattern_Containing_Character_Wildcard()
         {
             // Given
@@ -172,7 +171,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\Server\Foo\Baz\Qux.c");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Return_Files_For_Pattern_Ending_With_Character_Wildcard_And_Dot()
         {
             // Given
@@ -187,7 +186,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\Server\Bar.Qux.Test.dll");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Return_File_For_Recursive_Wildcard_Pattern_Ending_With_Wildcard_Regex()
         {
             // Given
@@ -205,7 +204,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\Server\Bar\Qux.c");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Return_Only_Folders_For_Pattern_Ending_With_Recursive_Wildcard()
         {
             // Given
@@ -224,7 +223,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainDirectoryPath(@"\\Server\Bar");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Include_Files_In_Root_Folder_When_Using_Recursive_Wildcard()
         {
             // Given
@@ -238,7 +237,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\Foo\Bar.baz");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Include_Folder_In_Root_Folder_When_Using_Recursive_Wildcard()
         {
             // Given
@@ -252,7 +251,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainDirectoryPath(@"\\Foo\Bar");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Parse_Glob_Expressions_With_Parenthesis_In_Them()
         {
             // Given
@@ -266,7 +265,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\Foo (Bar)\Baz.c");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Parse_Glob_Expressions_With_AtSign_In_Them()
         {
             // Given
@@ -280,7 +279,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\Foo@Bar\Baz.c");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Parse_Glob_Expressions_With_Relative_Directory_Not_At_The_Beginning()
         {
             // Given
@@ -295,7 +294,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\Server\Bar.Qux.Test.dll");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Parse_Glob_Expressions_With_Unicode_Characters_And_Ending_With_Identifier()
         {
             // Given
@@ -309,7 +308,7 @@ namespace Spectre.IO.Tests.Unit.IO.Globbing
             result.ShouldContainFilePath(@"\\嵌套\目录\文件.延期");
         }
 
-        [WindowsFact]
+        [Fact]
         public void Should_Parse_Glob_Expressions_With_Unicode_Characters_And_Not_Ending_With_Identifier()
         {
             // Given

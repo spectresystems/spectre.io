@@ -1,5 +1,4 @@
 ﻿using Shouldly;
-using Spectre.IO.Testing.Xunit;
 using Xunit;
 
 namespace Spectre.IO.Tests.Unit.IO
@@ -212,7 +211,7 @@ namespace Spectre.IO.Tests.Unit.IO
                 path.IsRelative.ShouldBeFalse();
             }
 
-            [WindowsTheory]
+            [Theory]
             [InlineData("c:/assets/shaders", false)]
             [InlineData("c:/assets/shaders/basic.frag", false)]
             [InlineData("c:/", false)]
