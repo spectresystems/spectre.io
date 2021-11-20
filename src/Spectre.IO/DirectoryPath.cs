@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Spectre.IO.Internal;
 
 namespace Spectre.IO
@@ -10,12 +11,21 @@ namespace Spectre.IO
     public sealed class DirectoryPath : Path
     {
         /// <summary>
+        /// Gets a value indicating whether or not the current
+        /// path is considered to be a root.
+        /// </summary>
+        public bool IsRoot { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DirectoryPath"/> class.
         /// </summary>
         /// <param name="path">The path.</param>
         public DirectoryPath(string path)
             : base(path)
         {
+            IsRoot = PathHelper.IsPathRooted(FullPath)
+                && ((IsUNC && Segments.Count == 2)
+                    || (Segments.Count == 1));
         }
 
         /// <summary>
@@ -46,6 +56,33 @@ namespace Spectre.IO
             }
 
             return new FilePath(PathHelper.Combine(FullPath, path.GetFilename().FullPath));
+        }
+
+        /// <summary>
+        /// Gets the parent directory.
+        /// </summary>
+        /// <returns>The parent directory, or <c>null</c> if none.</returns>
+        public DirectoryPath? GetParent()
+        {
+            if (IsRoot)
+            {
+                return null;
+            }
+
+            var seg = Segments.Take(Segments.Count - 1);
+            if (IsUNC)
+            {
+                // Skip the root
+                seg = seg.Skip(1);
+            }
+
+            var path = string.Join(Separator.ToString(), seg);
+            if (IsUNC)
+            {
+                path = string.Concat("\\\\", path);
+            }
+
+            return new DirectoryPath(path);
         }
 
         /// <summary>

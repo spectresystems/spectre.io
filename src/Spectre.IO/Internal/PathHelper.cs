@@ -5,9 +5,9 @@ namespace Spectre.IO.Internal
 {
     internal static class PathHelper
     {
-        private const char Backslash = '\\';
-        private const char Slash = '/';
-        private const string UncPrefix = @"\\";
+        public const char Backslash = '\\';
+        public const char Slash = '/';
+        public const string UncPrefix = @"\\";
 
         public static string Combine(params string[] paths)
         {

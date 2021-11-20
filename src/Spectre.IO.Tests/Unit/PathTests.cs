@@ -231,6 +231,7 @@ namespace Spectre.IO.Tests.Unit.IO
             [Theory]
             [InlineData("foo/bar")]
             [InlineData(@"\\foo\bar")]
+            [InlineData(@"\\foo")]
             public void Should_Return_The_Full_Path(string expected)
             {
                 // Given, When

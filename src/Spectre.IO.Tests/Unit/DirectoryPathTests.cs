@@ -29,6 +29,44 @@ namespace Spectre.IO.Tests.Unit.IO
             }
         }
 
+        public sealed class TheGetParentMethod
+        {
+            [Theory]
+            [InlineData("C:/Data", "C:/")]
+            [InlineData("C:/Data/Work", "C:/Data")]
+            [InlineData("C:/Data/Work/Other", "C:/Data/Work")]
+            [InlineData(@"\\Data\Work", @"\\Data")]
+            [InlineData(@"\\Data\Work\Other", @"\\Data\Work")]
+            public void Should_Return_Parent(string directoryPath, string parent)
+            {
+                // Given
+                var path = new DirectoryPath(directoryPath);
+
+                // When
+                var result = path.GetParent();
+
+                // Then
+                result.FullPath.ShouldBe(parent);
+            }
+
+            [Theory]
+            [InlineData(@"\\")]
+            [InlineData(@"\\Data")]
+            [InlineData("C:/")]
+            [InlineData("C:")]
+            public void Should_Return_Null_For_Root_Paths(string directoryPath)
+            {
+                // Given
+                var path = new DirectoryPath(directoryPath);
+
+                // When
+                var result = path.GetParent();
+
+                // Then
+                result.ShouldBeNull();
+            }
+        }
+
         public sealed class TheGetFilePathMethod
         {
             [Fact]
