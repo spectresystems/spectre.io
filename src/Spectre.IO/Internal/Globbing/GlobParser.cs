@@ -115,7 +115,7 @@ namespace Spectre.IO.Internal
             if (context.CurrentToken?.Kind == GlobTokenKind.Wildcard)
             {
                 var next = context.Peek();
-                if (next != null && next.Kind == GlobTokenKind.Wildcard)
+                if (next?.Kind == GlobTokenKind.Wildcard)
                 {
                     context.Accept(GlobTokenKind.Wildcard);
                     context.Accept(GlobTokenKind.Wildcard);

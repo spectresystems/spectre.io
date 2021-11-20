@@ -49,7 +49,10 @@ namespace Spectre.IO.Internal
                         accumulator.Add(queue.Dequeue());
                     }
 
-                    result.Add(new GlobToken(GlobTokenKind.Text, string.Join(string.Empty, accumulator.Select(i => i.Value))));
+                    result.Add(
+                        new GlobToken(
+                            GlobTokenKind.Text,
+                            string.Concat(accumulator.Select(i => i.Value))));
                 }
                 else
                 {

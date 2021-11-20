@@ -152,7 +152,6 @@ namespace Spectre.IO
         /// <param name="collection">The collection.</param>
         /// <param name="path">The path to remove.</param>
         /// <returns>A new <see cref="DirectoryPathCollection"/> that do not contain the provided path.</returns>
-        [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
         public static DirectoryPathCollection operator -(DirectoryPathCollection collection, DirectoryPath path)
         {
             if (collection == null)
