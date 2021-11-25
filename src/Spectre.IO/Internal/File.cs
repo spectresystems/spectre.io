@@ -90,7 +90,7 @@ namespace Spectre.IO.Internal
             }
 
 #if NET6_0_OR_GREATER
-            System.IO.File.CreateSymbolicLink(Path.FullPath, destination.FullPath);
+            System.IO.File.CreateSymbolicLink(destination.FullPath, Path.FullPath);
 #else
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
