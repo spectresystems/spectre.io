@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿#if !NET6_0_OR_GREATER
+using System.Runtime.InteropServices;
 
 namespace Spectre.IO.Internal
 {
@@ -14,3 +15,4 @@ namespace Spectre.IO.Internal
         public static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
     }
 }
+#endif
