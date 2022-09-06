@@ -149,7 +149,7 @@ namespace Spectre.IO.Testing
             }
         }
 
-        public void DeleteFile(FakeFile file)
+        public bool DeleteFile(FakeFile file)
         {
             if (!file.Exists)
             {
@@ -161,18 +161,23 @@ namespace Spectre.IO.Testing
                 throw new IOException($"Cannot delete readonly file '{file.Path.FullPath}'.");
             }
 
+            var result = false;
+
             // Find the directory.
             var directory = FindDirectory(file.Path.GetDirectory());
             if (directory != null)
             {
                 // Remove the file from the directory.
                 directory.Content.Remove(file);
+                result = true;
             }
 
             // Reset all properties.
             file.Exists = false;
             file.Content = new byte[4096];
             file.ContentLength = 0;
+
+            return result;
         }
 
         public FakeDirectory? FindDirectory(DirectoryPath path)
@@ -273,7 +278,7 @@ namespace Spectre.IO.Testing
 
             // Already exists?
             var destinationFile = FindFile(destination);
-            if (destinationFile != null)
+            if (destinationFile?.Exists == true)
             {
                 const string format = "{0} exists. Cannot create symbolic link.";
                 var message = string.Format(CultureInfo.InvariantCulture, format, destination.FullPath);

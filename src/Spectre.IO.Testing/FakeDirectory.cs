@@ -46,7 +46,7 @@ namespace Spectre.IO.Testing
         }
 
         /// <inheritdoc/>
-        public void Move(DirectoryPath destination)
+        public IDirectory Move(DirectoryPath destination)
         {
             if (destination is null)
             {
@@ -54,6 +54,7 @@ namespace Spectre.IO.Testing
             }
 
             _tree.MoveDirectory(this, destination);
+            return _tree.FindDirectory(destination) ?? new FakeDirectory(_tree, destination);
         }
 
         /// <inheritdoc/>

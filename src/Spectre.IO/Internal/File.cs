@@ -37,17 +37,18 @@ namespace Spectre.IO.Internal
             _file = new FileInfo(path.FullPath);
         }
 
-        public void Copy(FilePath destination, bool overwrite)
+        public IFile Copy(FilePath destination, bool overwrite)
         {
             if (destination == null)
             {
                 throw new ArgumentNullException(nameof(destination));
             }
 
-            _file.CopyTo(destination.FullPath, overwrite);
+            var result = _file.CopyTo(destination.FullPath, overwrite);
+            return new File(result.FullName);
         }
 
-        public void Move(FilePath destination)
+        public IFile Move(FilePath destination)
         {
             if (destination == null)
             {
@@ -55,6 +56,7 @@ namespace Spectre.IO.Internal
             }
 
             _file.MoveTo(destination.FullPath);
+            return new File(destination.FullPath);
         }
 
         public void Delete()

@@ -22,7 +22,8 @@ namespace Spectre.IO
         /// Moves the directory to the specified destination path.
         /// </summary>
         /// <param name="destination">The destination path.</param>
-        void Move(DirectoryPath destination);
+        /// <returns>A <see cref="IDirectory"/> representing the moved directory.</returns>
+        IDirectory Move(DirectoryPath destination);
 
         /// <summary>
         /// Deletes the directory.

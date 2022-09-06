@@ -70,7 +70,7 @@ namespace Spectre.IO.Testing
         }
 
         /// <inheritdoc/>
-        public void Copy(FilePath destination, bool overwrite)
+        public IFile Copy(FilePath destination, bool overwrite)
         {
             if (destination is null)
             {
@@ -78,6 +78,7 @@ namespace Spectre.IO.Testing
             }
 
             _tree.CopyFile(this, destination, overwrite);
+            return _tree.FindFile(destination) ?? new FakeFile(_tree, destination);
         }
 
         /// <inheritdoc/>
@@ -92,9 +93,10 @@ namespace Spectre.IO.Testing
         }
 
         /// <inheritdoc/>
-        public void Move(FilePath destination)
+        public IFile Move(FilePath destination)
         {
             _tree.MoveFile(this, destination);
+            return _tree.FindFile(destination) ?? new FakeFile(_tree, destination);
         }
 
         /// <inheritdoc/>

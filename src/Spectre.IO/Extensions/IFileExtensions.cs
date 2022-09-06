@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Spectre.IO
@@ -73,6 +74,67 @@ namespace Spectre.IO
             }
 
             return file.Open(FileMode.Create, FileAccess.Write, FileShare.None);
+        }
+
+        /// <summary>
+        /// Tries copying the file to the specified destination path.
+        /// </summary>
+        /// <param name="file">The file to move.</param>
+        /// <param name="destination">The destination path.</param>
+        /// <param name="overwrite">Will overwrite existing destination file if set to <c>true</c>.</param>
+        /// <param name="result">The result if the operation succeeded, otherwise <c>null</c>.</param>
+        /// <returns>Whether or not the operation succeeded.</returns>
+        public static bool TryCopy(this IFile file, FilePath destination, bool overwrite, out IFile? result)
+        {
+            try
+            {
+                result = file.Copy(destination, overwrite);
+                return result.Exists;
+            }
+            catch
+            {
+                result = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tries moving the file to the specified destination path.
+        /// </summary>
+        /// <param name="file">The file to move.</param>
+        /// <param name="destination">The destination path.</param>
+        /// <param name="result">The result if the operation succeeded, otherwise <c>null</c>.</param>
+        /// <returns>Whether or not the operation succeeded.</returns>
+        public static bool TryMove(this IFile file, FilePath destination, [NotNullWhen(true)] out IFile? result)
+        {
+            try
+            {
+                result = file.Move(destination);
+                return result.Exists;
+            }
+            catch
+            {
+                result = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tries deleting the file to the specified destination path.
+        /// </summary>
+        /// <param name="file">The file to delete.</param>
+        /// <returns>Whether or not the operation succeeded.</returns>
+        public static bool TryDelete(this IFile file)
+        {
+            try
+            {
+                file.Delete();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Spectre.IO.Internal
             _directory.Create();
         }
 
-        public void Move(DirectoryPath destination)
+        public IDirectory Move(DirectoryPath destination)
         {
             if (destination == null)
             {
@@ -38,6 +38,7 @@ namespace Spectre.IO.Internal
             }
 
             _directory.MoveTo(destination.FullPath);
+            return new Directory(destination.FullPath);
         }
 
         public void Delete(bool recursive)
