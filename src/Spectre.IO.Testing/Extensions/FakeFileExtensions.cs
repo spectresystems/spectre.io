@@ -10,6 +10,23 @@ namespace Spectre.IO.Testing
     public static class FakeFileExtensions
     {
         /// <summary>
+        /// Sets the last write time of the provided file.
+        /// </summary>
+        /// <param name="file">The file.</param>
+        /// <param name="lastWriteTime">The last write time.</param>
+        /// <returns>The same <see cref="FakeFile"/> instance so that multiple calls can be chained.</returns>
+        public static FakeFile SetLastWriteTime(this FakeFile file, DateTime lastWriteTime)
+        {
+            if (file == null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
+            file.LastWriteTime = lastWriteTime;
+            return file;
+        }
+
+        /// <summary>
         /// Sets the content of the provided file.
         /// </summary>
         /// <param name="file">The file.</param>

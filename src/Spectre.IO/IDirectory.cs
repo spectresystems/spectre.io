@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Spectre.IO
 {
@@ -12,6 +13,11 @@ namespace Spectre.IO
         /// </summary>
         /// <value>The path.</value>
         new DirectoryPath Path { get; }
+
+        /// <summary>
+        /// Gets the last write time.
+        /// </summary>
+        public DateTime LastWriteTime { get; }
 
         /// <summary>
         /// Creates the directory.

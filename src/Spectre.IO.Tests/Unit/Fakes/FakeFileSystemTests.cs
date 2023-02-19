@@ -1,4 +1,5 @@
-﻿using Shouldly;
+﻿using System;
+using Shouldly;
 using Spectre.IO.Testing;
 using Xunit;
 
@@ -41,6 +42,42 @@ namespace Spectre.IO.Tests.Unit.Fakes
 
             // Then
             result.ShouldBe("LOL");
+        }
+
+        [Fact]
+        public void Should_Return_Last_Write_Time_Of_File()
+        {
+            // Given
+            var environment = new FakeEnvironment(PlatformFamily.Linux);
+            var fileSystem = new FakeFileSystem(environment);
+            fileSystem.CreateDirectory("/home/Patrik");
+            fileSystem.CreateFile("/home/Patrik/test.txt")
+                .SetTextContent("LOL")
+                .SetLastWriteTime(new DateTime(2023, 02, 19, 10, 41, 31));
+
+            // When
+            var result = fileSystem.GetFakeFile("/home/Patrik/test.txt")
+                .LastWriteTime;
+
+            // Then
+            result.ShouldBe(new DateTime(2023, 02, 19, 10, 41, 31));
+        }
+
+        [Fact]
+        public void Should_Return_Last_Write_Time_Of_Directory()
+        {
+            // Given
+            var environment = new FakeEnvironment(PlatformFamily.Linux);
+            var fileSystem = new FakeFileSystem(environment);
+            fileSystem.CreateDirectory("/home/Patrik")
+                .SetLastWriteTime(new DateTime(2023, 02, 19, 10, 41, 31));
+
+            // When
+            var result = fileSystem.GetFakeDirectory("/home/Patrik")
+                .LastWriteTime;
+
+            // Then
+            result.ShouldBe(new DateTime(2023, 02, 19, 10, 41, 31));
         }
     }
 }

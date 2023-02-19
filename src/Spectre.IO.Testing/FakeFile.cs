@@ -34,7 +34,7 @@ namespace Spectre.IO.Testing
         public long Length { get; private set; }
 
         /// <inheritdoc/>
-        public DateTime LastWritetime { get; set; }
+        public DateTime LastWriteTime { get; set; }
 
         /// <inheritdoc/>
         public FileAttributes Attributes { get; set; }

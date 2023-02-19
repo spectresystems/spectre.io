@@ -29,7 +29,7 @@ namespace Spectre.IO
         /// <summary>
         /// Gets the last write time.
         /// </summary>
-        public DateTime LastWritetime { get; }
+        public DateTime LastWriteTime { get; }
 
         /// <summary>
         /// Copies the file to the specified destination path.

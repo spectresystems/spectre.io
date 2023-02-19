@@ -19,6 +19,9 @@ namespace Spectre.IO.Testing
         /// <inheritdoc/>
         public bool Hidden { get; internal set; }
 
+        /// <inheritdoc/>
+        public DateTime LastWriteTime { get; set; }
+
         /// <summary>
         /// Gets the path to the directory.
         /// </summary>
