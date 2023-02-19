@@ -1,9 +1,5 @@
 ﻿using System;
 using System.IO;
-#if !NET6_0_OR_GREATER
-using System.Runtime.InteropServices;
-using Mono.Unix.Native;
-#endif
 
 namespace Spectre.IO.Internal
 {
@@ -89,24 +85,7 @@ namespace Spectre.IO.Internal
                 throw new InvalidOperationException("Detination path cannot be relative");
             }
 
-#if NET6_0_OR_GREATER
             System.IO.File.CreateSymbolicLink(destination.FullPath, Path.FullPath);
-#else
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                if (!Win32.CreateSymbolicLink(destination.FullPath, Path.FullPath, Win32.SymbolicLink.File))
-                {
-                    throw new IOException($"Could not create symbolic link from {Path.FullPath} to {destination.FullPath}");
-                }
-            }
-            else
-            {
-                if (Syscall.symlink(Path.FullPath, destination.FullPath) != 0)
-                {
-                    throw new IOException($"Could not create symbolic link from {Path.FullPath} to {destination.FullPath}");
-                }
-            }
-#endif
         }
     }
 }

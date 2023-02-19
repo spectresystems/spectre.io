@@ -24,7 +24,6 @@ namespace Spectre.IO.Testing
             return directory;
         }
 
-
         /// <summary>
         /// Hides the specified directory.
         /// </summary>
