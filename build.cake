@@ -7,10 +7,10 @@ var configuration = Argument("configuration", "Release");
 Task("Build")
     .Does(context => 
 {
-    DotNetCoreBuild("./src/Spectre.IO.sln", new DotNetCoreBuildSettings {
+    DotNetBuild("./src/Spectre.IO.sln", new DotNetBuildSettings {
         Configuration = configuration,
         NoIncremental = context.HasArgument("rebuild"),
-        MSBuildSettings = new DotNetCoreMSBuildSettings()
+        MSBuildSettings = new DotNetMSBuildSettings()
             .TreatAllWarningsAs(MSBuildTreatAllWarningsAs.Error)
     });
 });
@@ -19,7 +19,7 @@ Task("Test")
     .IsDependentOn("Build")
     .Does(context => 
 {
-    DotNetCoreTest("./src/Spectre.IO.Tests/Spectre.IO.Tests.csproj", new DotNetCoreTestSettings {
+    DotNetTest("./src/Spectre.IO.Tests/Spectre.IO.Tests.csproj", new DotNetTestSettings {
         Configuration = configuration,
         NoRestore = true,
         NoBuild = true,
@@ -32,12 +32,12 @@ Task("Package")
 {
     context.CleanDirectory("./.artifacts");
 
-    context.DotNetCorePack($"./src/Spectre.IO.sln", new DotNetCorePackSettings {
+    context.DotNetPack($"./src/Spectre.IO.sln", new DotNetPackSettings {
         Configuration = configuration,
         NoRestore = true,
         NoBuild = true,
         OutputDirectory = "./.artifacts",
-        MSBuildSettings = new DotNetCoreMSBuildSettings()
+        MSBuildSettings = new DotNetMSBuildSettings()
             .TreatAllWarningsAs(MSBuildTreatAllWarningsAs.Error)
             .WithProperty("SymbolPackageFormat", "snupkg")
     });
@@ -57,7 +57,7 @@ Task("Publish-NuGet")
     foreach(var file in context.GetFiles("./.artifacts/*.nupkg")) 
     {
         context.Information("Publishing {0}...", file.GetFilename().FullPath);
-        DotNetCoreNuGetPush(file.FullPath, new DotNetCoreNuGetPushSettings
+        DotNetNuGetPush(file.FullPath, new DotNetNuGetPushSettings
         {
             Source = "https://api.nuget.org/v3/index.json",
             ApiKey = apiKey,
