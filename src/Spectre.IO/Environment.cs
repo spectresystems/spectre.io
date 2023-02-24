@@ -13,6 +13,11 @@ namespace Spectre.IO
     /// </summary>
     public sealed class Environment : IEnvironment
     {
+        /// <summary>
+        /// Gets the default <see cref="Environment"/> instance.
+        /// </summary>
+        public static Environment Shared { get; } = new Environment();
+
         /// <inheritdoc/>
         public DirectoryPath WorkingDirectory
         {
@@ -32,7 +37,7 @@ namespace Spectre.IO
         /// Initializes a new instance of the <see cref="Environment"/> class.
         /// </summary>
         public Environment()
-            : this(new Platform())
+            : this(Spectre.IO.Platform.Shared)
         {
         }
 

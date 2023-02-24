@@ -19,6 +19,11 @@ namespace Spectre.IO
         public bool Is64Bit => Architecture == PlatformArchitecture.X64;
 
         /// <summary>
+        /// Gets the default <see cref="Platform"/> instance.
+        /// </summary>
+        public static Platform Shared { get; } = new Platform();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Platform"/> class.
         /// </summary>
         public Platform()

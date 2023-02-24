@@ -5,6 +5,11 @@
     /// </summary>
     public sealed class FileSystem : IFileSystem
     {
+        /// <summary>
+        /// Gets the default <see cref="FileSystem"/> instance.
+        /// </summary>
+        public static FileSystem Shared { get; } = new FileSystem();
+
         /// <inheritdoc/>
         public IFileProvider File { get; }
 

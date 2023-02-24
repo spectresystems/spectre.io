@@ -30,13 +30,14 @@ Task("Package")
     .IsDependentOn("Test")
     .Does(context => 
 {
-    context.CleanDirectory("./.artifacts");
+    var outputPath = MakeAbsolute(Directory("./.artifacts"));
 
+    context.CleanDirectory(outputPath.FullPath);
     context.DotNetPack($"./src/Spectre.IO.sln", new DotNetPackSettings {
+        ArgumentCustomization = args => args.Append($"--property:PackageOutputPath={outputPath.FullPath}"),
         Configuration = configuration,
         NoRestore = true,
         NoBuild = true,
-        OutputDirectory = "./.artifacts",
         MSBuildSettings = new DotNetMSBuildSettings()
             .TreatAllWarningsAs(MSBuildTreatAllWarningsAs.Error)
             .WithProperty("SymbolPackageFormat", "snupkg")

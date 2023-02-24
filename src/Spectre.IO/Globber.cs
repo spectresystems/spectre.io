@@ -14,6 +14,11 @@ namespace Spectre.IO
         private readonly GlobVisitor _visitor;
 
         /// <summary>
+        /// Gets the default <see cref="Globber"/> instance.
+        /// </summary>
+        public static Globber Shared { get; } = new Globber(FileSystem.Shared, Environment.Shared);
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Globber"/> class.
         /// </summary>
         /// <param name="fileSystem">The file system.</param>
