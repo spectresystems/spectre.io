@@ -79,5 +79,32 @@ namespace Spectre.IO.Tests.Unit.Fakes
             // Then
             result.ShouldBe(new DateTime(2023, 02, 19, 10, 41, 31));
         }
+
+        [Fact]
+        public void Should_Dump_Correct_Data()
+        {
+            // Given
+            var environment = new FakeEnvironment(PlatformFamily.Linux);
+            var fileSystem = new FakeFileSystem(environment);
+            fileSystem.CreateDirectory("/home/Patrik");
+            fileSystem.CreateDirectory("/home/Vale");
+            fileSystem.CreateDirectory("/home/Ada");
+            fileSystem.CreateFile("/home/Vale/love.you");
+            fileSystem.CreateFile("/home/Ada/love.you");
+
+            // When
+            var result = fileSystem.ToString();
+
+            // Then
+            result.ShouldBe(
+                """
+                /home
+                    Ada
+                        love.you
+                    Vale
+                        love.you
+                    Patrik
+                """);
+        }
     }
 }

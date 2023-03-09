@@ -18,5 +18,10 @@
         {
             return _tree.FindDirectory(path) ?? new FakeDirectory(_tree, path);
         }
+
+        public string Dump()
+        {
+            return _tree.ToString();
+        }
     }
 }

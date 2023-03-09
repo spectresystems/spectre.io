@@ -40,6 +40,11 @@ namespace Spectre.IO
         /// </remarks>
         public string GetDirectoryName()
         {
+            if (Segments.Count == 0)
+            {
+                return string.Empty;
+            }
+
             return Segments[Segments.Count - 1];
         }
 

@@ -385,5 +385,41 @@ namespace Spectre.IO.Testing
                 directory.Exists = false;
             }
         }
+
+        public override string ToString()
+        {
+            var builder = new IndentedStringBuilder();
+            foreach (var child in _root.GetDirectories("*", SearchScope.Current))
+            {
+                Dump(builder, child);
+            }
+
+            return builder.ToString().Trim();
+        }
+
+        private void Dump(IndentedStringBuilder writer, FakeDirectory directory)
+        {
+            writer.AppendLine(directory.Path.GetDirectoryName());
+
+            using (writer.Indent())
+            {
+                var children = directory.GetDirectories("*", SearchScope.Current);
+                if (children.Count == 0)
+                {
+                    var files = directory.GetFiles("*", SearchScope.Current);
+                    foreach (var file in files)
+                    {
+                        writer.AppendLine(file.Path.GetFilename().FullPath);
+                    }
+                }
+                else
+                {
+                    foreach (var child in children)
+                    {
+                        Dump(writer, child);
+                    }
+                }
+            }
+        }
     }
 }

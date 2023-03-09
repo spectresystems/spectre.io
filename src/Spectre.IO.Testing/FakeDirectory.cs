@@ -67,9 +67,20 @@ namespace Spectre.IO.Testing
         }
 
         /// <inheritdoc/>
-        public IEnumerable<IDirectory> GetDirectories(string filter, SearchScope scope)
+        IEnumerable<IDirectory> IDirectory.GetDirectories(string filter, SearchScope scope)
         {
-            var result = new List<IDirectory>();
+            return GetDirectories(filter, scope);
+        }
+
+        /// <summary>
+        /// Gets directories matching the specified filter and scope.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <param name="scope">The search scope.</param>
+        /// <returns>Directories matching the filter and scope.</returns>
+        public List<FakeDirectory> GetDirectories(string filter, SearchScope scope)
+        {
+            var result = new List<FakeDirectory>();
             var stack = new Stack<FakeDirectory>();
             foreach (var child in Content.Directories.Values)
             {
@@ -110,9 +121,20 @@ namespace Spectre.IO.Testing
         }
 
         /// <inheritdoc/>
-        public IEnumerable<IFile> GetFiles(string filter, SearchScope scope)
+        IEnumerable<IFile> IDirectory.GetFiles(string filter, SearchScope scope)
         {
-            var result = new List<IFile>();
+            return GetFiles(filter, scope);
+        }
+
+        /// <summary>
+        /// Gets files matching the specified filter and scope.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <param name="scope">The search scope.</param>
+        /// <returns>Files matching the specified filter and scope.</returns>
+        public List<FakeFile> GetFiles(string filter, SearchScope scope)
+        {
+            var result = new List<FakeFile>();
             var stack = new Stack<FakeDirectory>();
 
             // Rewrite the filter to a regex expression.
@@ -154,7 +176,7 @@ namespace Spectre.IO.Testing
         {
         }
 
-        private static IEnumerable<FakeFile> GetFiles(FakeDirectory current, Regex expression)
+        private static List<FakeFile> GetFiles(FakeDirectory current, Regex expression)
         {
             var result = new List<FakeFile>();
             foreach (var file in current.Content.Files)

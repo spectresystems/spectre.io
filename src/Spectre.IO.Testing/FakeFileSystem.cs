@@ -153,5 +153,11 @@ namespace Spectre.IO.Testing
 
             return directory;
         }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return _directoryProvider.Dump();
+        }
     }
 }
