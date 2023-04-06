@@ -75,7 +75,7 @@ using Spectre.IO.Testing;
 public void Should_Return_False_If_Hello_File_Exists_But_Contains_The_Word_Goodbye()
 {
     // Given
-    var environment = FakeEnvironment.CreateUnixEnvironment();
+    var environment = FakeEnvironment.CreateLinuxEnvironment();
     var filesystem = new FakeFileSystem(environment);
     var globber = new Globber(filesystem, environment);
     var checker = new Checker(filesystem, environment, globber);
