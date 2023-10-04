@@ -42,14 +42,14 @@ namespace Spectre.IO.Internal
             return new File(result.FullName);
         }
 
-        public IFile Move(FilePath destination)
+        public IFile Move(FilePath destination, bool overwrite)
         {
             if (destination == null)
             {
                 throw new ArgumentNullException(nameof(destination));
             }
 
-            _file.MoveTo(destination.FullPath);
+            _file.MoveTo(destination.FullPath, overwrite);
             return new File(destination.FullPath);
         }
 

@@ -35,6 +35,13 @@ namespace Spectre.IO
         /// Copies the file to the specified destination path.
         /// </summary>
         /// <param name="destination">The destination path.</param>
+        /// <returns>A <see cref="IFile"/> representing the copied file.</returns>
+        IFile Copy(FilePath destination) => Copy(destination, false);
+
+        /// <summary>
+        /// Copies the file to the specified destination path.
+        /// </summary>
+        /// <param name="destination">The destination path.</param>
         /// <param name="overwrite">Will overwrite existing destination file if set to <c>true</c>.</param>
         /// <returns>A <see cref="IFile"/> representing the copied file.</returns>
         IFile Copy(FilePath destination, bool overwrite);
@@ -50,7 +57,15 @@ namespace Spectre.IO
         /// </summary>
         /// <param name="destination">The destination path.</param>
         /// <returns>A <see cref="IFile"/> representing the moved file.</returns>
-        IFile Move(FilePath destination);
+        IFile Move(FilePath destination) => Move(destination, false);
+
+        /// <summary>
+        /// Moves the file to the specified destination path.
+        /// </summary>
+        /// <param name="destination">The destination path.</param>
+        /// <param name="overwrite">Will overwrite existing destination file if set to <c>true</c>.</param>
+        /// <returns>A <see cref="IFile"/> representing the moved file.</returns>
+        IFile Move(FilePath destination, bool overwrite);
 
         /// <summary>
         /// Deletes the file.

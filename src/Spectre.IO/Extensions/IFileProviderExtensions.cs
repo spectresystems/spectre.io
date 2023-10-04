@@ -129,13 +129,25 @@ namespace Spectre.IO
         /// <param name="destination">The destination file path.</param>
         public static void Move(this IFileProvider provider, FilePath source, FilePath destination)
         {
+            Move(provider, source, destination, false);
+        }
+
+        /// <summary>
+        /// Moves the file to the specified destination path.
+        /// </summary>
+        /// <param name="provider">The file provider.</param>
+        /// <param name="source">The source file path.</param>
+        /// <param name="destination">The destination file path.</param>
+        /// <param name="overwrite">Will overwrite existing destination file if set to <c>true</c>.</param>
+        public static void Move(this IFileProvider provider, FilePath source, FilePath destination, bool overwrite)
+        {
             if (provider is null)
             {
                 throw new ArgumentNullException(nameof(provider));
             }
 
             var file = provider.Retrieve(source);
-            file.Move(destination);
+            file.Move(destination, overwrite);
         }
 
         /// <summary>

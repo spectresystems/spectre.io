@@ -304,10 +304,10 @@ namespace Spectre.IO.Testing
             }
         }
 
-        public void MoveFile(FakeFile fakeFile, FilePath destination)
+        public void MoveFile(FakeFile fakeFile, FilePath destination, bool overwrite = false)
         {
             // Copy the file to the new location.
-            CopyFile(fakeFile, destination, false);
+            CopyFile(fakeFile, destination, overwrite);
 
             // Delete the original file.
             fakeFile.Delete();

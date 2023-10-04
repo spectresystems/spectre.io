@@ -93,9 +93,9 @@ namespace Spectre.IO.Testing
         }
 
         /// <inheritdoc/>
-        public IFile Move(FilePath destination)
+        public IFile Move(FilePath destination, bool overwrite)
         {
-            _tree.MoveFile(this, destination);
+            _tree.MoveFile(this, destination, overwrite);
             return _tree.FindFile(destination) ?? new FakeFile(_tree, destination);
         }
 

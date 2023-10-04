@@ -107,9 +107,22 @@ namespace Spectre.IO
         /// <returns>Whether or not the operation succeeded.</returns>
         public static bool TryMove(this IFile file, FilePath destination, [NotNullWhen(true)] out IFile? result)
         {
+            return TryMove(file, destination, false, out result);
+        }
+
+        /// <summary>
+        /// Tries moving the file to the specified destination path.
+        /// </summary>
+        /// <param name="file">The file to move.</param>
+        /// <param name="destination">The destination path.</param>
+        /// <param name="overwrite">Will overwrite existing destination file if set to <c>true</c>.</param>
+        /// <param name="result">The result if the operation succeeded, otherwise <c>null</c>.</param>
+        /// <returns>Whether or not the operation succeeded.</returns>
+        public static bool TryMove(this IFile file, FilePath destination, bool overwrite, [NotNullWhen(true)] out IFile? result)
+        {
             try
             {
-                result = file.Move(destination);
+                result = file.Move(destination, overwrite);
                 return result.Exists;
             }
             catch
