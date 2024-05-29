@@ -8,7 +8,7 @@ namespace Spectre.IO
     /// <summary>
     /// Compares <see cref="Path"/> instances.
     /// </summary>
-    public sealed class PathComparer : IEqualityComparer<Path?>
+    public sealed class PathComparer : IEqualityComparer<Path?>, IComparer<Path?>
     {
         /// <summary>
         /// Gets the default path comparer.
@@ -45,6 +45,36 @@ namespace Spectre.IO
             }
 
             IsCaseSensitive = environment.Platform.IsUnix();
+        }
+
+        /// <inheritdoc/>
+        public int Compare(Path? x, Path? y)
+        {
+            if (x == null && y == null)
+            {
+                return 0;
+            }
+
+            if (x != null && y == null)
+            {
+                return -1;
+            }
+
+            if (x == null && y != null)
+            {
+                return 1;
+            }
+
+            if (IsCaseSensitive)
+            {
+                return StringComparer.Ordinal.Compare(
+                    x!.FullPath,
+                    y!.FullPath);
+            }
+
+            return StringComparer.OrdinalIgnoreCase.Compare(
+                x!.FullPath,
+                y!.FullPath);
         }
 
         /// <inheritdoc/>

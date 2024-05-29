@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 using Shouldly;
 using Spectre.IO.Internal;
 using Xunit;
@@ -88,7 +91,8 @@ namespace Spectre.IO.Tests.Unit.IO
             [Theory]
             [InlineData(true, false)]
             [InlineData(false, true)]
-            public void Same_Paths_But_Different_Casing_Are_Considered_Equal_Depending_On_Case_Sensitivity(bool isCaseSensitive, bool expected)
+            public void Same_Paths_But_Different_Casing_Are_Considered_Equal_Depending_On_Case_Sensitivity(
+                bool isCaseSensitive, bool expected)
             {
                 // Given, When
                 var comparer = new PathComparer(isCaseSensitive);
@@ -98,6 +102,31 @@ namespace Spectre.IO.Tests.Unit.IO
                 // Then
                 comparer.Equals(first, second).ShouldBe(expected);
                 comparer.Equals(second, first).ShouldBe(expected);
+            }
+        }
+
+        public sealed class TheCompareMethod
+        {
+            [Fact]
+            public void Should_Sort_Paths()
+            {
+                // Given
+                var paths = new List<FilePath>
+                {
+                    new("foo/bar/qux"),
+                    new("foo/bar/baz"),
+                    new("foo/bar"),
+                };
+
+                // When
+                var result = paths
+                    .Order(new PathComparer(isCaseSensitive: false))
+                    .ToList();
+
+                // Then
+                result[0].FullPath.ShouldBe("foo/bar");
+                result[1].FullPath.ShouldBe("foo/bar/baz");
+                result[2].FullPath.ShouldBe("foo/bar/qux");
             }
         }
 
@@ -156,7 +185,8 @@ namespace Spectre.IO.Tests.Unit.IO
             [Theory]
             [InlineData(true, false)]
             [InlineData(false, true)]
-            public void Same_Paths_But_Different_Casing_Get_Same_Hash_Code_Depending_On_Case_Sensitivity(bool isCaseSensitive, bool expected)
+            public void Same_Paths_But_Different_Casing_Get_Same_Hash_Code_Depending_On_Case_Sensitivity(
+                bool isCaseSensitive, bool expected)
             {
                 // Given, When
                 var comparer = new PathComparer(isCaseSensitive);
