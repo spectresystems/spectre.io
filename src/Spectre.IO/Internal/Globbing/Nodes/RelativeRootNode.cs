@@ -1,14 +1,13 @@
 ﻿using System.Diagnostics;
 
-namespace Spectre.IO.Internal
+namespace Spectre.IO.Internal;
+
+[DebuggerDisplay("./")]
+internal sealed class RelativeRootNode : GlobNode
 {
-    [DebuggerDisplay("./")]
-    internal sealed class RelativeRootNode : GlobNode
+    [DebuggerStepThrough]
+    public override void Accept(GlobVisitor globber, GlobVisitorContext context)
     {
-        [DebuggerStepThrough]
-        public override void Accept(GlobVisitor globber, GlobVisitorContext context)
-        {
-            globber.VisitRelativeRoot(this, context);
-        }
+        globber.VisitRelativeRoot(this, context);
     }
 }

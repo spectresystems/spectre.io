@@ -1,36 +1,35 @@
 ﻿using System.Collections.Generic;
 
-namespace Spectre.IO.Internal
+namespace Spectre.IO.Internal;
+
+internal sealed class GlobTokenBuffer
 {
-    internal sealed class GlobTokenBuffer
+    private readonly Queue<GlobToken> _tokens;
+
+    public int Count => _tokens.Count;
+
+    public GlobTokenBuffer(IEnumerable<GlobToken> tokens)
     {
-        private readonly Queue<GlobToken> _tokens;
+        _tokens = new Queue<GlobToken>(tokens);
+    }
 
-        public int Count => _tokens.Count;
-
-        public GlobTokenBuffer(IEnumerable<GlobToken> tokens)
+    public GlobToken? Peek()
+    {
+        if (_tokens.Count == 0)
         {
-            _tokens = new Queue<GlobToken>(tokens);
+            return null;
         }
 
-        public GlobToken? Peek()
-        {
-            if (_tokens.Count == 0)
-            {
-                return null;
-            }
+        return _tokens.Peek();
+    }
 
-            return _tokens.Peek();
+    public GlobToken? Read()
+    {
+        if (_tokens.Count == 0)
+        {
+            return null;
         }
 
-        public GlobToken? Read()
-        {
-            if (_tokens.Count == 0)
-            {
-                return null;
-            }
-
-            return _tokens.Dequeue();
-        }
+        return _tokens.Dequeue();
     }
 }

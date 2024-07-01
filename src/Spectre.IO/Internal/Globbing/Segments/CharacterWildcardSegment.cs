@@ -1,9 +1,8 @@
-﻿namespace Spectre.IO.Internal
-{
-    internal sealed class CharacterWildcardSegment : PathSegment
-    {
-        public override string Value => "?";
+﻿namespace Spectre.IO.Internal;
 
-        public override string Regex => ".{1}";
-    }
+internal sealed class CharacterWildcardSegment : PathSegment
+{
+    public override string Value => "?";
+
+    public override string Regex => ".{1}";
 }

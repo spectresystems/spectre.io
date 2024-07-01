@@ -1,16 +1,15 @@
-﻿namespace Spectre.IO.Internal
+﻿namespace Spectre.IO.Internal;
+
+internal enum GlobTokenKind
 {
-    internal enum GlobTokenKind
-    {
-        Wildcard,
-        CharacterWildcard,
-        PathSeparator,
-        Text,
-        HomeDirectory,
-        WindowsRoot,
-        Parent,
-        Current,
-        BracketWildcard,
-        BraceExpansion,
-    }
+    Wildcard,
+    CharacterWildcard,
+    PathSeparator,
+    Text,
+    HomeDirectory,
+    WindowsRoot,
+    Parent,
+    Current,
+    BracketWildcard,
+    BraceExpansion,
 }

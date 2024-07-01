@@ -3,326 +3,351 @@ using System.Collections.Generic;
 using Shouldly;
 using Xunit;
 
-namespace Spectre.IO.Tests.Unit.IO
+namespace Spectre.IO.Tests.Unit.IO;
+
+public sealed class DirectoryPathCollectionTests
 {
-    public sealed class DirectoryPathCollectionTests
+    public sealed class TheCountProperty
     {
-        public sealed class TheCountProperty
+        [Fact]
+        public void Should_Return_The_Number_Of_Paths_In_The_Collection()
+        {
+            // Given
+            var collection = new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(false));
+
+            // When, Then
+            collection.Count.ShouldBe(2);
+        }
+    }
+
+    public sealed class TheAddMethod
+    {
+        public sealed class WithSinglePath
         {
             [Fact]
-            public void Should_Return_The_Number_Of_Paths_In_The_Collection()
+            public void Should_Add_Path_If_Not_Already_Present()
+            {
+                // Given
+                var collection = new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(false));
+
+                // When
+                collection.Add(new DirectoryPath("B"));
+
+                // Then
+                collection.Count.ShouldBe(2);
+            }
+
+            [Theory]
+            [InlineData(true, 2)]
+            [InlineData(false, 1)]
+            public void Should_Respect_File_System_Case_Sensitivity_When_Adding_Path(
+                bool caseSensitive,
+                int expectedCount)
+            {
+                // Given
+                var collection =
+                    new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(caseSensitive));
+
+                // When
+                collection.Add(new DirectoryPath("a"));
+
+                // Then
+                collection.Count.ShouldBe(expectedCount);
+            }
+        }
+
+        public sealed class WithMultiplePaths
+        {
+            [Fact]
+            public void Should_Throw_If_Paths_Is_Null()
+            {
+                // Given
+                var collection = new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(false));
+
+                // When
+                var result = Record.Exception(() => collection.Add((IEnumerable<DirectoryPath>)null));
+
+                // Then
+                result.ShouldBeOfType<ArgumentNullException>()
+                    .And().ParamName.ShouldBe("paths");
+            }
+
+            [Fact]
+            public void Should_Add_Paths_That_Are_Not_Present()
             {
                 // Given
                 var collection = new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(false));
 
-                // When, Then
-                collection.Count.ShouldBe(2);
+                // When
+                collection.Add(new DirectoryPath[] { "A", "B", "C" });
+
+                // Then
+                collection.Count.ShouldBe(3);
+            }
+
+            [Theory]
+            [InlineData(true, 5)]
+            [InlineData(false, 3)]
+            public void Should_Respect_File_System_Case_Sensitivity_When_Adding_Paths(
+                bool caseSensitive,
+                int expectedCount)
+            {
+                // Given
+                var collection =
+                    new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(caseSensitive));
+
+                // When
+                collection.Add(new DirectoryPath[] { "a", "b", "c" });
+
+                // Then
+                collection.Count.ShouldBe(expectedCount);
+            }
+        }
+    }
+
+    public sealed class TheRemoveMethod
+    {
+        public sealed class WithSinglePath
+        {
+            [Theory]
+            [InlineData(true, 1)]
+            [InlineData(false, 0)]
+            public void Should_Respect_File_System_Case_Sensitivity_When_Removing_Path(
+                bool caseSensitive,
+                int expectedCount)
+            {
+                // Given
+                var collection =
+                    new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(caseSensitive));
+
+                // When
+                collection.Remove(new DirectoryPath("a"));
+
+                // Then
+                collection.Count.ShouldBe(expectedCount);
             }
         }
 
-        public sealed class TheAddMethod
+        public sealed class WithMultiplePaths
         {
-            public sealed class WithSinglePath
+            [Fact]
+            public void Should_Throw_If_Paths_Is_Null()
             {
-                [Fact]
-                public void Should_Add_Path_If_Not_Already_Present()
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(false));
+                // Given
+                var collection = new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(false));
 
-                    // When
-                    collection.Add(new DirectoryPath("B"));
+                // When
+                var result = Record.Exception(() => collection.Remove((IEnumerable<DirectoryPath>)null));
 
-                    // Then
-                    collection.Count.ShouldBe(2);
-                }
-
-                [Theory]
-                [InlineData(true, 2)]
-                [InlineData(false, 1)]
-                public void Should_Respect_File_System_Case_Sensitivity_When_Adding_Path(bool caseSensitive, int expectedCount)
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(caseSensitive));
-
-                    // When
-                    collection.Add(new DirectoryPath("a"));
-
-                    // Then
-                    collection.Count.ShouldBe(expectedCount);
-                }
+                // Then
+                result.ShouldBeOfType<ArgumentNullException>()
+                    .And().ParamName.ShouldBe("paths");
             }
 
-            public sealed class WithMultiplePaths
+            [Theory]
+            [InlineData(true, 2)]
+            [InlineData(false, 0)]
+            public void Should_Respect_File_System_Case_Sensitivity_When_Removing_Paths(
+                bool caseSensitive,
+                int expectedCount)
             {
-                [Fact]
-                public void Should_Throw_If_Paths_Is_Null()
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(false));
+                // Given
+                var collection =
+                    new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(caseSensitive));
 
-                    // When
-                    var result = Record.Exception(() => collection.Add((IEnumerable<DirectoryPath>)null));
+                // When
+                collection.Remove(new DirectoryPath[] { "a", "b", "c" });
 
-                    // Then
-                    result.ShouldBeOfType<ArgumentNullException>()
-                        .And().ParamName.ShouldBe("paths");
-                }
+                // Then
+                collection.Count.ShouldBe(expectedCount);
+            }
+        }
+    }
 
-                [Fact]
-                public void Should_Add_Paths_That_Are_Not_Present()
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(false));
+    public sealed class ThePlusOperator
+    {
+        public sealed class WithSinglePath
+        {
+            [Fact]
+            public void Should_Throw_If_Collection_Is_Null()
+            {
+                // Given, When
+                var result = Record.Exception(() => (DirectoryPathCollection)null + new DirectoryPath("a"));
 
-                    // When
-                    collection.Add(new DirectoryPath[] { "A", "B", "C" });
+                // Then
+                result.ShouldBeOfType<ArgumentNullException>()
+                    .And().ParamName.ShouldBe("collection");
+            }
 
-                    // Then
-                    collection.Count.ShouldBe(3);
-                }
+            [Theory]
+            [InlineData(true, 2)]
+            [InlineData(false, 1)]
+            public void Should_Respect_File_System_Case_Sensitivity_When_Adding_Path(
+                bool caseSensitive,
+                int expectedCount)
+            {
+                // Given
+                var collection =
+                    new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(caseSensitive));
 
-                [Theory]
-                [InlineData(true, 5)]
-                [InlineData(false, 3)]
-                public void Should_Respect_File_System_Case_Sensitivity_When_Adding_Paths(bool caseSensitive, int expectedCount)
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(caseSensitive));
+                // When
+                var result = collection + new DirectoryPath("a");
 
-                    // When
-                    collection.Add(new DirectoryPath[] { "a", "b", "c" });
+                // Then
+                result.Count.ShouldBe(expectedCount);
+            }
 
-                    // Then
-                    collection.Count.ShouldBe(expectedCount);
-                }
+            [Fact]
+            public void Should_Return_New_Collection_When_Adding_Path()
+            {
+                // Given
+                var collection = new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(false));
+
+                // When
+                var result = collection + new DirectoryPath("B");
+
+                // Then
+                collection.ShouldNotBeSameAs(result);
             }
         }
 
-        public sealed class TheRemoveMethod
+        public sealed class WithMultiplePaths
         {
-            public sealed class WithSinglePath
+            [Fact]
+            public void Should_Throw_If_Collection_Is_Null()
             {
-                [Theory]
-                [InlineData(true, 1)]
-                [InlineData(false, 0)]
-                public void Should_Respect_File_System_Case_Sensitivity_When_Removing_Path(bool caseSensitive, int expectedCount)
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(caseSensitive));
+                // Given, When
+                var result = Record.Exception(() => (DirectoryPathCollection)null + new DirectoryPath[] { "a" });
 
-                    // When
-                    collection.Remove(new DirectoryPath("a"));
-
-                    // Then
-                    collection.Count.ShouldBe(expectedCount);
-                }
+                // Then
+                result.ShouldBeOfType<ArgumentNullException>()
+                    .And().ParamName.ShouldBe("collection");
             }
 
-            public sealed class WithMultiplePaths
+            [Theory]
+            [InlineData(true, 5)]
+            [InlineData(false, 3)]
+            public void Should_Respect_File_System_Case_Sensitivity_When_Adding_Paths(
+                bool caseSensitive,
+                int expectedCount)
             {
-                [Fact]
-                public void Should_Throw_If_Paths_Is_Null()
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(false));
+                // Given
+                var collection =
+                    new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(caseSensitive));
 
-                    // When
-                    var result = Record.Exception(() => collection.Remove((IEnumerable<DirectoryPath>)null));
+                // When
+                var result = collection + new DirectoryPath[] { "a", "b", "c" };
 
-                    // Then
-                    result.ShouldBeOfType<ArgumentNullException>()
-                        .And().ParamName.ShouldBe("paths");
-                }
+                // Then
+                result.Count.ShouldBe(expectedCount);
+            }
 
-                [Theory]
-                [InlineData(true, 2)]
-                [InlineData(false, 0)]
-                public void Should_Respect_File_System_Case_Sensitivity_When_Removing_Paths(bool caseSensitive, int expectedCount)
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(caseSensitive));
+            [Fact]
+            public void Should_Return_New_Collection_When_Adding_Paths()
+            {
+                // Given
+                var collection = new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(false));
 
-                    // When
-                    collection.Remove(new DirectoryPath[] { "a", "b", "c" });
+                // When
+                var result = collection + new DirectoryPath[] { "C", "D" };
 
-                    // Then
-                    collection.Count.ShouldBe(expectedCount);
-                }
+                // Then
+                collection.ShouldNotBeSameAs(result);
+            }
+        }
+    }
+
+    public sealed class TheMinusOperator
+    {
+        public sealed class WithSinglePath
+        {
+            [Fact]
+            public void Should_Throw_If_Collection_Is_Null()
+            {
+                // Given, When
+                var result = Record.Exception(() => (DirectoryPathCollection)null - new DirectoryPath("a"));
+
+                // Then
+                result.ShouldBeOfType<ArgumentNullException>()
+                    .And().ParamName.ShouldBe("collection");
+            }
+
+            [Theory]
+            [InlineData(true, 2)]
+            [InlineData(false, 1)]
+            public void Should_Respect_File_System_Case_Sensitivity_When_Removing_Path(
+                bool caseSensitive,
+                int expectedCount)
+            {
+                // Given
+                var collection =
+                    new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(caseSensitive));
+
+                // When
+                var result = collection - new DirectoryPath("a");
+
+                // Then
+                result.Count.ShouldBe(expectedCount);
+            }
+
+            [Fact]
+            public void Should_Return_New_Collection_When_Removing_Path()
+            {
+                // Given
+                var collection = new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(false));
+
+                // When
+                var result = collection - new DirectoryPath("A");
+
+                // Then
+                collection.ShouldNotBeSameAs(result);
             }
         }
 
-        public sealed class ThePlusOperator
+        public sealed class WithMultiplePaths
         {
-            public sealed class WithSinglePath
+            [Fact]
+            public void Should_Throw_If_Collection_Is_Null()
             {
-                [Fact]
-                public void Should_Throw_If_Collection_Is_Null()
-                {
-                    // Given, When
-                    var result = Record.Exception(() => (DirectoryPathCollection)null + new DirectoryPath("a"));
+                // Given, When
+                var result = Record.Exception(() => (DirectoryPathCollection)null - new DirectoryPath[] { "a" });
 
-                    // Then
-                    result.ShouldBeOfType<ArgumentNullException>()
-                        .And().ParamName.ShouldBe("collection");
-                }
-
-                [Theory]
-                [InlineData(true, 2)]
-                [InlineData(false, 1)]
-                public void Should_Respect_File_System_Case_Sensitivity_When_Adding_Path(bool caseSensitive, int expectedCount)
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(caseSensitive));
-
-                    // When
-                    var result = collection + new DirectoryPath("a");
-
-                    // Then
-                    result.Count.ShouldBe(expectedCount);
-                }
-
-                [Fact]
-                public void Should_Return_New_Collection_When_Adding_Path()
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A" }, new PathComparer(false));
-
-                    // When
-                    var result = collection + new DirectoryPath("B");
-
-                    // Then
-                    collection.ShouldNotBeSameAs(result);
-                }
+                // Then
+                result.ShouldBeOfType<ArgumentNullException>()
+                    .And().ParamName.ShouldBe("collection");
             }
 
-            public sealed class WithMultiplePaths
+            [Theory]
+            [InlineData(true, 3)]
+            [InlineData(false, 1)]
+            public void Should_Respect_File_System_Case_Sensitivity_When_Removing_Paths(
+                bool caseSensitive,
+                int expectedCount)
             {
-                [Fact]
-                public void Should_Throw_If_Collection_Is_Null()
-                {
-                    // Given, When
-                    var result = Record.Exception(() => (DirectoryPathCollection)null + new DirectoryPath[] { "a" });
+                // Given
+                var collection = new DirectoryPathCollection(
+                    new DirectoryPath[] { "A", "B", "C" },
+                    new PathComparer(caseSensitive));
 
-                    // Then
-                    result.ShouldBeOfType<ArgumentNullException>()
-                        .And().ParamName.ShouldBe("collection");
-                }
+                // When
+                var result = collection - new DirectoryPath[] { "b", "c" };
 
-                [Theory]
-                [InlineData(true, 5)]
-                [InlineData(false, 3)]
-                public void Should_Respect_File_System_Case_Sensitivity_When_Adding_Paths(bool caseSensitive, int expectedCount)
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(caseSensitive));
-
-                    // When
-                    var result = collection + new DirectoryPath[] { "a", "b", "c" };
-
-                    // Then
-                    result.Count.ShouldBe(expectedCount);
-                }
-
-                [Fact]
-                public void Should_Return_New_Collection_When_Adding_Paths()
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(false));
-
-                    // When
-                    var result = collection + new DirectoryPath[] { "C", "D" };
-
-                    // Then
-                    collection.ShouldNotBeSameAs(result);
-                }
-            }
-        }
-
-        public sealed class TheMinusOperator
-        {
-            public sealed class WithSinglePath
-            {
-                [Fact]
-                public void Should_Throw_If_Collection_Is_Null()
-                {
-                    // Given, When
-                    var result = Record.Exception(() => (DirectoryPathCollection)null - new DirectoryPath("a"));
-
-                    // Then
-                    result.ShouldBeOfType<ArgumentNullException>()
-                        .And().ParamName.ShouldBe("collection");
-                }
-
-                [Theory]
-                [InlineData(true, 2)]
-                [InlineData(false, 1)]
-                public void Should_Respect_File_System_Case_Sensitivity_When_Removing_Path(bool caseSensitive, int expectedCount)
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(caseSensitive));
-
-                    // When
-                    var result = collection - new DirectoryPath("a");
-
-                    // Then
-                    result.Count.ShouldBe(expectedCount);
-                }
-
-                [Fact]
-                public void Should_Return_New_Collection_When_Removing_Path()
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A", "B" }, new PathComparer(false));
-
-                    // When
-                    var result = collection - new DirectoryPath("A");
-
-                    // Then
-                    collection.ShouldNotBeSameAs(result);
-                }
+                // Then
+                result.Count.ShouldBe(expectedCount);
             }
 
-            public sealed class WithMultiplePaths
+            [Fact]
+            public void Should_Return_New_Collection_When_Removing_Paths()
             {
-                [Fact]
-                public void Should_Throw_If_Collection_Is_Null()
-                {
-                    // Given, When
-                    var result = Record.Exception(() => (DirectoryPathCollection)null - new DirectoryPath[] { "a" });
+                // Given
+                var collection =
+                    new DirectoryPathCollection(new DirectoryPath[] { "A", "B", "C" }, new PathComparer(false));
 
-                    // Then
-                    result.ShouldBeOfType<ArgumentNullException>()
-                        .And().ParamName.ShouldBe("collection");
-                }
+                // When
+                var result = collection - new DirectoryPath[] { "B", "C" };
 
-                [Theory]
-                [InlineData(true, 3)]
-                [InlineData(false, 1)]
-                public void Should_Respect_File_System_Case_Sensitivity_When_Removing_Paths(bool caseSensitive, int expectedCount)
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A", "B", "C" }, new PathComparer(caseSensitive));
-
-                    // When
-                    var result = collection - new DirectoryPath[] { "b", "c" };
-
-                    // Then
-                    result.Count.ShouldBe(expectedCount);
-                }
-
-                [Fact]
-                public void Should_Return_New_Collection_When_Removing_Paths()
-                {
-                    // Given
-                    var collection = new DirectoryPathCollection(new DirectoryPath[] { "A", "B", "C" }, new PathComparer(false));
-
-                    // When
-                    var result = collection - new DirectoryPath[] { "B", "C" };
-
-                    // Then
-                    collection.ShouldNotBeSameAs(result);
-                }
+                // Then
+                collection.ShouldNotBeSameAs(result);
             }
         }
     }

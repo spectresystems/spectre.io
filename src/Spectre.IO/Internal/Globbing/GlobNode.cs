@@ -1,12 +1,11 @@
 ﻿using System.Diagnostics;
 
-namespace Spectre.IO.Internal
-{
-    [DebuggerDisplay("{ToString(),nq}")]
-    internal abstract class GlobNode
-    {
-        public GlobNode? Next { get; internal set; }
+namespace Spectre.IO.Internal;
 
-        public abstract void Accept(GlobVisitor visitor, GlobVisitorContext context);
-    }
+[DebuggerDisplay("{ToString(),nq}")]
+internal abstract class GlobNode
+{
+    public GlobNode? Next { get; internal set; }
+
+    public abstract void Accept(GlobVisitor visitor, GlobVisitorContext context);
 }

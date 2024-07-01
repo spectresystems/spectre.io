@@ -1,27 +1,26 @@
-﻿namespace Spectre.IO.Testing
+﻿namespace Spectre.IO.Testing;
+
+internal sealed class FakeDirectoryProvider : IDirectoryProvider
 {
-    internal sealed class FakeDirectoryProvider : IDirectoryProvider
+    private readonly FakeFileSystemTree _tree;
+
+    internal FakeDirectoryProvider(FakeFileSystemTree tree)
     {
-        private readonly FakeFileSystemTree _tree;
+        _tree = tree;
+    }
 
-        internal FakeDirectoryProvider(FakeFileSystemTree tree)
-        {
-            _tree = tree;
-        }
+    IDirectory IDirectoryProvider.Retrieve(DirectoryPath path)
+    {
+        return Get(path);
+    }
 
-        IDirectory IDirectoryProvider.Retrieve(DirectoryPath path)
-        {
-            return Get(path);
-        }
+    public FakeDirectory Get(DirectoryPath path)
+    {
+        return _tree.FindDirectory(path) ?? new FakeDirectory(_tree, path);
+    }
 
-        public FakeDirectory Get(DirectoryPath path)
-        {
-            return _tree.FindDirectory(path) ?? new FakeDirectory(_tree, path);
-        }
-
-        public string Dump()
-        {
-            return _tree.ToString();
-        }
+    public string Dump()
+    {
+        return _tree.ToString();
     }
 }

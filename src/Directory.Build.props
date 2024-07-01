@@ -1,44 +1,44 @@
 <Project>
-  <PropertyGroup Label="Settings">
-    <Deterministic>true</Deterministic>
-    <LangVersion>10.0</LangVersion>
-    <IncludeSymbols>true</IncludeSymbols>
-    <MinVerSkip Condition="'$(Configuration)' == 'Debug'">true</MinVerSkip>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
+    <PropertyGroup Label="Settings">
+        <Deterministic>true</Deterministic>
+        <LangVersion>10.0</LangVersion>
+        <IncludeSymbols>true</IncludeSymbols>
+        <MinVerSkip Condition="'$(Configuration)' == 'Debug'">true</MinVerSkip>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
 
-  <PropertyGroup Label="Deterministic Build" Condition="'$(GITHUB_ACTIONS)' == 'true'">
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-  </PropertyGroup>
+    <PropertyGroup Label="Deterministic Build" Condition="'$(GITHUB_ACTIONS)' == 'true'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
 
-  <PropertyGroup Label="Package Information">
-    <Description>A library containing cross platform abstractions and implementations for IO.</Description>
-    <Company>Spectre Systems AB</Company>
-    <Copyright>Spectre Systems AB</Copyright>
-    <Authors>Patrik Svensson</Authors>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/spectresystems/spectre.io</RepositoryUrl>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/spectresystems/spectre.io</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>File;Directory;IO;Glob;Globbing;File system</PackageTags>
-    <PackageReleaseNotes>https://github.com/spectresystems/spectre.io/releases</PackageReleaseNotes>
-  </PropertyGroup>
+    <PropertyGroup Label="Package Information">
+        <Description>A library containing cross platform abstractions and implementations for IO.</Description>
+        <Company>Spectre Systems AB</Company>
+        <Copyright>Spectre Systems AB</Copyright>
+        <Authors>Patrik Svensson</Authors>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/spectresystems/spectre.io</RepositoryUrl>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <PackageProjectUrl>https://github.com/spectresystems/spectre.io</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>File;Directory;IO;Glob;Globbing;File system</PackageTags>
+        <PackageReleaseNotes>https://github.com/spectresystems/spectre.io/releases</PackageReleaseNotes>
+    </PropertyGroup>
 
-  <PropertyGroup Label="Source Link">
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-  </PropertyGroup>
-  
-  <ItemGroup Label="Package References">
-    <PackageReference Include="MinVer" PrivateAssets="All" Version="4.3.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" Version="1.1.1" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Roslynator.Analyzers" Version="4.6.2">
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
+    <PropertyGroup Label="Source Link">
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    </PropertyGroup>
+
+    <ItemGroup Label="Package References">
+        <PackageReference Include="MinVer" PrivateAssets="All" Version="4.3.0"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" Version="1.1.1"/>
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
+            <PrivateAssets>All</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Roslynator.Analyzers" Version="4.6.2">
+            <PrivateAssets>All</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
 </Project>

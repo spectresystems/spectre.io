@@ -1,22 +1,21 @@
-﻿namespace Spectre.IO.Testing
+﻿namespace Spectre.IO.Testing;
+
+internal sealed class FakeFileProvider : IFileProvider
 {
-    internal sealed class FakeFileProvider : IFileProvider
+    private readonly FakeFileSystemTree _tree;
+
+    internal FakeFileProvider(FakeFileSystemTree tree)
     {
-        private readonly FakeFileSystemTree _tree;
+        _tree = tree;
+    }
 
-        internal FakeFileProvider(FakeFileSystemTree tree)
-        {
-            _tree = tree;
-        }
+    IFile IFileProvider.Retrieve(FilePath path)
+    {
+        return Get(path);
+    }
 
-        IFile IFileProvider.Retrieve(FilePath path)
-        {
-            return Get(path);
-        }
-
-        public FakeFile Get(FilePath path)
-        {
-            return _tree.FindFile(path) ?? new FakeFile(_tree, path);
-        }
+    public FakeFile Get(FilePath path)
+    {
+        return _tree.FindFile(path) ?? new FakeFile(_tree, path);
     }
 }

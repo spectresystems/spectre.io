@@ -1,12 +1,11 @@
 ﻿using Spectre.IO.Internal;
 
-namespace Spectre.IO
+namespace Spectre.IO;
+
+internal sealed class DirectoryProvider : IDirectoryProvider
 {
-    internal sealed class DirectoryProvider : IDirectoryProvider
+    public IDirectory Retrieve(DirectoryPath path)
     {
-        public IDirectory Retrieve(DirectoryPath path)
-        {
-            return new Directory(path);
-        }
+        return new Directory(path);
     }
 }

@@ -7,18 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup Label="StyleCop">
-        <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+        <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Include="..\Spectre.IO\Internal\EnvironmentHelper.cs" Link="Utilities\EnvironmentHelper.cs" />
+        <Compile Include="..\Spectre.IO\Internal\EnvironmentHelper.cs" Link="Utilities\EnvironmentHelper.cs"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-        <PackageReference Include="NSubstitute" Version="5.1.0" />
-        <PackageReference Include="Shouldly" Version="4.2.1" />
-        <PackageReference Include="xunit" Version="2.6.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
+        <PackageReference Include="NSubstitute" Version="5.1.0"/>
+        <PackageReference Include="Shouldly" Version="4.2.1"/>
+        <PackageReference Include="xunit" Version="2.6.1"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -26,12 +26,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Spectre.IO.Testing\Spectre.IO.Testing.csproj" />
-        <ProjectReference Include="..\Spectre.IO\Spectre.IO.csproj" />
+        <ProjectReference Include="..\Spectre.IO.Testing\Spectre.IO.Testing.csproj"/>
+        <ProjectReference Include="..\Spectre.IO\Spectre.IO.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Fixtures\" />
+        <Folder Include="Fixtures\"/>
     </ItemGroup>
 
 </Project>

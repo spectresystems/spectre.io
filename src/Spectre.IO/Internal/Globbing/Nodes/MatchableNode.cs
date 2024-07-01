@@ -1,7 +1,6 @@
-﻿namespace Spectre.IO.Internal
+﻿namespace Spectre.IO.Internal;
+
+internal abstract class MatchableNode : GlobNode
 {
-    internal abstract class MatchableNode : GlobNode
-    {
-        public abstract bool IsMatch(string value);
-    }
+    public abstract bool IsMatch(string value);
 }

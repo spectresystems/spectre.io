@@ -1,12 +1,11 @@
 ﻿using Spectre.IO.Internal;
 
-namespace Spectre.IO
+namespace Spectre.IO;
+
+internal sealed class FileProvider : IFileProvider
 {
-    internal sealed class FileProvider : IFileProvider
+    public IFile Retrieve(FilePath path)
     {
-        public IFile Retrieve(FilePath path)
-        {
-            return new File(path);
-        }
+        return new File(path);
     }
 }

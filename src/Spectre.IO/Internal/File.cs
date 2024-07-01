@@ -1,91 +1,90 @@
 ﻿using System;
 using System.IO;
 
-namespace Spectre.IO.Internal
+namespace Spectre.IO.Internal;
+
+internal sealed class File : IFile
 {
-    internal sealed class File : IFile
+    private readonly FileInfo _file;
+
+    public FilePath Path { get; }
+
+    Path IFileSystemInfo.Path => Path;
+
+    public bool Exists => _file.Exists;
+
+    public bool Hidden => (_file.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
+
+    public DateTime LastWriteTime => _file.LastWriteTime;
+
+    public long Length => _file.Length;
+
+    public FileAttributes Attributes
     {
-        private readonly FileInfo _file;
+        get { return _file.Attributes; }
+        set { _file.Attributes = value; }
+    }
 
-        public FilePath Path { get; }
+    public File(FilePath path)
+    {
+        Path = path;
+        _file = new FileInfo(path.FullPath);
+    }
 
-        Path IFileSystemInfo.Path => Path;
-
-        public bool Exists => _file.Exists;
-
-        public bool Hidden => (_file.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
-
-        public DateTime LastWriteTime => _file.LastWriteTime;
-
-        public long Length => _file.Length;
-
-        public FileAttributes Attributes
+    public IFile Copy(FilePath destination, bool overwrite)
+    {
+        if (destination == null)
         {
-            get { return _file.Attributes; }
-            set { _file.Attributes = value; }
+            throw new ArgumentNullException(nameof(destination));
         }
 
-        public File(FilePath path)
+        var result = _file.CopyTo(destination.FullPath, overwrite);
+        return new File(result.FullName);
+    }
+
+    public IFile Move(FilePath destination, bool overwrite)
+    {
+        if (destination == null)
         {
-            Path = path;
-            _file = new FileInfo(path.FullPath);
+            throw new ArgumentNullException(nameof(destination));
         }
 
-        public IFile Copy(FilePath destination, bool overwrite)
-        {
-            if (destination == null)
-            {
-                throw new ArgumentNullException(nameof(destination));
-            }
+        _file.MoveTo(destination.FullPath, overwrite);
+        return new File(destination.FullPath);
+    }
 
-            var result = _file.CopyTo(destination.FullPath, overwrite);
-            return new File(result.FullName);
+    public void Delete()
+    {
+        _file.Delete();
+    }
+
+    public void Refresh()
+    {
+        _file.Refresh();
+    }
+
+    public Stream Open(FileMode fileMode, FileAccess fileAccess, FileShare fileShare)
+    {
+        return _file.Open(fileMode, fileAccess, fileShare);
+    }
+
+    public void CreateSymbolicLink(FilePath destination)
+    {
+        if (destination is null)
+        {
+            throw new ArgumentNullException(nameof(destination));
         }
 
-        public IFile Move(FilePath destination, bool overwrite)
+        if (Path.IsRelative)
         {
-            if (destination == null)
-            {
-                throw new ArgumentNullException(nameof(destination));
-            }
-
-            _file.MoveTo(destination.FullPath, overwrite);
-            return new File(destination.FullPath);
+            throw new InvalidOperationException("Source path cannot be relative");
         }
 
-        public void Delete()
+        if (destination.IsRelative)
         {
-            _file.Delete();
+            throw new InvalidOperationException("Detination path cannot be relative");
         }
 
-        public void Refresh()
-        {
-            _file.Refresh();
-        }
-
-        public Stream Open(FileMode fileMode, FileAccess fileAccess, FileShare fileShare)
-        {
-            return _file.Open(fileMode, fileAccess, fileShare);
-        }
-
-        public void CreateSymbolicLink(FilePath destination)
-        {
-            if (destination is null)
-            {
-                throw new ArgumentNullException(nameof(destination));
-            }
-
-            if (Path.IsRelative)
-            {
-                throw new InvalidOperationException("Source path cannot be relative");
-            }
-
-            if (destination.IsRelative)
-            {
-                throw new InvalidOperationException("Detination path cannot be relative");
-            }
-
-            System.IO.File.CreateSymbolicLink(destination.FullPath, Path.FullPath);
-        }
+        System.IO.File.CreateSymbolicLink(destination.FullPath, Path.FullPath);
     }
 }

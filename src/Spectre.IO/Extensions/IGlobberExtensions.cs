@@ -2,61 +2,60 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Spectre.IO
+namespace Spectre.IO;
+
+/// <summary>
+/// Contains extensions for <see cref="IGlobber"/>.
+/// </summary>
+public static class IGlobberExtensions
 {
     /// <summary>
-    /// Contains extensions for <see cref="IGlobber"/>.
+    /// Gets all files matching the specified pattern.
     /// </summary>
-    public static class IGlobberExtensions
+    /// <param name="globber">The globber.</param>
+    /// <param name="pattern">The pattern.</param>
+    /// <returns>The files matching the specified pattern.</returns>
+    public static IEnumerable<FilePath> GetFiles(this IGlobber globber, string pattern)
     {
-        /// <summary>
-        /// Gets all files matching the specified pattern.
-        /// </summary>
-        /// <param name="globber">The globber.</param>
-        /// <param name="pattern">The pattern.</param>
-        /// <returns>The files matching the specified pattern.</returns>
-        public static IEnumerable<FilePath> GetFiles(this IGlobber globber, string pattern)
+        if (globber == null)
         {
-            if (globber == null)
-            {
-                throw new ArgumentNullException(nameof(globber));
-            }
-
-            return globber.Match(pattern).OfType<FilePath>();
+            throw new ArgumentNullException(nameof(globber));
         }
 
-        /// <summary>
-        /// Gets all directories matching the specified pattern.
-        /// </summary>
-        /// <param name="globber">The globber.</param>
-        /// <param name="pattern">The pattern.</param>
-        /// <returns>The directories matching the specified pattern.</returns>
-        public static IEnumerable<DirectoryPath> GetDirectories(this IGlobber globber, string pattern)
-        {
-            if (globber == null)
-            {
-                throw new ArgumentNullException(nameof(globber));
-            }
+        return globber.Match(pattern).OfType<FilePath>();
+    }
 
-            return globber.Match(pattern).OfType<DirectoryPath>();
+    /// <summary>
+    /// Gets all directories matching the specified pattern.
+    /// </summary>
+    /// <param name="globber">The globber.</param>
+    /// <param name="pattern">The pattern.</param>
+    /// <returns>The directories matching the specified pattern.</returns>
+    public static IEnumerable<DirectoryPath> GetDirectories(this IGlobber globber, string pattern)
+    {
+        if (globber == null)
+        {
+            throw new ArgumentNullException(nameof(globber));
         }
 
-        /// <summary>
-        /// Returns <see cref="Path" /> instances matching the specified pattern.
-        /// </summary>
-        /// <param name="globber">The globber.</param>
-        /// <param name="pattern">The pattern to match.</param>
-        /// <returns>
-        ///   <see cref="Path" /> instances matching the specified pattern.
-        /// </returns>
-        public static IEnumerable<Path> Match(this IGlobber globber, string pattern)
-        {
-            if (globber == null)
-            {
-                throw new ArgumentNullException(nameof(globber));
-            }
+        return globber.Match(pattern).OfType<DirectoryPath>();
+    }
 
-            return globber.Match(pattern, new GlobberSettings());
+    /// <summary>
+    /// Returns <see cref="Path" /> instances matching the specified pattern.
+    /// </summary>
+    /// <param name="globber">The globber.</param>
+    /// <param name="pattern">The pattern to match.</param>
+    /// <returns>
+    ///   <see cref="Path" /> instances matching the specified pattern.
+    /// </returns>
+    public static IEnumerable<Path> Match(this IGlobber globber, string pattern)
+    {
+        if (globber == null)
+        {
+            throw new ArgumentNullException(nameof(globber));
         }
+
+        return globber.Match(pattern, new GlobberSettings());
     }
 }

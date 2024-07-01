@@ -1,35 +1,34 @@
 ﻿using System;
 using System.IO;
 
-namespace Spectre.IO.Internal
+namespace Spectre.IO.Internal;
+
+internal static class GlobNodeValidator
 {
-    internal static class GlobNodeValidator
+    public static void Validate(string pattern, GlobNode node)
     {
-        public static void Validate(string pattern, GlobNode node)
+        var previous = (GlobNode?)null;
+        var current = node;
+        while (current != null)
         {
-            var previous = (GlobNode?)null;
-            var current = node;
-            while (current != null)
+            if (previous is RecursiveWildcardNode)
             {
-                if (previous is RecursiveWildcardNode)
+                if (current is ParentDirectoryNode)
                 {
-                    if (current is ParentDirectoryNode)
-                    {
-                        throw new NotSupportedException("Visiting a parent that is a recursive wildcard is not supported.");
-                    }
+                    throw new NotSupportedException("Visiting a parent that is a recursive wildcard is not supported.");
                 }
-
-                if (current is UncRootNode unc)
-                {
-                    if (string.IsNullOrWhiteSpace(unc.Server))
-                    {
-                        throw new IOException($"The pattern '{pattern}' has no server part specified.");
-                    }
-                }
-
-                previous = current;
-                current = current.Next;
             }
+
+            if (current is UncRootNode unc)
+            {
+                if (string.IsNullOrWhiteSpace(unc.Server))
+                {
+                    throw new IOException($"The pattern '{pattern}' has no server part specified.");
+                }
+            }
+
+            previous = current;
+            current = current.Next;
         }
     }
 }

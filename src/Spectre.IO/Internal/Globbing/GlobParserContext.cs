@@ -2,58 +2,57 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Spectre.IO.Internal
+namespace Spectre.IO.Internal;
+
+internal sealed class GlobParserContext
 {
-    internal sealed class GlobParserContext
+    private readonly GlobTokenBuffer _buffer;
+
+    public string Pattern { get; }
+    public int TokenCount => _buffer.Count;
+    public GlobToken? CurrentToken { get; private set; }
+    public RegexOptions Options { get; }
+
+    public GlobParserContext(string pattern, PathComparer comparer)
     {
-        private readonly GlobTokenBuffer _buffer;
+        _buffer = GlobTokenizer.Tokenize(pattern);
 
-        public string Pattern { get; }
-        public int TokenCount => _buffer.Count;
-        public GlobToken? CurrentToken { get; private set; }
-        public RegexOptions Options { get; }
+        Pattern = pattern;
+        CurrentToken = null;
+        Options = RegexOptions.Compiled | RegexOptions.Singleline;
 
-        public GlobParserContext(string pattern, PathComparer comparer)
+        if (!comparer.IsCaseSensitive)
         {
-            _buffer = GlobTokenizer.Tokenize(pattern);
+            Options |= RegexOptions.IgnoreCase;
+        }
+    }
 
-            Pattern = pattern;
-            CurrentToken = null;
-            Options = RegexOptions.Compiled | RegexOptions.Singleline;
+    public GlobToken? Peek()
+    {
+        return _buffer.Peek();
+    }
 
-            if (!comparer.IsCaseSensitive)
-            {
-                Options |= RegexOptions.IgnoreCase;
-            }
+    public GlobToken? Accept()
+    {
+        var result = CurrentToken;
+        CurrentToken = _buffer.Read();
+        return result;
+    }
+
+    public GlobToken Accept(params GlobTokenKind[] kind)
+    {
+        if (CurrentToken == null)
+        {
+            throw new InvalidOperationException("Unable to accept glob token.");
         }
 
-        public GlobToken? Peek()
-        {
-            return _buffer.Peek();
-        }
-
-        public GlobToken? Accept()
+        if (kind.Any(k => k == CurrentToken.Kind))
         {
             var result = CurrentToken;
-            CurrentToken = _buffer.Read();
+            Accept();
             return result;
         }
 
-        public GlobToken Accept(params GlobTokenKind[] kind)
-        {
-            if (CurrentToken == null)
-            {
-                throw new InvalidOperationException("Unable to accept glob token.");
-            }
-
-            if (kind.Any(k => k == CurrentToken.Kind))
-            {
-                var result = CurrentToken;
-                Accept();
-                return result;
-            }
-
-            throw new InvalidOperationException("Unexpected glob token kind.");
-        }
+        throw new InvalidOperationException("Unexpected glob token kind.");
     }
 }

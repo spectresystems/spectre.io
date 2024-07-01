@@ -1,18 +1,17 @@
-﻿namespace Spectre.IO
+﻿namespace Spectre.IO;
+
+/// <summary>
+/// Represents a search scope.
+/// </summary>
+public enum SearchScope
 {
     /// <summary>
-    /// Represents a search scope.
+    /// The current directory.
     /// </summary>
-    public enum SearchScope
-    {
-        /// <summary>
-        /// The current directory.
-        /// </summary>
-        Current,
+    Current,
 
-        /// <summary>
-        /// The current directory and child directories.
-        /// </summary>
-        Recursive,
-    }
+    /// <summary>
+    /// The current directory and child directories.
+    /// </summary>
+    Recursive,
 }
