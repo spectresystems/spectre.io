@@ -31,35 +31,43 @@ public sealed class FakeEnvironment : IEnvironment
     /// <param name="family">The platform family.</param>
     /// <param name="architecture">The platform processor architecture.</param>
     public FakeEnvironment(PlatformFamily family, PlatformArchitecture architecture = PlatformArchitecture.X64)
+        : this(new FakePlatform(family, architecture))
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FakeEnvironment"/> class.
+    /// </summary>
+    /// <param name="platform">The underlying platform for the environment.</param>
+    public FakeEnvironment(FakePlatform platform)
     {
         _environmentVariables = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+        Platform = platform ?? throw new ArgumentNullException(nameof(platform));
 
-        if (family == PlatformFamily.Windows)
+        if (Platform.Family == PlatformFamily.Windows)
         {
             WorkingDirectory = new DirectoryPath("C:/Working");
             HomeDirectory = new DirectoryPath("C:/Users/JohnDoe");
         }
-        else if (family == PlatformFamily.MacOs)
+        else if (Platform.Family == PlatformFamily.MacOs)
         {
             WorkingDirectory = new DirectoryPath("/Working");
             HomeDirectory = new DirectoryPath("/Users/JohnDoe");
         }
-        else if (family == PlatformFamily.FreeBSD)
+        else if (Platform.Family == PlatformFamily.FreeBSD)
         {
             WorkingDirectory = new DirectoryPath("/Working");
             HomeDirectory = new DirectoryPath("/usr/home/JohnDoe");
         }
-        else if (family == PlatformFamily.Linux)
+        else if (Platform.Family == PlatformFamily.Linux)
         {
             WorkingDirectory = new DirectoryPath("/Working");
             HomeDirectory = new DirectoryPath("/home/JohnDoe");
         }
         else
         {
-            throw new ArgumentException("Unknown platform family", nameof(family));
+            throw new ArgumentException("Unknown platform family", nameof(Platform.Family));
         }
-
-        Platform = new FakePlatform(family, architecture);
     }
 
     /// <summary>

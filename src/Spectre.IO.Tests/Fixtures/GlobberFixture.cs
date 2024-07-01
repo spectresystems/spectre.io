@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Linq;
 using Spectre.IO.Testing;
 
@@ -7,113 +9,111 @@ namespace Spectre.IO.Tests.Fixtures;
 internal sealed class GlobberFixture
 {
     public FakeFileSystem FileSystem { get; set; }
-    public IEnvironment Environment { get; set; }
+    public FakeEnvironment Environment { get; set; }
 
-    private GlobberFixture(FakeFileSystem filesystem, IEnvironment environment)
+    private GlobberFixture(FakeMachine machine)
     {
-        FileSystem = filesystem;
-        Environment = environment;
+        FileSystem = machine.FileSystem;
+        Environment = machine.Environment;
     }
 
     public static GlobberFixture Windows()
     {
-        var environment = FakeEnvironment.CreateWindowsEnvironment();
-        var filesystem = new FakeFileSystem(environment);
+        var machine = FakeMachine.CreateWindowsMachine();
 
         // Directories
-        filesystem.CreateDirectory("C://Working");
-        filesystem.CreateDirectory("C://Working/Foo");
-        filesystem.CreateDirectory("C://Working/Foo/Bar");
-        filesystem.CreateDirectory("C:");
-        filesystem.CreateDirectory("C:/Program Files (x86)");
+        machine.FileSystem.CreateDirectory("C://Working");
+        machine.FileSystem.CreateDirectory("C://Working/Foo");
+        machine.FileSystem.CreateDirectory("C://Working/Foo/Bar");
+        machine.FileSystem.CreateDirectory("C:");
+        machine.FileSystem.CreateDirectory("C:/Program Files (x86)");
 
         // UNC directories
-        filesystem.CreateDirectory(@"\\Server");
-        filesystem.CreateDirectory(@"\\Server\Foo");
-        filesystem.CreateDirectory(@"\\Server\Foo\Bar");
-        filesystem.CreateDirectory(@"\\Server\Bar");
-        filesystem.CreateDirectory(@"\\Foo\Bar");
-        filesystem.CreateDirectory(@"\\Foo (Bar)");
-        filesystem.CreateDirectory(@"\\Foo@Bar\");
-        filesystem.CreateDirectory(@"\\嵌套");
-        filesystem.CreateDirectory(@"\\嵌套\目录");
+        machine.FileSystem.CreateDirectory(@"\\Server");
+        machine.FileSystem.CreateDirectory(@"\\Server\Foo");
+        machine.FileSystem.CreateDirectory(@"\\Server\Foo\Bar");
+        machine.FileSystem.CreateDirectory(@"\\Server\Bar");
+        machine.FileSystem.CreateDirectory(@"\\Foo\Bar");
+        machine.FileSystem.CreateDirectory(@"\\Foo (Bar)");
+        machine.FileSystem.CreateDirectory(@"\\Foo@Bar\");
+        machine.FileSystem.CreateDirectory(@"\\嵌套");
+        machine.FileSystem.CreateDirectory(@"\\嵌套\目录");
 
         // Files
-        filesystem.CreateFile("C:/Working/Foo/Bar/Qux.c");
-        filesystem.CreateFile("C:/Program Files (x86)/Foo.c");
-        filesystem.CreateFile("C:/Working/Project.A.Test.dll");
-        filesystem.CreateFile("C:/Working/Project.B.Test.dll");
-        filesystem.CreateFile("C:/Working/Project.IntegrationTest.dll");
-        filesystem.CreateFile("C:/Tools & Services/MyTool.dll");
-        filesystem.CreateFile("C:/Tools + Services/MyTool.dll");
-        filesystem.CreateFile("C:/Some %2F Directory/MyTool.dll");
-        filesystem.CreateFile("C:/Some ! Directory/MyTool.dll");
-        filesystem.CreateFile("C:/Some@Directory/MyTool.dll");
-        filesystem.CreateFile("C:/Working/foobar.rs");
-        filesystem.CreateFile("C:/Working/foobaz.rs");
-        filesystem.CreateFile("C:/Working/foobax.rs");
+        machine.FileSystem.CreateFile("C:/Working/Foo/Bar/Qux.c");
+        machine.FileSystem.CreateFile("C:/Program Files (x86)/Foo.c");
+        machine.FileSystem.CreateFile("C:/Working/Project.A.Test.dll");
+        machine.FileSystem.CreateFile("C:/Working/Project.B.Test.dll");
+        machine.FileSystem.CreateFile("C:/Working/Project.IntegrationTest.dll");
+        machine.FileSystem.CreateFile("C:/Tools & Services/MyTool.dll");
+        machine.FileSystem.CreateFile("C:/Tools + Services/MyTool.dll");
+        machine.FileSystem.CreateFile("C:/Some %2F Directory/MyTool.dll");
+        machine.FileSystem.CreateFile("C:/Some ! Directory/MyTool.dll");
+        machine.FileSystem.CreateFile("C:/Some@Directory/MyTool.dll");
+        machine.FileSystem.CreateFile("C:/Working/foobar.rs");
+        machine.FileSystem.CreateFile("C:/Working/foobaz.rs");
+        machine.FileSystem.CreateFile("C:/Working/foobax.rs");
 
         // UNC files
-        filesystem.CreateFile(@"\\Server\Foo/Bar/Qux.c");
-        filesystem.CreateFile(@"\\Server\Foo/Bar/Qex.c");
-        filesystem.CreateFile(@"\\Server\Foo/Bar/Qux.h");
-        filesystem.CreateFile(@"\\Server\Foo/Baz/Qux.c");
-        filesystem.CreateFile(@"\\Server\Foo/Bar/Baz/Qux.c");
-        filesystem.CreateFile(@"\\Server\Bar/Qux.c");
-        filesystem.CreateFile(@"\\Server\Bar/Qux.h");
-        filesystem.CreateFile(@"\\Server\Foo.Bar.Test.dll");
-        filesystem.CreateFile(@"\\Server\Bar.Qux.Test.dll");
-        filesystem.CreateFile(@"\\Server\Quz.FooTest.dll");
-        filesystem.CreateFile(@"\\Foo\Bar.baz");
-        filesystem.CreateFile(@"\\Foo (Bar)\Baz.c");
-        filesystem.CreateFile(@"\\Foo@Bar\Baz.c");
-        filesystem.CreateFile(@"\\嵌套/目录/文件.延期");
+        machine.FileSystem.CreateFile(@"\\Server\Foo/Bar/Qux.c");
+        machine.FileSystem.CreateFile(@"\\Server\Foo/Bar/Qex.c");
+        machine.FileSystem.CreateFile(@"\\Server\Foo/Bar/Qux.h");
+        machine.FileSystem.CreateFile(@"\\Server\Foo/Baz/Qux.c");
+        machine.FileSystem.CreateFile(@"\\Server\Foo/Bar/Baz/Qux.c");
+        machine.FileSystem.CreateFile(@"\\Server\Bar/Qux.c");
+        machine.FileSystem.CreateFile(@"\\Server\Bar/Qux.h");
+        machine.FileSystem.CreateFile(@"\\Server\Foo.Bar.Test.dll");
+        machine.FileSystem.CreateFile(@"\\Server\Bar.Qux.Test.dll");
+        machine.FileSystem.CreateFile(@"\\Server\Quz.FooTest.dll");
+        machine.FileSystem.CreateFile(@"\\Foo\Bar.baz");
+        machine.FileSystem.CreateFile(@"\\Foo (Bar)\Baz.c");
+        machine.FileSystem.CreateFile(@"\\Foo@Bar\Baz.c");
+        machine.FileSystem.CreateFile(@"\\嵌套/目录/文件.延期");
 
-        return new GlobberFixture(filesystem, environment);
+        return new GlobberFixture(machine);
     }
 
     public static GlobberFixture UnixLike()
     {
-        var environment = FakeEnvironment.CreateLinuxEnvironment();
-        var filesystem = new FakeFileSystem(environment);
+        var machine = FakeMachine.CreateLinuxMachine();
 
         // Directories
-        filesystem.CreateDirectory("/RootDir");
-        filesystem.CreateDirectory("/home/JohnDoe");
-        filesystem.CreateDirectory("/Working");
-        filesystem.CreateDirectory("/Working/Foo");
-        filesystem.CreateDirectory("/Working/Foo/Bar");
-        filesystem.CreateDirectory("/Working/Bar");
-        filesystem.CreateDirectory("/Foo/Bar");
-        filesystem.CreateDirectory("/Foo (Bar)");
-        filesystem.CreateDirectory("/Foo@Bar/");
-        filesystem.CreateDirectory("/嵌套");
-        filesystem.CreateDirectory("/嵌套/目录");
+        machine.FileSystem.CreateDirectory("/RootDir");
+        machine.FileSystem.CreateDirectory("/home/JohnDoe");
+        machine.FileSystem.CreateDirectory("/Working");
+        machine.FileSystem.CreateDirectory("/Working/Foo");
+        machine.FileSystem.CreateDirectory("/Working/Foo/Bar");
+        machine.FileSystem.CreateDirectory("/Working/Bar");
+        machine.FileSystem.CreateDirectory("/Foo/Bar");
+        machine.FileSystem.CreateDirectory("/Foo (Bar)");
+        machine.FileSystem.CreateDirectory("/Foo@Bar/");
+        machine.FileSystem.CreateDirectory("/嵌套");
+        machine.FileSystem.CreateDirectory("/嵌套/目录");
 
         // Files
-        filesystem.CreateFile("/RootFile.sh");
-        filesystem.CreateFile("/home/JohnDoe/foobar.rs");
-        filesystem.CreateFile("/home/JohnDoe/foobaz.rs");
-        filesystem.CreateFile("/home/JohnDoe/foobax.rs");
-        filesystem.CreateFile("/Working/Foo/Bar/Qux.c");
-        filesystem.CreateFile("/Working/Foo/Bar/Qex.c");
-        filesystem.CreateFile("/Working/Foo/Bar/Qux.h");
-        filesystem.CreateFile("/Working/Foo/Baz/Qux.c");
-        filesystem.CreateFile("/Working/Foo/Bar/Baz/Qux.c");
-        filesystem.CreateFile("/Working/Bar/Qux.c");
-        filesystem.CreateFile("/Working/Bar/Qux.h");
-        filesystem.CreateFile("/Working/Foo.Bar.Test.dll");
-        filesystem.CreateFile("/Working/Bar.Qux.Test.dll");
-        filesystem.CreateFile("/Working/Quz.FooTest.dll");
-        filesystem.CreateFile("/Foo/Bar.baz");
-        filesystem.CreateFile("/Foo (Bar)/Baz.c");
-        filesystem.CreateFile("/Foo@Bar/Baz.c");
-        filesystem.CreateFile("/嵌套/目录/文件.延期");
-        filesystem.CreateFile("/Working/foobar.rs");
-        filesystem.CreateFile("/Working/foobaz.rs");
-        filesystem.CreateFile("/Working/foobax.rs");
+        machine.FileSystem.CreateFile("/RootFile.sh");
+        machine.FileSystem.CreateFile("/home/JohnDoe/foobar.rs");
+        machine.FileSystem.CreateFile("/home/JohnDoe/foobaz.rs");
+        machine.FileSystem.CreateFile("/home/JohnDoe/foobax.rs");
+        machine.FileSystem.CreateFile("/Working/Foo/Bar/Qux.c");
+        machine.FileSystem.CreateFile("/Working/Foo/Bar/Qex.c");
+        machine.FileSystem.CreateFile("/Working/Foo/Bar/Qux.h");
+        machine.FileSystem.CreateFile("/Working/Foo/Baz/Qux.c");
+        machine.FileSystem.CreateFile("/Working/Foo/Bar/Baz/Qux.c");
+        machine.FileSystem.CreateFile("/Working/Bar/Qux.c");
+        machine.FileSystem.CreateFile("/Working/Bar/Qux.h");
+        machine.FileSystem.CreateFile("/Working/Foo.Bar.Test.dll");
+        machine.FileSystem.CreateFile("/Working/Bar.Qux.Test.dll");
+        machine.FileSystem.CreateFile("/Working/Quz.FooTest.dll");
+        machine.FileSystem.CreateFile("/Foo/Bar.baz");
+        machine.FileSystem.CreateFile("/Foo (Bar)/Baz.c");
+        machine.FileSystem.CreateFile("/Foo@Bar/Baz.c");
+        machine.FileSystem.CreateFile("/嵌套/目录/文件.延期");
+        machine.FileSystem.CreateFile("/Working/foobar.rs");
+        machine.FileSystem.CreateFile("/Working/foobaz.rs");
+        machine.FileSystem.CreateFile("/Working/foobax.rs");
 
-        return new GlobberFixture(filesystem, environment);
+        return new GlobberFixture(machine);
     }
 
     public void SetWorkingDirectory(DirectoryPath path)
@@ -121,20 +121,17 @@ internal sealed class GlobberFixture
         Environment.SetWorkingDirectory(path);
     }
 
-    public Path[] Match(string pattern)
-    {
-        return Match(pattern, null);
-    }
-
-    public Path[] Match(string pattern, Func<IFileSystemInfo, bool> directoryPredicate)
-    {
-        return Match(pattern, directoryPredicate, null);
-    }
-
-    public Path[] Match(string pattern, Func<IFileSystemInfo, bool> directoryPredicate, Func<IFile, bool> filePredicate)
+    public Path[] Match(
+        string pattern,
+        Func<IFileSystemInfo, bool>? directoryPredicate = null,
+        Func<IFile, bool>? filePredicate = null)
     {
         return new Globber(FileSystem, Environment)
-            .Match(pattern, new GlobberSettings { Predicate = directoryPredicate, FilePredicate = filePredicate })
+            .Match(pattern, new GlobberSettings
+            {
+                Predicate = directoryPredicate,
+                FilePredicate = filePredicate,
+            })
             .ToArray();
     }
 }
