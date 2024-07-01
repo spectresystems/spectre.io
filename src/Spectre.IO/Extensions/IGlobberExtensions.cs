@@ -14,15 +14,17 @@ public static class IGlobberExtensions
     /// </summary>
     /// <param name="globber">The globber.</param>
     /// <param name="pattern">The pattern.</param>
+    /// <param name="settings">The settings.</param>
     /// <returns>The files matching the specified pattern.</returns>
-    public static IEnumerable<FilePath> GetFiles(this IGlobber globber, string pattern)
+    public static IEnumerable<FilePath> GetFiles(this IGlobber globber, string pattern, GlobberSettings? settings = null)
     {
         if (globber == null)
         {
             throw new ArgumentNullException(nameof(globber));
         }
 
-        return globber.Match(pattern).OfType<FilePath>();
+        settings ??= new GlobberSettings();
+        return globber.Match(pattern, settings).OfType<FilePath>();
     }
 
     /// <summary>
@@ -30,15 +32,17 @@ public static class IGlobberExtensions
     /// </summary>
     /// <param name="globber">The globber.</param>
     /// <param name="pattern">The pattern.</param>
+    /// <param name="settings">The settings.</param>
     /// <returns>The directories matching the specified pattern.</returns>
-    public static IEnumerable<DirectoryPath> GetDirectories(this IGlobber globber, string pattern)
+    public static IEnumerable<DirectoryPath> GetDirectories(this IGlobber globber, string pattern, GlobberSettings? settings = null)
     {
         if (globber == null)
         {
             throw new ArgumentNullException(nameof(globber));
         }
 
-        return globber.Match(pattern).OfType<DirectoryPath>();
+        settings ??= new GlobberSettings();
+        return globber.Match(pattern, settings).OfType<DirectoryPath>();
     }
 
     /// <summary>
