@@ -10,6 +10,7 @@ namespace Spectre.IO;
 /// </summary>
 public sealed class Globber : IGlobber
 {
+    private readonly IPathComparer _comparer;
     private readonly GlobParser _parser;
     private readonly GlobVisitor _visitor;
 
@@ -25,16 +26,10 @@ public sealed class Globber : IGlobber
     /// <param name="environment">The environment.</param>
     public Globber(IFileSystem fileSystem, IEnvironment environment)
     {
-        if (fileSystem == null)
-        {
-            throw new ArgumentNullException(nameof(fileSystem));
-        }
+        ArgumentNullException.ThrowIfNull(fileSystem);
+        ArgumentNullException.ThrowIfNull(environment);
 
-        if (environment is null)
-        {
-            throw new ArgumentNullException(nameof(environment));
-        }
-
+        _comparer = fileSystem.Comparer;
         _parser = new GlobParser(environment);
         _visitor = new GlobVisitor(fileSystem, environment);
     }
@@ -42,25 +37,21 @@ public sealed class Globber : IGlobber
     /// <inheritdoc/>
     public IEnumerable<Path> Match(string pattern, GlobberSettings settings)
     {
-        if (pattern == null)
-        {
-            throw new ArgumentNullException(nameof(pattern));
-        }
+        ArgumentNullException.ThrowIfNull(settings);
+        ArgumentNullException.ThrowIfNull(pattern);
 
         if (string.IsNullOrWhiteSpace(pattern))
         {
             return Enumerable.Empty<Path>();
         }
 
-        // Make sure we got some settings.
-        settings ??= new GlobberSettings();
-
         // Parse the pattern into an AST.
-        var root = _parser.Parse(pattern, settings.Comparer ?? PathComparer.Default);
+        var comparer = settings.Comparer ?? _comparer;
+        var root = _parser.Parse(pattern, comparer);
 
         // Visit all nodes in the parsed patterns and filter the result.
         return _visitor.Walk(root, settings)
             .Select(x => x.Path)
-            .Distinct(settings.Comparer ?? PathComparer.Default);
+            .Distinct(comparer);
     }
 }

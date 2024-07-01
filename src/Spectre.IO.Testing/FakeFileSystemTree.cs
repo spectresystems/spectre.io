@@ -10,7 +10,7 @@ internal sealed class FakeFileSystemTree
 {
     private readonly FakeDirectory _root;
 
-    public PathComparer Comparer { get; }
+    public IPathComparer Comparer { get; }
 
     public FakeFileSystemTree(IEnvironment environment)
     {

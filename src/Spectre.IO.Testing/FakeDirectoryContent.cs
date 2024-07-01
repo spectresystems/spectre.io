@@ -13,7 +13,7 @@ internal sealed class FakeDirectoryContent
 
     public IReadOnlyDictionary<FilePath, FakeFile> Files => _files;
 
-    public FakeDirectoryContent(FakeDirectory owner, PathComparer comparer)
+    public FakeDirectoryContent(FakeDirectory owner, IPathComparer comparer)
     {
         Owner = owner;
         _directories = new Dictionary<DirectoryPath, FakeDirectory>(comparer);

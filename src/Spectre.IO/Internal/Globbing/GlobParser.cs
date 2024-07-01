@@ -13,7 +13,7 @@ internal sealed class GlobParser
         _environment = environment;
     }
 
-    public GlobNode Parse(string pattern, PathComparer comparer)
+    public GlobNode Parse(string pattern, IPathComparer comparer)
     {
         return Parse(new GlobParserContext(pattern, comparer));
     }

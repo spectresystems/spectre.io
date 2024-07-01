@@ -11,6 +11,10 @@ public sealed class FakeFileSystem : IFileSystem
     private readonly FakeFileProvider _fileProvider;
     private readonly FakeDirectoryProvider _directoryProvider;
     private readonly IEnvironment _environment;
+    private readonly IPathComparer _comparer;
+
+    /// <inheritdoc/>
+    public IPathComparer Comparer => _comparer;
 
     /// <inheritdoc/>
     public IFileProvider File => _fileProvider;
@@ -28,7 +32,8 @@ public sealed class FakeFileSystem : IFileSystem
 
         _fileProvider = new FakeFileProvider(tree);
         _directoryProvider = new FakeDirectoryProvider(tree);
-        _environment = environment;
+        _environment = environment ?? throw new ArgumentNullException(nameof(environment));
+        _comparer = new PathComparer(_environment.Platform.IsUnix());
     }
 
     /// <summary>

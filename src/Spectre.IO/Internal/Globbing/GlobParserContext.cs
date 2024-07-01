@@ -13,7 +13,7 @@ internal sealed class GlobParserContext
     public GlobToken? CurrentToken { get; private set; }
     public RegexOptions Options { get; }
 
-    public GlobParserContext(string pattern, PathComparer comparer)
+    public GlobParserContext(string pattern, IPathComparer comparer)
     {
         _buffer = GlobTokenizer.Tokenize(pattern);
 

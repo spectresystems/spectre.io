@@ -6,6 +6,11 @@
 public interface IFileSystem
 {
     /// <summary>
+    /// Gets the file system's <see cref="IPathComparer"/>.
+    /// </summary>
+    IPathComparer Comparer { get; }
+
+    /// <summary>
     /// Gets the <see cref="IFileProvider"/> belonging to this <see cref="IFileSystem"/>>.
     /// </summary>
     /// <returns>An <see cref="IFileProvider"/> instance.</returns>

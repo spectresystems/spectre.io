@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Spectre.IO.Internal;
 
 namespace Spectre.IO;
@@ -8,12 +6,11 @@ namespace Spectre.IO;
 /// <summary>
 /// Compares <see cref="Path"/> instances.
 /// </summary>
-public sealed class PathComparer : IEqualityComparer<Path?>, IComparer<Path?>
+public sealed class PathComparer : IPathComparer
 {
     /// <summary>
     /// Gets the default path comparer.
     /// </summary>
-    [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
     public static PathComparer Default { get; } = new PathComparer(EnvironmentHelper.IsUnix());
 
     /// <summary>

@@ -1,4 +1,6 @@
-﻿namespace Spectre.IO;
+﻿using System;
+
+namespace Spectre.IO;
 
 /// <summary>
 /// A physical file system implementation.
@@ -11,6 +13,9 @@ public sealed class FileSystem : IFileSystem
     public static FileSystem Shared { get; } = new();
 
     /// <inheritdoc/>
+    public IPathComparer Comparer { get; }
+
+    /// <inheritdoc/>
     public IFileProvider File { get; }
 
     /// <inheritdoc/>
@@ -19,8 +24,10 @@ public sealed class FileSystem : IFileSystem
     /// <summary>
     /// Initializes a new instance of the <see cref="FileSystem"/> class.
     /// </summary>
-    public FileSystem()
+    /// <param name="comparer">The path comparer to use.</param>
+    public FileSystem(IPathComparer? comparer = null)
     {
+        Comparer = comparer ?? PathComparer.Default;
         File = new FileProvider();
         Directory = new DirectoryProvider();
     }

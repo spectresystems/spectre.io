@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Spectre.IO;
 
@@ -33,5 +34,16 @@ public static class DirectoryPathExtensions
 
         var result = environment.ExpandEnvironmentVariables(path.FullPath);
         return new DirectoryPath(result);
+    }
+
+    /// <summary>
+    /// Converts an <see cref="IEnumerable{DirectoryPath}"/> to a <see cref="DirectoryPathCollection"/>.
+    /// </summary>
+    /// <param name="source">The paths to add to the collection.</param>
+    /// <param name="comparer">The comparer to use. If <c>null</c>, the default one is used.</param>
+    /// <returns>A new <see cref="DirectoryPathCollection"/>.</returns>
+    public static DirectoryPathCollection ToPathCollection(this IEnumerable<DirectoryPath> source, IPathComparer? comparer = null)
+    {
+        return new DirectoryPathCollection(source, comparer);
     }
 }

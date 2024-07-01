@@ -19,13 +19,13 @@ public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
     /// <value>The number of directories in the collection.</value>
     public int Count => _paths.Count;
 
-    internal PathComparer Comparer { get; }
+    internal IPathComparer Comparer { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DirectoryPathCollection"/> class.
     /// </summary>
     public DirectoryPathCollection()
-        : this(PathComparer.Default)
+        : this(Enumerable.Empty<DirectoryPath>(), null)
     {
     }
 
@@ -33,7 +33,7 @@ public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
     /// Initializes a new instance of the <see cref="DirectoryPathCollection"/> class.
     /// </summary>
     /// <param name="comparer">The comparer.</param>
-    public DirectoryPathCollection(PathComparer comparer)
+    public DirectoryPathCollection(IPathComparer comparer)
         : this(Enumerable.Empty<DirectoryPath>(), comparer)
     {
     }
@@ -43,7 +43,7 @@ public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
     /// </summary>
     /// <param name="paths">The paths.</param>
     public DirectoryPathCollection(IEnumerable<DirectoryPath> paths)
-        : this(paths, PathComparer.Default)
+        : this(paths, null)
     {
     }
 
@@ -52,10 +52,11 @@ public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
     /// </summary>
     /// <param name="paths">The paths.</param>
     /// <param name="comparer">The comparer.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="comparer"/> is <c>null</c>.</exception>
-    public DirectoryPathCollection(IEnumerable<DirectoryPath> paths, PathComparer comparer)
+    public DirectoryPathCollection(IEnumerable<DirectoryPath> paths, IPathComparer? comparer = null)
     {
-        Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
+        ArgumentNullException.ThrowIfNull(paths);
+
+        Comparer = comparer ?? PathComparer.Default;
         _paths = new HashSet<DirectoryPath>(paths, comparer);
     }
 

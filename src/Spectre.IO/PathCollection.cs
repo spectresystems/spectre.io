@@ -19,13 +19,13 @@ public sealed class PathCollection : IEnumerable<Path>
     /// <value>The number of paths in the collection.</value>
     public int Count => _paths.Count;
 
-    internal PathComparer Comparer { get; }
+    internal IPathComparer Comparer { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PathCollection"/> class.
     /// </summary>
     public PathCollection()
-        : this(PathComparer.Default)
+        : this(Enumerable.Empty<Path>(), null)
     {
     }
 
@@ -33,7 +33,7 @@ public sealed class PathCollection : IEnumerable<Path>
     /// Initializes a new instance of the <see cref="PathCollection"/> class.
     /// </summary>
     /// <param name="comparer">The comparer.</param>
-    public PathCollection(PathComparer comparer)
+    public PathCollection(IPathComparer comparer)
         : this(Enumerable.Empty<Path>(), comparer)
     {
     }
@@ -43,7 +43,7 @@ public sealed class PathCollection : IEnumerable<Path>
     /// </summary>
     /// <param name="paths">The paths.</param>
     public PathCollection(IEnumerable<Path> paths)
-        : this(paths, PathComparer.Default)
+        : this(paths, null)
     {
     }
 
@@ -53,9 +53,11 @@ public sealed class PathCollection : IEnumerable<Path>
     /// <param name="paths">The paths.</param>
     /// <param name="comparer">The comparer.</param>
     /// <exception cref="ArgumentNullException"><paramref name="comparer"/> is <c>null</c>.</exception>
-    public PathCollection(IEnumerable<Path> paths, PathComparer comparer)
+    public PathCollection(IEnumerable<Path> paths, IPathComparer? comparer = null)
     {
-        Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
+        ArgumentNullException.ThrowIfNull(paths);
+
+        Comparer = comparer ?? PathComparer.Default;
         _paths = new HashSet<Path>(paths, comparer);
     }
 

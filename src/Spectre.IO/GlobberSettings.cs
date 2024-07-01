@@ -25,5 +25,5 @@ public sealed class GlobberSettings
     /// <summary>
     /// Gets or sets the comparer to use.
     /// </summary>
-    public PathComparer? Comparer { get; set; }
+    public IPathComparer? Comparer { get; set; }
 }

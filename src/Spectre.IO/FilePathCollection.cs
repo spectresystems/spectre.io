@@ -19,13 +19,13 @@ public sealed class FilePathCollection : IEnumerable<FilePath>
     /// <value>The number of files in the collection.</value>
     public int Count => _paths.Count;
 
-    internal PathComparer Comparer { get; }
+    internal IPathComparer Comparer { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FilePathCollection"/> class.
     /// </summary>
     public FilePathCollection()
-        : this(PathComparer.Default)
+        : this(Enumerable.Empty<FilePath>(), null)
     {
     }
 
@@ -33,7 +33,7 @@ public sealed class FilePathCollection : IEnumerable<FilePath>
     /// Initializes a new instance of the <see cref="FilePathCollection"/> class.
     /// </summary>
     /// <param name="comparer">The comparer.</param>
-    public FilePathCollection(PathComparer comparer)
+    public FilePathCollection(IPathComparer comparer)
         : this(Enumerable.Empty<FilePath>(), comparer)
     {
     }
@@ -43,7 +43,7 @@ public sealed class FilePathCollection : IEnumerable<FilePath>
     /// </summary>
     /// <param name="paths">The paths.</param>
     public FilePathCollection(IEnumerable<FilePath> paths)
-        : this(paths, PathComparer.Default)
+        : this(paths, null)
     {
     }
 
@@ -53,10 +53,12 @@ public sealed class FilePathCollection : IEnumerable<FilePath>
     /// <param name="paths">The paths.</param>
     /// <param name="comparer">The comparer.</param>
     /// <exception cref="ArgumentNullException"><paramref name="comparer"/> is <c>null</c>.</exception>
-    public FilePathCollection(IEnumerable<FilePath> paths, PathComparer comparer)
+    public FilePathCollection(IEnumerable<FilePath> paths, IPathComparer? comparer = null)
     {
-        Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
-        _paths = new HashSet<FilePath>(paths, comparer);
+        ArgumentNullException.ThrowIfNull(paths);
+
+        Comparer = comparer ?? PathComparer.Default;
+        _paths = new HashSet<FilePath>(paths, Comparer);
     }
 
     /// <summary>
