@@ -12,20 +12,6 @@ public sealed class FileSystemExtensionsTest
         public sealed class WithFilePath
         {
             [Fact]
-            public void Should_Return_False_If_File_System_Returned_Null()
-            {
-                // Given
-                var fileSystem = Substitute.For<IFileSystem>();
-                fileSystem.File.Retrieve(Arg.Any<FilePath>()).Returns((IFile)null);
-
-                // When
-                var result = fileSystem.Exist((FilePath)"file.txt");
-
-                // Then
-                result.ShouldBeFalse();
-            }
-
-            [Fact]
             public void Should_Return_False_If_File_Do_Not_Exist()
             {
                 // Given
@@ -71,20 +57,6 @@ public sealed class FileSystemExtensionsTest
 
         public sealed class WithDirectoryPath
         {
-            [Fact]
-            public void Should_Return_False_If_File_System_Returned_Null()
-            {
-                // Given
-                var fileSystem = Substitute.For<IFileSystem>();
-                fileSystem.Directory.Retrieve(Arg.Any<DirectoryPath>()).Returns((IDirectory)null);
-
-                // When
-                var result = fileSystem.Exist((DirectoryPath)"/Target");
-
-                // Then
-                result.ShouldBeFalse();
-            }
-
             [Fact]
             public void Should_Return_False_If_Directory_Do_Not_Exist()
             {

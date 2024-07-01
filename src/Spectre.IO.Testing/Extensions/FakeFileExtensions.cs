@@ -56,37 +56,12 @@ public static class FakeFileExtensions
     }
 
     /// <summary>
-    /// Gets the binary content of the specified file.
-    /// </summary>
-    /// <param name="file">The file.</param>
-    /// <returns>The binary content of the specified file.</returns>
-    public static byte[] GetBinaryContent(this FakeFile file)
-    {
-        if (file == null)
-        {
-            throw new ArgumentNullException(nameof(file));
-        }
-
-        if (!file.Exists)
-        {
-            throw new FileNotFoundException("File could not be found.", file.Path.FullPath);
-        }
-
-        using (var stream = file.OpenRead())
-        using (var reader = new BinaryReader(stream))
-        using (var memory = new MemoryStream())
-        {
-            reader.BaseStream.CopyTo(memory);
-            return memory.ToArray();
-        }
-    }
-
-    /// <summary>
     /// Gets the text content of the file.
     /// </summary>
     /// <param name="file">The file.</param>
     /// <param name="encoding">The text encoding to use, or <c>null</c> to use the default encoding.</param>
     /// <returns>The text content of the file.</returns>
+    [Obsolete("Use `IFile.ReadAllText(...)` instead")]
     public static string GetTextContent(this FakeFile file, Encoding? encoding = null)
     {
         if (file == null)
@@ -106,18 +81,6 @@ public static class FakeFileExtensions
         {
             return reader.ReadToEnd();
         }
-    }
-
-    /// <summary>
-    /// Determines if a specified file has a UTF-8 BOM.
-    /// </summary>
-    /// <param name="file">The file.</param>
-    /// <returns>Whether or not the specified file has a UTF-8 BOM.</returns>
-    public static bool HasUTF8BOM(this FakeFile file)
-    {
-        var content = GetBinaryContent(file);
-        var preamble = Encoding.UTF8.GetPreamble();
-        return content.StartsWith(preamble);
     }
 
     /// <summary>

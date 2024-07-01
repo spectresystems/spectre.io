@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 
 namespace Spectre.IO;
 
@@ -52,8 +54,7 @@ public static class IFileSystemExtensions
             throw new ArgumentNullException(nameof(fileSystem));
         }
 
-        var file = fileSystem.File.Retrieve(path);
-        return file?.Exists == true;
+        return GetFile(fileSystem, path).Exists;
     }
 
     /// <summary>
@@ -69,7 +70,53 @@ public static class IFileSystemExtensions
             throw new ArgumentNullException(nameof(fileSystem));
         }
 
-        var directory = fileSystem.Directory.Retrieve(path);
-        return directory?.Exists == true;
+        return GetDirectory(fileSystem, path).Exists;
+    }
+
+    /// <summary>
+    /// Opens a text file, reads all the text in the file, and then closes the file.
+    /// </summary>
+    /// <param name="fileSystem">The file system.</param>
+    /// <param name="path">The file path to read from.</param>
+    /// <param name="encoding">The character encoding to use.</param>
+    /// <returns>A string containing all text in the file.</returns>
+    public static string ReadAllText(
+        this IFileSystem fileSystem,
+        FilePath path,
+        Encoding? encoding = null)
+    {
+        ArgumentNullException.ThrowIfNull(fileSystem);
+        ArgumentNullException.ThrowIfNull(path);
+
+        var file = GetFile(fileSystem, path);
+        using (var reader = new StreamReader(file.OpenRead(), encoding, true, -1, false))
+        {
+            return reader.ReadToEnd();
+        }
+    }
+
+    /// <summary>
+    /// Creates a new file, writes the specified string to the file, and then closes the file.
+    /// If the target file already exists, it is overwritten.
+    /// </summary>
+    /// <param name="fileSystem">The file system.</param>
+    /// <param name="path">The file path to write to.</param>
+    /// <param name="contents">The string to write to the file.</param>
+    /// <param name="encoding">The encoding to apply to the string.</param>
+    public static void WriteAllText(
+        this IFileSystem fileSystem,
+        FilePath path,
+        string contents,
+        Encoding? encoding = null)
+    {
+        ArgumentNullException.ThrowIfNull(fileSystem);
+        ArgumentNullException.ThrowIfNull(path);
+        ArgumentNullException.ThrowIfNull(contents);
+
+        var file = GetFile(fileSystem, path);
+        using (var writer = new StreamWriter(file.OpenWrite(), encoding, -1, false))
+        {
+            writer.Write(contents);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Text;
 
 namespace Spectre.IO;
 
@@ -17,10 +18,7 @@ public static class IFileExtensions
     /// <returns>A <see cref="Stream"/> to the file.</returns>
     public static Stream Open(this IFile file, FileMode mode)
     {
-        if (file == null)
-        {
-            throw new ArgumentNullException(nameof(file));
-        }
+        ArgumentNullException.ThrowIfNull(file);
 
         return file.Open(
             mode,
@@ -37,10 +35,7 @@ public static class IFileExtensions
     /// <returns>A <see cref="Stream"/> to the file.</returns>
     public static Stream Open(this IFile file, FileMode mode, FileAccess access)
     {
-        if (file == null)
-        {
-            throw new ArgumentNullException(nameof(file));
-        }
+        ArgumentNullException.ThrowIfNull(file);
 
         return file.Open(mode, access, FileShare.None);
     }
@@ -52,10 +47,7 @@ public static class IFileExtensions
     /// <returns>A <see cref="Stream"/> to the file.</returns>
     public static Stream OpenRead(this IFile file)
     {
-        if (file == null)
-        {
-            throw new ArgumentNullException(nameof(file));
-        }
+        ArgumentNullException.ThrowIfNull(file);
 
         return file.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
     }
@@ -68,10 +60,7 @@ public static class IFileExtensions
     /// <returns>A <see cref="Stream"/> to the file.</returns>
     public static Stream OpenWrite(this IFile file)
     {
-        if (file == null)
-        {
-            throw new ArgumentNullException(nameof(file));
-        }
+        ArgumentNullException.ThrowIfNull(file);
 
         return file.Open(FileMode.Create, FileAccess.Write, FileShare.None);
     }
@@ -86,6 +75,9 @@ public static class IFileExtensions
     /// <returns>Whether or not the operation succeeded.</returns>
     public static bool TryCopy(this IFile file, FilePath destination, bool overwrite, out IFile? result)
     {
+        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(destination);
+
         try
         {
             result = file.Copy(destination, overwrite);
@@ -107,6 +99,9 @@ public static class IFileExtensions
     /// <returns>Whether or not the operation succeeded.</returns>
     public static bool TryMove(this IFile file, FilePath destination, [NotNullWhen(true)] out IFile? result)
     {
+        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(destination);
+
         return TryMove(file, destination, false, out result);
     }
 
@@ -124,6 +119,9 @@ public static class IFileExtensions
         bool overwrite,
         [NotNullWhen(true)] out IFile? result)
     {
+        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(destination);
+
         try
         {
             result = file.Move(destination, overwrite);
@@ -143,6 +141,8 @@ public static class IFileExtensions
     /// <returns>Whether or not the operation succeeded.</returns>
     public static bool TryDelete(this IFile file)
     {
+        ArgumentNullException.ThrowIfNull(file);
+
         try
         {
             file.Delete();
@@ -151,6 +151,44 @@ public static class IFileExtensions
         catch
         {
             return false;
+        }
+    }
+
+    /// <summary>
+    /// Opens a text file, reads all the text in the file, and then closes the file.
+    /// </summary>
+    /// <param name="file">The file to read from.</param>
+    /// <param name="encoding">The character encoding to use.</param>
+    /// <returns>A string containing all text in the file.</returns>
+    public static string ReadAllText(
+        this IFile file,
+        Encoding? encoding = null)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+
+        using (var reader = new StreamReader(file.OpenRead(), encoding, true, -1, false))
+        {
+            return reader.ReadToEnd();
+        }
+    }
+
+    /// <summary>
+    /// Creates a new file, writes the specified string to the file, and then closes the file.
+    /// If the target file already exists, it is overwritten.
+    /// </summary>
+    /// <param name="file">The file to write to.</param>
+    /// <param name="contents">The string to write to the file.</param>
+    /// <param name="encoding">The encoding to apply to the string.</param>
+    public static void WriteAllText(
+        this IFile file,
+        string contents,
+        Encoding? encoding = null)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+
+        using (var writer = new StreamWriter(file.OpenWrite(), encoding, -1, false))
+        {
+            writer.Write(contents);
         }
     }
 }

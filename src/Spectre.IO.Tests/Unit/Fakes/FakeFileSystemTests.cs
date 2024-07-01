@@ -38,7 +38,7 @@ public sealed class FakeFileSystemTests
         fileSystem.File.CreateSymbolicLink("/Working/test.txt", "/home/Patrik/foo.txt");
 
         // When
-        var result = fileSystem.GetFakeFile("/home/Patrik/foo.txt").GetTextContent();
+        var result = fileSystem.GetFakeFile("/home/Patrik/foo.txt").ReadAllText();
 
         // Then
         result.ShouldBe("LOL");
