@@ -2,6 +2,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Spectre.IO;
 
@@ -158,7 +160,7 @@ public static class IFileExtensions
     /// Opens a text file, reads all the text in the file, and then closes the file.
     /// </summary>
     /// <param name="file">The file to read from.</param>
-    /// <param name="encoding">The character encoding to use.</param>
+    /// <param name="encoding">The encoding applied to the contents of the file.</param>
     /// <returns>A string containing all text in the file.</returns>
     public static string ReadAllText(
         this IFile file,
@@ -169,6 +171,54 @@ public static class IFileExtensions
         using (var reader = new StreamReader(file.OpenRead(), encoding, true, -1, false))
         {
             return reader.ReadToEnd();
+        }
+    }
+
+    /// <summary>
+    /// Asynchronously opens a text file, reads all the text in the file, and then closes the file.
+    /// </summary>
+    /// <param name="file">The file to read from.</param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests.
+    /// The default value is <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous read operation,
+    /// which wraps the string containing all text in the file.
+    /// </returns>
+    public static async Task<string> ReadAllTextAsync(this IFile file, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+
+        using (var reader = new StreamReader(file.OpenRead()))
+        {
+            return await reader.ReadToEndAsync();
+        }
+    }
+
+    /// <summary>
+    /// Asynchronously opens a text file, reads all the text in the file, and then closes the file.
+    /// </summary>
+    /// <param name="file">The file to read from.</param>
+    /// <param name="encoding">The encoding applied to the contents of the file.</param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests.
+    /// The default value is <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous read operation,
+    /// which wraps the string containing all text in the file.
+    /// </returns>
+    public static async Task<string> ReadAllTextAsync(
+        this IFile file,
+        Encoding encoding,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+
+        using (var reader = new StreamReader(file.OpenRead(), encoding, true, -1, false))
+        {
+            return await reader.ReadToEndAsync();
         }
     }
 
@@ -189,6 +239,56 @@ public static class IFileExtensions
         using (var writer = new StreamWriter(file.OpenWrite(), encoding, -1, false))
         {
             writer.Write(contents);
+        }
+    }
+
+    /// <summary>
+    /// Creates a new file, writes the specified string to the file, and then closes the file.
+    /// If the target file already exists, it is overwritten.
+    /// </summary>
+    /// <param name="file">The file to write to.</param>
+    /// <param name="contents">The string to write to the file.</param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests.
+    /// The default value is <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>A task that represents the asynchronous write operation.</returns>
+    public static async Task WriteAllTextAsync(
+        this IFile file,
+        string contents,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+
+        using (var writer = new StreamWriter(file.OpenWrite()))
+        {
+            await writer.WriteAsync(contents);
+        }
+    }
+
+    /// <summary>
+    /// Creates a new file, writes the specified string to the file, and then closes the file.
+    /// If the target file already exists, it is overwritten.
+    /// </summary>
+    /// <param name="file">The file to write to.</param>
+    /// <param name="contents">The string to write to the file.</param>
+    /// <param name="encoding">The encoding to apply to the string.</param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests.
+    /// The default value is <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>A task that represents the asynchronous write operation.</returns>
+    public static async Task WriteAllTextAsync(
+        this IFile file,
+        string contents,
+        Encoding encoding,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+
+        using (var writer = new StreamWriter(file.OpenWrite(), encoding, -1, false))
+        {
+            await writer.WriteAsync(contents);
         }
     }
 }
