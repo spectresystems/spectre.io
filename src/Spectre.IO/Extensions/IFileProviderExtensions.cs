@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Spectre.IO;
 
@@ -16,10 +19,8 @@ public static class IFileProviderExtensions
     /// <returns><c>true</c> if the file exists; otherwise, <c>false</c>.</returns>
     public static bool Exists(this IFileProvider provider, FilePath path)
     {
-        if (provider is null)
-        {
-            throw new ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
 
         var file = provider.Retrieve(path);
         return file.Exists;
@@ -34,10 +35,8 @@ public static class IFileProviderExtensions
     /// <returns>The file size in bytes.</returns>
     public static long GetLength(this IFileProvider provider, FilePath path)
     {
-        if (provider is null)
-        {
-            throw new ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
 
         var file = provider.Retrieve(path);
         return file.Length;
@@ -52,10 +51,8 @@ public static class IFileProviderExtensions
     /// <returns>The file attributes.</returns>
     public static FileAttributes GetAttributes(this IFileProvider provider, FilePath path)
     {
-        if (provider is null)
-        {
-            throw new ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
 
         var file = provider.Retrieve(path);
         return file.Attributes;
@@ -70,10 +67,8 @@ public static class IFileProviderExtensions
     /// <value>The file attributes.</value>
     public static void SetAttributes(this IFileProvider provider, FilePath path, FileAttributes attributes)
     {
-        if (provider is null)
-        {
-            throw new ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
 
         var file = provider.Retrieve(path);
         file.Attributes = attributes;
@@ -92,10 +87,9 @@ public static class IFileProviderExtensions
         FilePath destination,
         bool overwrite)
     {
-        if (provider is null)
-        {
-            throw new ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destination);
 
         var file = provider.Retrieve(source);
         file.Copy(destination, overwrite);
@@ -112,10 +106,9 @@ public static class IFileProviderExtensions
         FilePath source,
         FilePath destination)
     {
-        if (provider is null)
-        {
-            throw new ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destination);
 
         var file = provider.Retrieve(source);
         file.CreateSymbolicLink(destination);
@@ -129,6 +122,10 @@ public static class IFileProviderExtensions
     /// <param name="destination">The destination file path.</param>
     public static void Move(this IFileProvider provider, FilePath source, FilePath destination)
     {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destination);
+
         Move(provider, source, destination, false);
     }
 
@@ -141,10 +138,9 @@ public static class IFileProviderExtensions
     /// <param name="overwrite">Will overwrite existing destination file if set to <c>true</c>.</param>
     public static void Move(this IFileProvider provider, FilePath source, FilePath destination, bool overwrite)
     {
-        if (provider is null)
-        {
-            throw new ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(destination);
 
         var file = provider.Retrieve(source);
         file.Move(destination, overwrite);
@@ -157,10 +153,8 @@ public static class IFileProviderExtensions
     /// <param name="path">The file to delete.</param>
     public static void Delete(this IFileProvider provider, FilePath path)
     {
-        if (provider is null)
-        {
-            throw new ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
 
         var file = provider.Retrieve(path);
         file.Delete();
@@ -182,10 +176,8 @@ public static class IFileProviderExtensions
         FileAccess fileAccess,
         FileShare fileShare)
     {
-        if (provider is null)
-        {
-            throw new ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
 
         var file = provider.Retrieve(path);
         return file.Open(fileMode, fileAccess, fileShare);
@@ -200,10 +192,8 @@ public static class IFileProviderExtensions
     /// <returns>A <see cref="Stream"/> to the file.</returns>
     public static Stream Open(this IFileProvider provider, FilePath path, FileMode mode)
     {
-        if (provider == null)
-        {
-            throw new ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
 
         return provider.Retrieve(path).Open(
             mode,
@@ -225,10 +215,8 @@ public static class IFileProviderExtensions
         FileMode mode,
         FileAccess access)
     {
-        if (provider == null)
-        {
-            throw new ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
 
         return provider.Retrieve(path).Open(mode, access, FileShare.None);
     }
@@ -241,10 +229,8 @@ public static class IFileProviderExtensions
     /// <returns>A <see cref="Stream"/> to the file.</returns>
     public static Stream OpenRead(this IFileProvider provider, FilePath path)
     {
-        if (provider == null)
-        {
-            throw new ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
 
         return provider.Retrieve(path).Open(FileMode.Open, FileAccess.Read, FileShare.Read);
     }
@@ -258,11 +244,152 @@ public static class IFileProviderExtensions
     /// <returns>A <see cref="Stream"/> to the file.</returns>
     public static Stream OpenWrite(this IFileProvider provider, FilePath path)
     {
-        if (provider == null)
-        {
-            throw new ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
 
-        return provider.Retrieve(path).Open(FileMode.Create, FileAccess.Write, FileShare.None);
+        return provider.Retrieve(path)
+            .Open(FileMode.Create, FileAccess.Write, FileShare.None);
+    }
+
+    /// <summary>
+    /// Opens a text file, reads all the text in the file, and then closes the file.
+    /// </summary>
+    /// <param name="provider">The file provider.</param>
+    /// <param name="path">The file to read from.</param>
+    /// <param name="encoding">The encoding applied to the contents of the file.</param>
+    /// <returns>A string containing all text in the file.</returns>
+    public static string ReadAllText(this IFileProvider provider, FilePath path, Encoding? encoding = null)
+    {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
+
+        return provider.Retrieve(path)
+            .ReadAllText(encoding);
+    }
+
+    /// <summary>
+    /// Asynchronously opens a text file, reads all the text in the file, and then closes the file.
+    /// </summary>
+    /// <param name="provider">The file provider.</param>
+    /// <param name="path">The file path.</param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests.
+    /// The default value is <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous read operation,
+    /// which wraps the string containing all text in the file.
+    /// </returns>
+    public static async Task<string> ReadAllTextAsync(
+        this IFileProvider provider,
+        FilePath path,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
+
+        return await provider.Retrieve(path)
+            .ReadAllTextAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Asynchronously opens a text file, reads all the text in the file, and then closes the file.
+    /// </summary>
+    /// <param name="provider">The file provider.</param>
+    /// <param name="path">The file path.</param>
+    /// <param name="encoding">The encoding applied to the contents of the file.</param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests.
+    /// The default value is <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous read operation,
+    /// which wraps the string containing all text in the file.
+    /// </returns>
+    public static async Task<string> ReadAllTextAsync(
+        this IFileProvider provider,
+        FilePath path,
+        Encoding encoding,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
+
+        return await provider.Retrieve(path)
+            .ReadAllTextAsync(encoding, cancellationToken);
+    }
+
+    /// <summary>
+    /// Creates a new file, writes the specified string to the file, and then closes the file.
+    /// If the target file already exists, it is overwritten.
+    /// </summary>
+    /// <param name="provider">The file provider.</param>
+    /// <param name="path">The file to write to.</param>
+    /// <param name="contents">The string to write to the file.</param>
+    /// <param name="encoding">The encoding to apply to the string.</param>
+    public static void WriteAllText(
+        this IFileProvider provider,
+        FilePath path,
+        string contents,
+        Encoding? encoding = null)
+    {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
+
+        provider.Retrieve(path)
+            .WriteAllText(contents, encoding);
+    }
+
+    /// <summary>
+    /// Creates a new file, writes the specified string to the file, and then closes the file.
+    /// If the target file already exists, it is overwritten.
+    /// </summary>
+    /// <param name="provider">The file provider.</param>
+    /// <param name="path">The file to write to.</param>
+    /// <param name="contents">The string to write to the file.</param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests.
+    /// The default value is <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>A task that represents the asynchronous write operation.</returns>
+    public static async Task WriteAllTextAsync(
+        this IFileProvider provider,
+        FilePath path,
+        string contents,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
+
+        await provider.Retrieve(path)
+            .WriteAllTextAsync(contents, cancellationToken);
+    }
+
+    /// <summary>
+    /// Asynchronously creates a new file, writes the specified string to the file using the
+    /// specified encoding, and then closes the file. If the target file already exists,
+    /// it is truncated and overwritten.
+    /// </summary>
+    /// <param name="provider">The file provider.</param>
+    /// <param name="path">The file to write to.</param>
+    /// <param name="contents">The string to write to the file.</param>
+    /// <param name="encoding">The encoding to apply to the string.</param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests.
+    /// The default value is <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>A task that represents the asynchronous write operation.</returns>
+    public static async Task WriteAllTextAsync(
+        this IFileProvider provider,
+        FilePath path,
+        string contents,
+        Encoding encoding,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(path);
+
+        await provider.Retrieve(path)
+            .WriteAllTextAsync(contents, encoding, cancellationToken);
     }
 }

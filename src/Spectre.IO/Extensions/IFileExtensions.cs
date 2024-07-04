@@ -197,7 +197,8 @@ public static class IFileExtensions
     }
 
     /// <summary>
-    /// Asynchronously opens a text file, reads all the text in the file, and then closes the file.
+    /// Asynchronously opens a text file, reads all text in the file with the
+    /// specified encoding, and then closes the file.
     /// </summary>
     /// <param name="file">The file to read from.</param>
     /// <param name="encoding">The encoding applied to the contents of the file.</param>
@@ -267,8 +268,9 @@ public static class IFileExtensions
     }
 
     /// <summary>
-    /// Creates a new file, writes the specified string to the file, and then closes the file.
-    /// If the target file already exists, it is overwritten.
+    /// Asynchronously creates a new file, writes the specified string to the file using the
+    /// specified encoding, and then closes the file. If the target file already exists,
+    /// it is truncated and overwritten.
     /// </summary>
     /// <param name="file">The file to write to.</param>
     /// <param name="contents">The string to write to the file.</param>
