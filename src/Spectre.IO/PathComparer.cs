@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Spectre.IO.Internal;
 
 namespace Spectre.IO;
@@ -11,7 +12,8 @@ public sealed class PathComparer : IPathComparer
     /// <summary>
     /// Gets the default path comparer.
     /// </summary>
-    public static PathComparer Default { get; } = new PathComparer(EnvironmentHelper.IsUnix());
+    public static PathComparer Default { get; }
+        = new PathComparer(EnvironmentHelper.IsUnix());
 
     /// <summary>
     /// Gets a value indicating whether comparison is case sensitive.
@@ -24,10 +26,10 @@ public sealed class PathComparer : IPathComparer
     /// <summary>
     /// Initializes a new instance of the <see cref="PathComparer"/> class.
     /// </summary>
-    /// <param name="isCaseSensitive">if set to <c>true</c>, comparison is case sensitive.</param>
-    public PathComparer(bool isCaseSensitive)
+    /// <param name="caseSensitive">if set to <c>true</c>, comparison is case sensitive.</param>
+    public PathComparer(bool caseSensitive)
     {
-        IsCaseSensitive = isCaseSensitive;
+        IsCaseSensitive = caseSensitive;
     }
 
     /// <summary>
@@ -52,26 +54,39 @@ public sealed class PathComparer : IPathComparer
             return 0;
         }
 
-        if (x != null && y == null)
+        // This might look strange,
+        // but for some reason, null reference tracking
+        // does not work correctly otherwise.
+        if (x == null || y == null)
         {
-            return -1;
-        }
+            if (x != null && y == null)
+            {
+                return -1;
+            }
 
-        if (x == null && y != null)
-        {
             return 1;
         }
 
-        if (IsCaseSensitive)
+        if (x.Segments.Count != y.Segments.Count)
         {
-            return StringComparer.Ordinal.Compare(
-                x!.FullPath,
-                y!.FullPath);
+            return x.Segments.Count
+                .CompareTo(y.Segments.Count);
         }
 
-        return StringComparer.OrdinalIgnoreCase.Compare(
-            x!.FullPath,
-            y!.FullPath);
+        var comparer = IsCaseSensitive
+            ? StringComparer.Ordinal
+            : StringComparer.OrdinalIgnoreCase;
+
+        foreach (var (segmentX, segmentY) in x.Segments.Zip(y.Segments))
+        {
+            var sort = comparer.Compare(segmentX, segmentY);
+            if (sort != 0)
+            {
+                return sort;
+            }
+        }
+
+        return 0;
     }
 
     /// <inheritdoc/>
@@ -87,12 +102,24 @@ public sealed class PathComparer : IPathComparer
             return false;
         }
 
-        if (IsCaseSensitive)
+        if (x.Segments.Count != y.Segments.Count)
         {
-            return x.FullPath.Equals(y.FullPath, StringComparison.Ordinal);
+            return false;
         }
 
-        return x.FullPath.Equals(y.FullPath, StringComparison.OrdinalIgnoreCase);
+        var comparer = IsCaseSensitive
+            ? StringComparer.Ordinal
+            : StringComparer.OrdinalIgnoreCase;
+
+        foreach (var (segmentX, segmentY) in x.Segments.Zip(y.Segments))
+        {
+            if (!comparer.Equals(segmentX, segmentY))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /// <inheritdoc/>

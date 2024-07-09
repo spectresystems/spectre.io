@@ -15,10 +15,10 @@ public sealed class PathComparerTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Same_Asset_Instances_Is_Considered_Equal(bool isCaseSensitive)
+        public void Same_Asset_Instances_Is_Considered_Equal(bool caseSensitive)
         {
             // Given, When
-            var comparer = new PathComparer(isCaseSensitive);
+            var comparer = new PathComparer(caseSensitive);
             var path = new FilePath("shaders/basic.vert");
 
             // When
@@ -31,10 +31,10 @@ public sealed class PathComparerTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Two_Null_Paths_Are_Considered_Equal(bool isCaseSensitive)
+        public void Two_Null_Paths_Are_Considered_Equal(bool caseSensitive)
         {
             // Given
-            var comparer = new PathComparer(isCaseSensitive);
+            var comparer = new PathComparer(caseSensitive);
 
             // When
             var result = comparer.Equals(null, null);
@@ -46,10 +46,10 @@ public sealed class PathComparerTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Paths_Are_Considered_Inequal_If_Any_Is_Null(bool isCaseSensitive)
+        public void Paths_Are_Considered_Inequal_If_Any_Is_Null(bool caseSensitive)
         {
             // Given
-            var comparer = new PathComparer(isCaseSensitive);
+            var comparer = new PathComparer(caseSensitive);
 
             // When
             var result = comparer.Equals(null, new FilePath("test.txt"));
@@ -61,10 +61,10 @@ public sealed class PathComparerTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Same_Paths_Are_Considered_Equal(bool isCaseSensitive)
+        public void Same_Paths_Are_Considered_Equal(bool caseSensitive)
         {
             // Given, When
-            var comparer = new PathComparer(isCaseSensitive);
+            var comparer = new PathComparer(caseSensitive);
             var first = new FilePath("shaders/basic.vert");
             var second = new FilePath("shaders/basic.vert");
 
@@ -76,10 +76,10 @@ public sealed class PathComparerTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Different_Paths_Are_Not_Considered_Equal(bool isCaseSensitive)
+        public void Different_Paths_Are_Not_Considered_Equal(bool caseSensitive)
         {
             // Given, When
-            var comparer = new PathComparer(isCaseSensitive);
+            var comparer = new PathComparer(caseSensitive);
             var first = new FilePath("shaders/basic.vert");
             var second = new FilePath("shaders/basic.frag");
 
@@ -92,10 +92,10 @@ public sealed class PathComparerTests
         [InlineData(true, false)]
         [InlineData(false, true)]
         public void Same_Paths_But_Different_Casing_Are_Considered_Equal_Depending_On_Case_Sensitivity(
-            bool isCaseSensitive, bool expected)
+            bool caseSensitive, bool expected)
         {
             // Given, When
-            var comparer = new PathComparer(isCaseSensitive);
+            var comparer = new PathComparer(caseSensitive);
             var first = new FilePath("shaders/basic.vert");
             var second = new FilePath("SHADERS/BASIC.VERT");
 
@@ -120,7 +120,7 @@ public sealed class PathComparerTests
 
             // When
             var result = paths
-                .Order(new PathComparer(isCaseSensitive: false))
+                .Order(new PathComparer(caseSensitive: false))
                 .ToList();
 
             // Then
@@ -149,10 +149,10 @@ public sealed class PathComparerTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Same_Paths_Get_Same_Hash_Code(bool isCaseSensitive)
+        public void Same_Paths_Get_Same_Hash_Code(bool caseSensitive)
         {
             // Given
-            var comparer = new PathComparer(isCaseSensitive);
+            var comparer = new PathComparer(caseSensitive);
             var first = new FilePath("shaders/basic.vert");
             var second = new FilePath("shaders/basic.vert");
 
@@ -167,10 +167,10 @@ public sealed class PathComparerTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Different_Paths_Get_Different_Hash_Codes(bool isCaseSensitive)
+        public void Different_Paths_Get_Different_Hash_Codes(bool caseSensitive)
         {
             // Given
-            var comparer = new PathComparer(isCaseSensitive);
+            var comparer = new PathComparer(caseSensitive);
             var first = new FilePath("shaders/basic.vert");
             var second = new FilePath("shaders/basic.frag");
 
@@ -186,10 +186,10 @@ public sealed class PathComparerTests
         [InlineData(true, false)]
         [InlineData(false, true)]
         public void Same_Paths_But_Different_Casing_Get_Same_Hash_Code_Depending_On_Case_Sensitivity(
-            bool isCaseSensitive, bool expected)
+            bool caseSensitive, bool expected)
         {
             // Given, When
-            var comparer = new PathComparer(isCaseSensitive);
+            var comparer = new PathComparer(caseSensitive);
             var first = new FilePath("shaders/basic.vert");
             var second = new FilePath("SHADERS/BASIC.VERT");
 
@@ -222,13 +222,13 @@ public sealed class PathComparerTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void Should_Return_Whether_Or_Not_The_Comparer_Is_Case_Sensitive(bool isCaseSensitive)
+        public void Should_Return_Whether_Or_Not_The_Comparer_Is_Case_Sensitive(bool caseSensitive)
         {
             // Given, When
-            var comparer = new PathComparer(isCaseSensitive);
+            var comparer = new PathComparer(caseSensitive);
 
             // Then
-            comparer.IsCaseSensitive.ShouldBe(isCaseSensitive);
+            comparer.IsCaseSensitive.ShouldBe(caseSensitive);
         }
     }
 }
