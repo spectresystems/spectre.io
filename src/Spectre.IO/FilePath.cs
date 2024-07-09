@@ -6,7 +6,7 @@ namespace Spectre.IO;
 /// <summary>
 /// Represents a file path.
 /// </summary>
-public sealed class FilePath : Path
+public sealed class FilePath : Path, IEquatable<FilePath>, IComparable<FilePath>
 {
     /// <summary>
     /// Gets a value indicating whether this path has a file extension.
@@ -239,5 +239,30 @@ public sealed class FilePath : Path
     public FilePath GetRelativePath(FilePath to)
     {
         return GetDirectory().GetRelativePath(to);
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(FilePath? other)
+    {
+        return PathComparer.Default.Compare(this, other);
+    }
+
+    /// <inheritdoc />
+    public bool Equals(FilePath? other)
+    {
+        return PathComparer.Default.Equals(this, other);
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        return ReferenceEquals(this, obj)
+               || (obj is FilePath other && Equals(other));
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode()
+    {
+        return PathComparer.Default.GetHashCode(this);
     }
 }

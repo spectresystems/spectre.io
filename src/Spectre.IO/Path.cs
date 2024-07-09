@@ -8,7 +8,7 @@ namespace Spectre.IO;
 /// Provides properties and instance methods for working with paths.
 /// This class must be inherited.
 /// </summary>
-public abstract class Path
+public abstract class Path : IEquatable<Path>, IComparable<Path>
 {
     private readonly string[] _segments;
 
@@ -134,5 +134,44 @@ public abstract class Path
     public override string ToString()
     {
         return FullPath;
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(Path? other)
+    {
+        return PathComparer.Default.Compare(this, other);
+    }
+
+    /// <inheritdoc />
+    public bool Equals(Path? other)
+    {
+        return PathComparer.Default.Equals(this, other);
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj))
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, obj))
+        {
+            return true;
+        }
+
+        if (obj.GetType() != this.GetType())
+        {
+            return false;
+        }
+
+        return Equals((Path)obj);
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode()
+    {
+        return PathComparer.Default.GetHashCode(this);
     }
 }

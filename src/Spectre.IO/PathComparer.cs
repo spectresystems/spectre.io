@@ -55,7 +55,7 @@ public sealed class PathComparer : IPathComparer
         }
 
         // This might look strange,
-        // but for some reason, null reference tracking
+        // but for some reason, nullable reference tracking
         // does not work correctly otherwise.
         if (x == null || y == null)
         {
@@ -65,6 +65,11 @@ public sealed class PathComparer : IPathComparer
             }
 
             return 1;
+        }
+
+        if (x.GetType() != y.GetType())
+        {
+            return -1;
         }
 
         if (x.Segments.Count != y.Segments.Count)
@@ -98,6 +103,11 @@ public sealed class PathComparer : IPathComparer
         }
 
         if (x == null || y == null)
+        {
+            return false;
+        }
+
+        if (x.GetType() != y.GetType())
         {
             return false;
         }

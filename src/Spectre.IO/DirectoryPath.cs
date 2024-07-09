@@ -8,7 +8,7 @@ namespace Spectre.IO;
 /// <summary>
 /// Represents a directory path.
 /// </summary>
-public sealed class DirectoryPath : Path
+public sealed class DirectoryPath : Path, IEquatable<DirectoryPath>, IComparable<DirectoryPath>
 {
     /// <summary>
     /// Gets a value indicating whether or not the current
@@ -239,5 +239,30 @@ public sealed class DirectoryPath : Path
         }
 
         return GetRelativePath(to.GetDirectory()).GetFilePath(to.GetFilename());
+    }
+
+    /// <inheritdoc />
+    public int CompareTo(DirectoryPath? other)
+    {
+        return PathComparer.Default.Compare(this, other);
+    }
+
+    /// <inheritdoc />
+    public bool Equals(DirectoryPath? other)
+    {
+        return PathComparer.Default.Equals(this, other);
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        return ReferenceEquals(this, obj)
+               || (obj is DirectoryPath other && Equals(other));
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode()
+    {
+        return PathComparer.Default.GetHashCode(this);
     }
 }
