@@ -1,21 +1,11 @@
-﻿using System;
-using System.Linq;
-
-namespace Spectre.IO.Internal;
+﻿namespace Spectre.IO.Internal;
 
 internal static class RelativePathResolver
 {
     public static DirectoryPath Resolve(DirectoryPath from, DirectoryPath to)
     {
-        if (from == null)
-        {
-            throw new ArgumentNullException(nameof(from));
-        }
-
-        if (to == null)
-        {
-            throw new ArgumentNullException(nameof(to));
-        }
+        ArgumentNullException.ThrowIfNull(from);
+        ArgumentNullException.ThrowIfNull(to);
 
         if (to.IsRelative)
         {

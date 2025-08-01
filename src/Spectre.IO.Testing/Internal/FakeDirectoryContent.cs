@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Spectre.IO.Testing;
+﻿namespace Spectre.IO.Testing;
 
 internal sealed class FakeDirectoryContent
 {

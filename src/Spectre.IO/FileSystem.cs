@@ -1,10 +1,9 @@
-﻿using System;
-
-namespace Spectre.IO;
+﻿namespace Spectre.IO;
 
 /// <summary>
 /// A physical file system implementation.
 /// </summary>
+[PublicAPI]
 public sealed class FileSystem : IFileSystem
 {
     /// <summary>

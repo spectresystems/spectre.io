@@ -1,10 +1,9 @@
-﻿using System;
-
-namespace Spectre.IO;
+﻿namespace Spectre.IO;
 
 /// <summary>
 /// Contains settings used by the globber.
 /// </summary>
+[PublicAPI]
 public sealed class GlobberSettings
 {
     /// <summary>

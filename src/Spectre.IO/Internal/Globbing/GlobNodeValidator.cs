@@ -1,13 +1,10 @@
-﻿using System;
-using System.IO;
-
-namespace Spectre.IO.Internal;
+﻿namespace Spectre.IO.Internal;
 
 internal static class GlobNodeValidator
 {
     public static void Validate(string pattern, GlobNode node)
     {
-        var previous = (GlobNode?)null;
+        GlobNode? previous = null;
         var current = node;
         while (current != null)
         {

@@ -1,13 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using Spectre.IO.Internal;
+﻿using Spectre.IO.Internal;
 
 namespace Spectre.IO;
 
 /// <summary>
 /// Represents a directory path.
 /// </summary>
+[PublicAPI]
 public sealed class DirectoryPath : Path, IEquatable<DirectoryPath>, IComparable<DirectoryPath>
 {
     /// <summary>
@@ -45,7 +43,7 @@ public sealed class DirectoryPath : Path, IEquatable<DirectoryPath>, IComparable
             return string.Empty;
         }
 
-        return Segments[Segments.Count - 1];
+        return Segments[^1];
     }
 
     /// <summary>
@@ -55,10 +53,7 @@ public sealed class DirectoryPath : Path, IEquatable<DirectoryPath>, IComparable
     /// <returns>A combination of the current path and the file name of the provided <see cref="FilePath"/>.</returns>
     public FilePath GetFilePath(FilePath path)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         return new FilePath(PathHelper.Combine(FullPath, path.GetFilename().FullPath));
     }
@@ -84,7 +79,7 @@ public sealed class DirectoryPath : Path, IEquatable<DirectoryPath>, IComparable
         var path = string.Join(Separator.ToString(), seg);
         if (IsUNC)
         {
-            path = string.Concat("\\\\", path);
+            path = $@"\\{path}";
         }
 
         return new DirectoryPath(path);
@@ -98,10 +93,7 @@ public sealed class DirectoryPath : Path, IEquatable<DirectoryPath>, IComparable
     /// <returns>A combination of the current path and the provided <see cref="FilePath"/>.</returns>
     public FilePath CombineWithFilePath(FilePath path)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         if (!path.IsRelative)
         {
@@ -119,10 +111,7 @@ public sealed class DirectoryPath : Path, IEquatable<DirectoryPath>, IComparable
     /// <returns>A combination of the current path and the provided <see cref="DirectoryPath"/>.</returns>
     public DirectoryPath Combine(DirectoryPath path)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         if (!path.IsRelative)
         {
@@ -139,10 +128,7 @@ public sealed class DirectoryPath : Path, IEquatable<DirectoryPath>, IComparable
     /// <returns>An absolute path.</returns>
     public DirectoryPath MakeAbsolute(DirectoryPath path)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         if (path.IsRelative)
         {
@@ -161,10 +147,7 @@ public sealed class DirectoryPath : Path, IEquatable<DirectoryPath>, IComparable
     /// <returns>An absolute path.</returns>
     public DirectoryPath MakeAbsolute(IEnvironment environment)
     {
-        if (environment == null)
-        {
-            throw new ArgumentNullException(nameof(environment));
-        }
+        ArgumentNullException.ThrowIfNull(environment);
 
         // First expand the directory (convert ~ into correct path)
         var result = Expand(environment);
@@ -233,10 +216,7 @@ public sealed class DirectoryPath : Path, IEquatable<DirectoryPath>, IComparable
     /// <returns>A <see cref="FilePath"/>.</returns>
     public FilePath GetRelativePath(FilePath to)
     {
-        if (to == null)
-        {
-            throw new ArgumentNullException(nameof(to));
-        }
+        ArgumentNullException.ThrowIfNull(to);
 
         return GetRelativePath(to.GetDirectory()).GetFilePath(to.GetFilename());
     }

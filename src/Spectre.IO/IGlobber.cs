@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Spectre.IO;
+﻿namespace Spectre.IO;
 
 /// <summary>
 /// Represents a file system globber.
 /// </summary>
+[PublicAPI]
 public interface IGlobber
 {
     /// <summary>

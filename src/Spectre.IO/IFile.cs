@@ -1,11 +1,9 @@
-﻿using System;
-using System.IO;
-
-namespace Spectre.IO;
+﻿namespace Spectre.IO;
 
 /// <summary>
 /// Represents a file.
 /// </summary>
+[PublicAPI]
 public interface IFile : IFileSystemInfo
 {
     /// <summary>

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Spectre.IO.Internal;
+﻿namespace Spectre.IO.Internal;
 
 internal sealed class GlobVisitorContext
 {
@@ -18,15 +14,12 @@ internal sealed class GlobVisitorContext
         IEnvironment environment,
         GlobberSettings settings)
     {
-        if (environment is null)
-        {
-            throw new ArgumentNullException(nameof(environment));
-        }
+        ArgumentNullException.ThrowIfNull(environment);
 
         _settings = settings ?? throw new ArgumentNullException(nameof(settings));
-        _pathParts = new List<string>();
+        _pathParts = [];
 
-        Results = new List<IFileSystemInfo>();
+        Results = [];
 
         Root = _settings.Root ?? environment.WorkingDirectory;
         Root = Root.MakeAbsolute(environment);
@@ -47,7 +40,7 @@ internal sealed class GlobVisitorContext
 
     public string Pop()
     {
-        var last = _pathParts[_pathParts.Count - 1];
+        var last = _pathParts[^1];
         _pathParts.RemoveAt(_pathParts.Count - 1);
         Path = GenerateFullPath();
         return last;
@@ -68,14 +61,14 @@ internal sealed class GlobVisitorContext
         if (_pathParts.Count > 0 && _pathParts[0] == @"\\")
         {
             // UNC path
-            var path = string.Concat(@"\\", string.Join(@"\", _pathParts.Skip(1)));
+            var path = @$"\\{string.Join(@"\", _pathParts.Skip(1))}";
             return new DirectoryPath(path);
         }
 
         if (_pathParts.Count > 0 && _pathParts[0] == "/")
         {
             // Unix root path
-            var path = string.Concat("/", string.Join("/", _pathParts.Skip(1)));
+            var path = $"/{string.Join("/", _pathParts.Skip(1))}";
             return new DirectoryPath(path);
         }
         else

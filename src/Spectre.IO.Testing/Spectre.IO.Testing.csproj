@@ -1,18 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Label="Settings">
+  <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Package information">
     <Description>Contains testing utilities for Spectre.IO.</Description>
   </PropertyGroup>
 
-  <ItemGroup Label="StyleCop">
-    <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json"/>
-  </ItemGroup>
-
-  <ItemGroup Label="Project references">
+  <ItemGroup>
     <ProjectReference Include="..\Spectre.IO\Spectre.IO.csproj"/>
   </ItemGroup>
 

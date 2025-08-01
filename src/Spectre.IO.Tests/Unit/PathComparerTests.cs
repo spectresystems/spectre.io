@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using Shouldly;
+﻿using Shouldly;
 using Spectre.IO.Internal;
 using Xunit;
 

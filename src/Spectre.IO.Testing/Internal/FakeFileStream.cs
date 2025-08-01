@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace Spectre.IO.Testing;
+﻿namespace Spectre.IO.Testing;
 
 internal sealed class FakeFileStream : Stream
 {
@@ -56,22 +53,13 @@ internal sealed class FakeFileStream : Stream
 
     public override long Seek(long offset, SeekOrigin origin)
     {
-        if (origin == SeekOrigin.Begin)
+        return origin switch
         {
-            return MoveTo(offset);
-        }
-
-        if (origin == SeekOrigin.Current)
-        {
-            return MoveTo(_position + offset);
-        }
-
-        if (origin == SeekOrigin.End)
-        {
-            return MoveTo(_file.ContentLength - offset);
-        }
-
-        throw new NotSupportedException();
+            SeekOrigin.Begin => MoveTo(offset),
+            SeekOrigin.Current => MoveTo(_position + offset),
+            SeekOrigin.End => MoveTo(_file.ContentLength - offset),
+            _ => throw new NotSupportedException(),
+        };
     }
 
     public override void SetLength(long value)

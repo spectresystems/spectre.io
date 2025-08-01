@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace Spectre.IO.Internal;
@@ -24,10 +20,7 @@ internal sealed class GlobTokenizer
         while (reader.Peek() != -1)
         {
             var token = ReadToken(reader);
-            if (token != null)
-            {
-                tokens.Add(token);
-            }
+            tokens.Add(token);
         }
 
         var queue = new Queue<GlobToken>(tokens);
@@ -66,7 +59,7 @@ internal sealed class GlobTokenizer
 
     private static GlobToken ReadToken(StringReader reader)
     {
-        char current = (char)reader.Peek();
+        var current = (char)reader.Peek();
 
         if (current == '?')
         {
@@ -89,7 +82,7 @@ internal sealed class GlobTokenizer
             if (reader.Peek() != -1)
             {
                 var next = (char)reader.Peek();
-                if (next == '/' || next == '\\')
+                if (next is '/' or '\\')
                 {
                     return new GlobToken(GlobTokenKind.Current, ".");
                 }
@@ -128,7 +121,7 @@ internal sealed class GlobTokenizer
 
     private static GlobToken ReadScope(StringReader reader, GlobTokenKind kind, char first, char last)
     {
-        char current = (char)reader.Read();
+        var current = (char)reader.Read();
         Debug.Assert(current == first, "Unexpected token.");
 
         var accumulator = new StringBuilder();

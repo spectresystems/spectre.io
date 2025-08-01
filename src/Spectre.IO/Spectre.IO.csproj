@@ -1,15 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Label="Settings">
+  <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup Label="Package information">
     <Description>A library containing cross platform abstractions and implementations for IO.</Description>
   </PropertyGroup>
-
-  <ItemGroup Label="StyleCop">
-    <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json"/>
-  </ItemGroup>
 
 </Project>

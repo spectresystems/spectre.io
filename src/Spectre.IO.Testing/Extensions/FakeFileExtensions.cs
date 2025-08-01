@@ -1,12 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 
 namespace Spectre.IO.Testing;
 
 /// <summary>
 /// Contains extensions for <see cref="FakeFile"/>.
 /// </summary>
+[PublicAPI]
 public static class FakeFileExtensions
 {
     /// <summary>
@@ -17,10 +16,7 @@ public static class FakeFileExtensions
     /// <returns>The same <see cref="FakeFile"/> instance so that multiple calls can be chained.</returns>
     public static FakeFile SetLastWriteTime(this FakeFile file, DateTime lastWriteTime)
     {
-        if (file == null)
-        {
-            throw new ArgumentNullException(nameof(file));
-        }
+        ArgumentNullException.ThrowIfNull(file);
 
         file.LastWriteTime = lastWriteTime;
         return file;
@@ -35,15 +31,8 @@ public static class FakeFileExtensions
     /// <returns>The same <see cref="FakeFile"/> instance so that multiple calls can be chained.</returns>
     public static FakeFile SetTextContent(this FakeFile file, string content, Encoding? encoding = null)
     {
-        if (file == null)
-        {
-            throw new ArgumentNullException(nameof(file));
-        }
-
-        if (content == null)
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentNullException.ThrowIfNull(file);
+        ArgumentNullException.ThrowIfNull(content);
 
         encoding ??= Encoding.Default;
 
@@ -64,10 +53,7 @@ public static class FakeFileExtensions
     [Obsolete("Use `IFile.ReadAllText(...)` instead")]
     public static string GetTextContent(this FakeFile file, Encoding? encoding = null)
     {
-        if (file == null)
-        {
-            throw new ArgumentNullException(nameof(file));
-        }
+        ArgumentNullException.ThrowIfNull(file);
 
         if (!file.Exists)
         {

@@ -1,7 +1,5 @@
 ﻿#nullable enable
 
-using System;
-using System.Linq;
 using Spectre.IO.Testing;
 
 namespace Spectre.IO.Tests.Fixtures;

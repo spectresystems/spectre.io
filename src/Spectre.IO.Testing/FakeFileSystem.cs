@@ -1,20 +1,17 @@
-﻿using System;
-using System.IO;
-
-namespace Spectre.IO.Testing;
+﻿namespace Spectre.IO.Testing;
 
 /// <summary>
 /// Represents a fake file system.
 /// </summary>
+[PublicAPI]
 public sealed class FakeFileSystem : IFileSystem
 {
     private readonly FakeFileProvider _fileProvider;
     private readonly FakeDirectoryProvider _directoryProvider;
     private readonly IEnvironment _environment;
-    private readonly IPathComparer _comparer;
 
     /// <inheritdoc/>
-    public IPathComparer Comparer => _comparer;
+    public IPathComparer Comparer { get; }
 
     /// <inheritdoc/>
     public IFileProvider File => _fileProvider;
@@ -33,7 +30,8 @@ public sealed class FakeFileSystem : IFileSystem
         _fileProvider = new FakeFileProvider(tree);
         _directoryProvider = new FakeDirectoryProvider(tree);
         _environment = environment ?? throw new ArgumentNullException(nameof(environment));
-        _comparer = new PathComparer(_environment.Platform.IsUnix());
+
+        Comparer = new PathComparer(_environment.Platform.IsUnix());
     }
 
     /// <summary>
@@ -62,10 +60,7 @@ public sealed class FakeFileSystem : IFileSystem
     /// <param name="path">The path.</param>
     public void EnsureFileDoesNotExist(FilePath path)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         var file = GetFakeFile(path);
         if (file?.Exists == true)
@@ -82,10 +77,7 @@ public sealed class FakeFileSystem : IFileSystem
     /// <returns>The same <see cref="FakeFile"/> instance so that multiple calls can be chained.</returns>
     public FakeFile CreateFile(FilePath path, FileAttributes attributes = 0)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         path = path.MakeAbsolute(_environment);
 
@@ -108,15 +100,8 @@ public sealed class FakeFileSystem : IFileSystem
     /// <returns>The same <see cref="FakeFile"/> instance so that multiple calls can be chained.</returns>
     public FakeFile CreateFile(FilePath path, byte[] contentsBytes)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
-
-        if (contentsBytes == null)
-        {
-            throw new ArgumentNullException(nameof(contentsBytes));
-        }
+        ArgumentNullException.ThrowIfNull(path);
+        ArgumentNullException.ThrowIfNull(contentsBytes);
 
         path = path.MakeAbsolute(_environment);
 
@@ -143,10 +128,7 @@ public sealed class FakeFileSystem : IFileSystem
     /// <returns>The same <see cref="FakeDirectory"/> instance so that multiple calls can be chained.</returns>
     public FakeDirectory CreateDirectory(DirectoryPath path)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         path = path.MakeAbsolute(_environment);
 

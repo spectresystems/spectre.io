@@ -1,4 +1,3 @@
-using System;
 using Spectre.IO.Internal;
 
 namespace Spectre.IO;
@@ -6,6 +5,7 @@ namespace Spectre.IO;
 /// <summary>
 /// Represents the platform that Cake is running on.
 /// </summary>
+[PublicAPI]
 public sealed class Platform : IPlatform
 {
     /// <inheritdoc/>

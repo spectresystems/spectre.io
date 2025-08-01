@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace Spectre.IO.Internal;
+﻿namespace Spectre.IO.Internal;
 
 internal sealed class File : IFile
 {
@@ -33,10 +30,7 @@ internal sealed class File : IFile
 
     public IFile Copy(FilePath destination, bool overwrite)
     {
-        if (destination == null)
-        {
-            throw new ArgumentNullException(nameof(destination));
-        }
+        ArgumentNullException.ThrowIfNull(destination);
 
         var result = _file.CopyTo(destination.FullPath, overwrite);
         return new File(result.FullName);
@@ -44,10 +38,7 @@ internal sealed class File : IFile
 
     public IFile Move(FilePath destination, bool overwrite)
     {
-        if (destination == null)
-        {
-            throw new ArgumentNullException(nameof(destination));
-        }
+        ArgumentNullException.ThrowIfNull(destination);
 
         _file.MoveTo(destination.FullPath, overwrite);
         return new File(destination.FullPath);
@@ -70,10 +61,7 @@ internal sealed class File : IFile
 
     public void CreateSymbolicLink(FilePath destination)
     {
-        if (destination is null)
-        {
-            throw new ArgumentNullException(nameof(destination));
-        }
+        ArgumentNullException.ThrowIfNull(destination);
 
         if (Path.IsRelative)
         {

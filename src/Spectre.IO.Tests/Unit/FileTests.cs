@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Shouldly;
 using Spectre.IO.Testing;
 using Xunit;

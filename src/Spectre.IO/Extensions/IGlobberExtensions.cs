@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Spectre.IO;
+﻿namespace Spectre.IO;
 
 /// <summary>
 /// Contains extensions for <see cref="IGlobber"/>.
 /// </summary>
+[PublicAPI]
 public static class IGlobberExtensions
 {
     /// <summary>
@@ -18,10 +15,7 @@ public static class IGlobberExtensions
     /// <returns>The files matching the specified pattern.</returns>
     public static IEnumerable<FilePath> GetFiles(this IGlobber globber, string pattern, GlobberSettings? settings = null)
     {
-        if (globber == null)
-        {
-            throw new ArgumentNullException(nameof(globber));
-        }
+        ArgumentNullException.ThrowIfNull(globber);
 
         settings ??= new GlobberSettings();
         return globber.Match(pattern, settings).OfType<FilePath>();
@@ -36,10 +30,7 @@ public static class IGlobberExtensions
     /// <returns>The directories matching the specified pattern.</returns>
     public static IEnumerable<DirectoryPath> GetDirectories(this IGlobber globber, string pattern, GlobberSettings? settings = null)
     {
-        if (globber == null)
-        {
-            throw new ArgumentNullException(nameof(globber));
-        }
+        ArgumentNullException.ThrowIfNull(globber);
 
         settings ??= new GlobberSettings();
         return globber.Match(pattern, settings).OfType<DirectoryPath>();
@@ -55,10 +46,7 @@ public static class IGlobberExtensions
     /// </returns>
     public static IEnumerable<Path> Match(this IGlobber globber, string pattern)
     {
-        if (globber == null)
-        {
-            throw new ArgumentNullException(nameof(globber));
-        }
+        ArgumentNullException.ThrowIfNull(globber);
 
         return globber.Match(pattern, new GlobberSettings());
     }

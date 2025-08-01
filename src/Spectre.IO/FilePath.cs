@@ -1,11 +1,11 @@
-﻿using System;
-using Spectre.IO.Internal;
+﻿using Spectre.IO.Internal;
 
 namespace Spectre.IO;
 
 /// <summary>
 /// Represents a file path.
 /// </summary>
+[PublicAPI]
 public sealed class FilePath : Path, IEquatable<FilePath>, IComparable<FilePath>
 {
     /// <summary>
@@ -57,12 +57,9 @@ public sealed class FilePath : Path, IEquatable<FilePath>, IComparable<FilePath>
     public FilePath GetFilenameWithoutExtension()
     {
         var filename = PathHelper.GetFileNameWithoutExtension(this);
-        if (filename == null)
-        {
-            return new FilePath("./");
-        }
-
-        return new FilePath(filename);
+        return filename == null
+            ? new FilePath("./")
+            : new FilePath(filename);
     }
 
     /// <summary>
@@ -78,12 +75,9 @@ public sealed class FilePath : Path, IEquatable<FilePath>, IComparable<FilePath>
         }
 
         var index = filename.LastIndexOf('.');
-        if (index != -1)
-        {
-            return filename.Substring(index, filename.Length - index);
-        }
-
-        return null;
+        return index != -1
+            ? filename.Substring(index, filename.Length - index)
+            : null;
     }
 
     /// <summary>
@@ -94,12 +88,9 @@ public sealed class FilePath : Path, IEquatable<FilePath>, IComparable<FilePath>
     public FilePath ChangeExtension(string extension)
     {
         var filename = PathHelper.ChangeExtension(this, extension);
-        if (filename == null)
-        {
-            return new FilePath("./");
-        }
-
-        return new FilePath(filename);
+        return filename == null
+            ? new FilePath("./")
+            : new FilePath(filename);
     }
 
     /// <summary>
@@ -109,14 +100,11 @@ public sealed class FilePath : Path, IEquatable<FilePath>, IComparable<FilePath>
     /// <returns>A new <see cref="FilePath"/> with an appended extension.</returns>
     public FilePath AppendExtension(string extension)
     {
-        if (extension == null)
-        {
-            throw new ArgumentNullException(nameof(extension));
-        }
+        ArgumentNullException.ThrowIfNull(extension);
 
         if (!extension.StartsWith(".", StringComparison.OrdinalIgnoreCase))
         {
-            extension = string.Concat(".", extension);
+            extension = $".{extension}";
         }
 
         return new FilePath(string.Concat(FullPath, extension));
@@ -129,12 +117,9 @@ public sealed class FilePath : Path, IEquatable<FilePath>, IComparable<FilePath>
     public FilePath RemoveExtension()
     {
         var filename = PathHelper.GetFileNameWithoutExtension(this);
-        if (filename == null)
-        {
-            return new FilePath(FullPath);
-        }
-
-        return GetDirectory().CombineWithFilePath(new FilePath(filename));
+        return filename == null
+            ? new FilePath(FullPath)
+            : GetDirectory().CombineWithFilePath(new FilePath(filename));
     }
 
     /// <summary>
@@ -144,10 +129,7 @@ public sealed class FilePath : Path, IEquatable<FilePath>, IComparable<FilePath>
     /// <returns>An absolute path.</returns>
     public FilePath MakeAbsolute(DirectoryPath path)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         if (path.IsRelative)
         {
@@ -166,10 +148,7 @@ public sealed class FilePath : Path, IEquatable<FilePath>, IComparable<FilePath>
     /// <returns>An absolute path.</returns>
     public FilePath MakeAbsolute(IEnvironment environment)
     {
-        if (environment == null)
-        {
-            throw new ArgumentNullException(nameof(environment));
-        }
+        ArgumentNullException.ThrowIfNull(environment);
 
         // First expand the directory (convert ~ into correct path)
         var result = Expand(environment);

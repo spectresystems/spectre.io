@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Spectre.IO.Internal;
+﻿using Spectre.IO.Internal;
 
 namespace Spectre.IO;
 
 /// <summary>
 /// The file system globber.
 /// </summary>
+[PublicAPI]
 public sealed class Globber : IGlobber
 {
     private readonly IPathComparer _comparer;
@@ -42,7 +40,7 @@ public sealed class Globber : IGlobber
 
         if (string.IsNullOrWhiteSpace(pattern))
         {
-            return Enumerable.Empty<Path>();
+            return [];
         }
 
         // Parse the pattern into an AST.

@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace Spectre.IO;
 
 /// <summary>
 /// A collection of <see cref="Path"/>.
 /// </summary>
+[PublicAPI]
 public sealed class PathCollection : IEnumerable<Path>
 {
     private readonly HashSet<Path> _paths;
+    private readonly IPathComparer _comparer;
 
     /// <summary>
     /// Gets the number of paths in the collection.
@@ -19,13 +18,11 @@ public sealed class PathCollection : IEnumerable<Path>
     /// <value>The number of paths in the collection.</value>
     public int Count => _paths.Count;
 
-    internal IPathComparer Comparer { get; }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="PathCollection"/> class.
     /// </summary>
     public PathCollection()
-        : this(Enumerable.Empty<Path>(), null)
+        : this([], null)
     {
     }
 
@@ -34,7 +31,7 @@ public sealed class PathCollection : IEnumerable<Path>
     /// </summary>
     /// <param name="comparer">The comparer.</param>
     public PathCollection(IPathComparer comparer)
-        : this(Enumerable.Empty<Path>(), comparer)
+        : this([], comparer)
     {
     }
 
@@ -57,7 +54,7 @@ public sealed class PathCollection : IEnumerable<Path>
     {
         ArgumentNullException.ThrowIfNull(paths);
 
-        Comparer = comparer ?? PathComparer.Default;
+        _comparer = comparer ?? PathComparer.Default;
         _paths = new HashSet<Path>(paths, comparer);
     }
 
@@ -79,10 +76,7 @@ public sealed class PathCollection : IEnumerable<Path>
     /// <param name="paths">The paths to add.</param>
     public void Add(IEnumerable<Path> paths)
     {
-        if (paths == null)
-        {
-            throw new ArgumentNullException(nameof(paths));
-        }
+        ArgumentNullException.ThrowIfNull(paths);
 
         foreach (var path in paths)
         {
@@ -108,10 +102,7 @@ public sealed class PathCollection : IEnumerable<Path>
     /// <param name="paths">The paths to remove.</param>
     public void Remove(IEnumerable<Path> paths)
     {
-        if (paths == null)
-        {
-            throw new ArgumentNullException(nameof(paths));
-        }
+        ArgumentNullException.ThrowIfNull(paths);
 
         foreach (var path in paths)
         {
@@ -126,12 +117,9 @@ public sealed class PathCollection : IEnumerable<Path>
     /// well as the paths in the original collection.</returns>
     public static PathCollection operator +(PathCollection collection, Path path)
     {
-        if (collection == null)
-        {
-            throw new ArgumentNullException(nameof(collection));
-        }
+        ArgumentNullException.ThrowIfNull(collection);
 
-        return new PathCollection(collection, collection.Comparer) { path };
+        return new PathCollection(collection, collection._comparer) { path };
     }
 
     /// <summary>Adds multiple paths to the collection.</summary>
@@ -140,12 +128,9 @@ public sealed class PathCollection : IEnumerable<Path>
     /// <returns>A new <see cref="PathCollection"/> with the content of both collections.</returns>
     public static PathCollection operator +(PathCollection collection, IEnumerable<Path> paths)
     {
-        if (collection == null)
-        {
-            throw new ArgumentNullException(nameof(collection));
-        }
+        ArgumentNullException.ThrowIfNull(collection);
 
-        return new PathCollection(collection, collection.Comparer) { paths };
+        return new PathCollection(collection, collection._comparer) { paths };
     }
 
     /// <summary>
@@ -157,12 +142,9 @@ public sealed class PathCollection : IEnumerable<Path>
     [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
     public static PathCollection operator -(PathCollection collection, Path path)
     {
-        if (collection == null)
-        {
-            throw new ArgumentNullException(nameof(collection));
-        }
+        ArgumentNullException.ThrowIfNull(collection);
 
-        var result = new PathCollection(collection, collection.Comparer);
+        var result = new PathCollection(collection, collection._comparer);
         result.Remove(path);
         return result;
     }
@@ -176,12 +158,9 @@ public sealed class PathCollection : IEnumerable<Path>
     [SuppressMessage("Usage", "CA2225:Operator overloads have named alternates")]
     public static PathCollection operator -(PathCollection collection, IEnumerable<Path> paths)
     {
-        if (collection == null)
-        {
-            throw new ArgumentNullException(nameof(collection));
-        }
+        ArgumentNullException.ThrowIfNull(collection);
 
-        var result = new PathCollection(collection, collection.Comparer);
+        var result = new PathCollection(collection, collection._comparer);
         result.Remove(paths);
         return result;
     }

@@ -4,6 +4,7 @@ namespace Spectre.IO;
 /// Represents a "machine" which has a
 /// filesystem, environment and a platform.
 /// </summary>
+[PublicAPI]
 public interface IMachine
 {
     /// <summary>

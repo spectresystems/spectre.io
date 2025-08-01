@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 
 namespace Spectre.IO.Testing;
@@ -8,6 +6,7 @@ namespace Spectre.IO.Testing;
 /// <summary>
 /// Represents a fake directory.
 /// </summary>
+[PublicAPI]
 [DebuggerDisplay("{Path,nq}")]
 public sealed class FakeDirectory : IDirectory
 {
@@ -51,10 +50,7 @@ public sealed class FakeDirectory : IDirectory
     /// <inheritdoc/>
     public IDirectory Move(DirectoryPath destination)
     {
-        if (destination is null)
-        {
-            throw new ArgumentNullException(nameof(destination));
-        }
+        ArgumentNullException.ThrowIfNull(destination);
 
         _tree.MoveDirectory(this, destination);
         return _tree.FindDirectory(destination) ?? new FakeDirectory(_tree, destination);

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Spectre.IO.Internal;
+﻿namespace Spectre.IO.Internal;
 
 internal sealed class GlobTokenBuffer
 {
@@ -15,21 +13,15 @@ internal sealed class GlobTokenBuffer
 
     public GlobToken? Peek()
     {
-        if (_tokens.Count == 0)
-        {
-            return null;
-        }
-
-        return _tokens.Peek();
+        return _tokens.Count == 0
+            ? null
+            : _tokens.Peek();
     }
 
     public GlobToken? Read()
     {
-        if (_tokens.Count == 0)
-        {
-            return null;
-        }
-
-        return _tokens.Dequeue();
+        return _tokens.Count == 0
+            ? null
+            : _tokens.Dequeue();
     }
 }

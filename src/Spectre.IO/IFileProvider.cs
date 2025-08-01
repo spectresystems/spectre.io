@@ -3,6 +3,7 @@
 /// <summary>
 /// Represents a file provider.
 /// </summary>
+[PublicAPI]
 public interface IFileProvider
 {
     /// <summary>

@@ -1,12 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 
 namespace Spectre.IO;
 
 /// <summary>
 /// Contains extensions for <see cref="IFileSystem"/>.
 /// </summary>
+[PublicAPI]
 public static class IFileSystemExtensions
 {
     /// <summary>

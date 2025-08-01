@@ -1,10 +1,9 @@
-﻿using System;
-
-namespace Spectre.IO;
+﻿namespace Spectre.IO;
 
 /// <summary>
 /// Represents the platform we're running on.
 /// </summary>
+[PublicAPI]
 public interface IPlatform
 {
     /// <summary>

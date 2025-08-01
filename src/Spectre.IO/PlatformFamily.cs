@@ -3,6 +3,7 @@ namespace Spectre.IO;
 /// <summary>
 /// Represents a platform family.
 /// </summary>
+[PublicAPI]
 public enum PlatformFamily
 {
     /// <summary>

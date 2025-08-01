@@ -3,6 +3,7 @@
 /// <summary>
 /// An implementation of a fake <see cref="IPlatform"/>.
 /// </summary>
+[PublicAPI]
 public sealed class FakePlatform : IPlatform
 {
     /// <inheritdoc/>

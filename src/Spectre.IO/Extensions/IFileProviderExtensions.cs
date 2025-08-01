@@ -1,14 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Spectre.IO;
 
 /// <summary>
 /// Contains extensions for <see cref="IFileProvider"/>.
 /// </summary>
+[PublicAPI]
 public static class IFileProviderExtensions
 {
     /// <summary>

@@ -3,6 +3,7 @@ namespace Spectre.IO.Testing;
 /// <summary>
 /// Represents a fake machine.
 /// </summary>
+[PublicAPI]
 public sealed class FakeMachine : IMachine
 {
     /// <summary>

@@ -1,10 +1,9 @@
-using System.Collections.Generic;
-
 namespace Spectre.IO;
 
 /// <summary>
 /// Contains extensions for <see cref="Path"/>.
 /// </summary>
+[PublicAPI]
 public static class PathExtensions
 {
     /// <summary>

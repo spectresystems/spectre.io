@@ -5,6 +5,7 @@ namespace Spectre.IO;
 /// <summary>
 /// Represents a directory provider.
 /// </summary>
+[PublicAPI]
 public interface IDirectoryProvider
 {
     /// <summary>

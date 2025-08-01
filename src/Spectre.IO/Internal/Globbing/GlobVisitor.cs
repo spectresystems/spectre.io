@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Spectre.IO.Internal;
+﻿namespace Spectre.IO.Internal;
 
 internal sealed class GlobVisitor
 {
@@ -26,8 +24,7 @@ internal sealed class GlobVisitor
         if (_fileSystem.Exist(path.Path))
         {
             // Check if folders match.
-            var candidates = new List<IFileSystemInfo>();
-            candidates.Add(path);
+            var candidates = new List<IFileSystemInfo> { path };
             candidates.AddRange(FindCandidates(path.Path, node, context, SearchScope.Recursive, includeFiles: false));
 
             foreach (var candidate in candidates)
@@ -35,8 +32,8 @@ internal sealed class GlobVisitor
                 var pushed = false;
                 if (context.Path?.FullPath != candidate.Path.FullPath)
                 {
-                    context.Push(candidate.Path.FullPath.Substring(path.Path.FullPath.Length +
-                                                                   (path.Path.FullPath.Length > 1 ? 1 : 0)));
+                    context.Push(candidate.Path.FullPath[(path.Path.FullPath.Length +
+                                                          (path.Path.FullPath.Length > 1 ? 1 : 0))..]);
                     pushed = true;
                 }
 

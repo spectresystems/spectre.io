@@ -1,11 +1,12 @@
-﻿using System;
-using System.IO;
+﻿using System.Diagnostics;
 
 namespace Spectre.IO.Testing;
 
 /// <summary>
 /// Represents a fake file.
 /// </summary>
+[PublicAPI]
+[DebuggerDisplay("{Path,nq}")]
 public sealed class FakeFile : IFile
 {
     private readonly FakeFileSystemTree _tree;
@@ -19,7 +20,7 @@ public sealed class FakeFile : IFile
     /// <summary>
     /// Gets the source path for a symbolic link.
     /// </summary>
-    public FakeFile? SymbolicLink { get; internal set; }
+    public FakeFile? SymbolicLink { get; internal init; }
 
     /// <inheritdoc/>
     Path IFileSystemInfo.Path => Path;
@@ -72,10 +73,7 @@ public sealed class FakeFile : IFile
     /// <inheritdoc/>
     public IFile Copy(FilePath destination, bool overwrite)
     {
-        if (destination is null)
-        {
-            throw new ArgumentNullException(nameof(destination));
-        }
+        ArgumentNullException.ThrowIfNull(destination);
 
         _tree.CopyFile(this, destination, overwrite);
         return _tree.FindFile(destination) ?? new FakeFile(_tree, destination);
@@ -84,10 +82,7 @@ public sealed class FakeFile : IFile
     /// <inheritdoc/>
     public void CreateSymbolicLink(FilePath destination)
     {
-        if (destination is null)
-        {
-            throw new ArgumentNullException(nameof(destination));
-        }
+        ArgumentNullException.ThrowIfNull(destination);
 
         _tree.CreateSymbolicLink(this, destination);
     }
@@ -107,7 +102,7 @@ public sealed class FakeFile : IFile
             return SymbolicLink.Open(fileMode, fileAccess, fileShare);
         }
 
-        var position = GetPosition(fileMode, out bool fileWasCreated);
+        var position = GetPosition(fileMode, out var fileWasCreated);
         if (fileWasCreated)
         {
             _tree.CreateFile(this);

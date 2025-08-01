@@ -1,11 +1,11 @@
-﻿using System;
-using Spectre.IO.Internal;
+﻿using Spectre.IO.Internal;
 
 namespace Spectre.IO;
 
 /// <summary>
 /// Contains extension methods for <see cref="IPlatform"/>.
 /// </summary>
+[PublicAPI]
 public static class IPlatformExtensions
 {
     /// <summary>
@@ -15,10 +15,7 @@ public static class IPlatformExtensions
     /// <returns><c>true</c> if the platform is a Unix platform; otherwise <c>false</c>.</returns>
     public static bool IsUnix(this IPlatform platform)
     {
-        if (platform == null)
-        {
-            throw new ArgumentNullException(nameof(platform));
-        }
+        ArgumentNullException.ThrowIfNull(platform);
 
         return EnvironmentHelper.IsUnix(platform.Family);
     }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
-namespace Spectre.IO.Internal;
+﻿namespace Spectre.IO.Internal;
 
 internal sealed class Directory : IDirectory
 {
@@ -32,10 +27,7 @@ internal sealed class Directory : IDirectory
 
     public IDirectory Move(DirectoryPath destination)
     {
-        if (destination == null)
-        {
-            throw new ArgumentNullException(nameof(destination));
-        }
+        ArgumentNullException.ThrowIfNull(destination);
 
         _directory.MoveTo(destination.FullPath);
         return new Directory(destination.FullPath);

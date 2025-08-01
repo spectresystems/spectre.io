@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using SystemDirectory = System.IO.Directory;
+﻿using SystemDirectory = System.IO.Directory;
 using SystemEnv = System.Environment;
 using SystemFolder = System.Environment.SpecialFolder;
 
@@ -11,6 +7,7 @@ namespace Spectre.IO;
 /// <summary>
 /// Represents the environment.
 /// </summary>
+[PublicAPI]
 public sealed class Environment : IEnvironment
 {
     /// <summary>
@@ -81,10 +78,7 @@ public sealed class Environment : IEnvironment
     /// <inheritdoc/>
     public void SetWorkingDirectory(DirectoryPath path)
     {
-        if (path is null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         if (path.IsRelative)
         {
