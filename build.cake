@@ -19,7 +19,7 @@ Task("Test")
     .IsDependentOn("Build")
     .Does(context => 
 {
-    DotNetTest("./src/Spectre.IO.Tests/Spectre.IO.Tests.csproj", new DotNetTestSettings {
+    DotNetTest("./src/Spectre.IO.slnx", new DotNetTestSettings {
         Configuration = configuration,
         NoRestore = true,
         NoBuild = true,
@@ -30,17 +30,15 @@ Task("Package")
     .IsDependentOn("Test")
     .Does(context => 
 {
-    var outputPath = MakeAbsolute(Directory("./.artifacts"));
+    context.CleanDirectory("./.artifacts");
 
-    context.CleanDirectory(outputPath.FullPath);
     context.DotNetPack($"./src/Spectre.IO.slnx", new DotNetPackSettings {
-        ArgumentCustomization = args => args.Append($"--property:PackageOutputPath={outputPath.FullPath}"),
         Configuration = configuration,
         NoRestore = true,
         NoBuild = true,
+        OutputDirectory = "./.artifacts",
         MSBuildSettings = new DotNetMSBuildSettings()
             .TreatAllWarningsAs(MSBuildTreatAllWarningsAs.Error)
-            .WithProperty("SymbolPackageFormat", "snupkg")
     });
 });
 
