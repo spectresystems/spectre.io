@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Spectre.IO.Testing;
+﻿namespace Spectre.IO.Testing;
 
 /// <summary>
 /// Represents a fake environment.
 /// </summary>
+[PublicAPI]
 public sealed class FakeEnvironment : IEnvironment
 {
     private readonly Dictionary<string, string?> _environmentVariables;
@@ -44,29 +42,26 @@ public sealed class FakeEnvironment : IEnvironment
         _environmentVariables = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
         Platform = platform ?? throw new ArgumentNullException(nameof(platform));
 
-        if (Platform.Family == PlatformFamily.Windows)
+        switch (Platform.Family)
         {
-            WorkingDirectory = new DirectoryPath("C:/Working");
-            HomeDirectory = new DirectoryPath("C:/Users/JohnDoe");
-        }
-        else if (Platform.Family == PlatformFamily.MacOs)
-        {
-            WorkingDirectory = new DirectoryPath("/Working");
-            HomeDirectory = new DirectoryPath("/Users/JohnDoe");
-        }
-        else if (Platform.Family == PlatformFamily.FreeBSD)
-        {
-            WorkingDirectory = new DirectoryPath("/Working");
-            HomeDirectory = new DirectoryPath("/usr/home/JohnDoe");
-        }
-        else if (Platform.Family == PlatformFamily.Linux)
-        {
-            WorkingDirectory = new DirectoryPath("/Working");
-            HomeDirectory = new DirectoryPath("/home/JohnDoe");
-        }
-        else
-        {
-            throw new ArgumentException("Unknown platform family", nameof(Platform.Family));
+            case PlatformFamily.Windows:
+                WorkingDirectory = new DirectoryPath("C:/Working");
+                HomeDirectory = new DirectoryPath("C:/Users/JohnDoe");
+                break;
+            case PlatformFamily.MacOs:
+                WorkingDirectory = new DirectoryPath("/Working");
+                HomeDirectory = new DirectoryPath("/Users/JohnDoe");
+                break;
+            case PlatformFamily.FreeBSD:
+                WorkingDirectory = new DirectoryPath("/Working");
+                HomeDirectory = new DirectoryPath("/usr/home/JohnDoe");
+                break;
+            case PlatformFamily.Linux:
+                WorkingDirectory = new DirectoryPath("/Working");
+                HomeDirectory = new DirectoryPath("/home/JohnDoe");
+                break;
+            default:
+                throw new ArgumentException("Unknown platform family", nameof(platform));
         }
     }
 
@@ -113,12 +108,7 @@ public sealed class FakeEnvironment : IEnvironment
     /// <inheritdoc/>
     public string? GetEnvironmentVariable(string variable)
     {
-        if (_environmentVariables.ContainsKey(variable))
-        {
-            return _environmentVariables[variable];
-        }
-
-        return null;
+        return _environmentVariables.GetValueOrDefault(variable);
     }
 
     /// <inheritdoc/>
@@ -192,10 +182,7 @@ public sealed class FakeEnvironment : IEnvironment
     /// <inheritdoc/>
     public void SetWorkingDirectory(DirectoryPath path)
     {
-        if (path is null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         WorkingDirectory = path;
     }

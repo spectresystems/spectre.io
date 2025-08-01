@@ -1,10 +1,9 @@
-using System.Collections.Generic;
-
 namespace Spectre.IO;
 
 /// <summary>
 /// Compares <see cref="Path"/> instances.
 /// </summary>
+[PublicAPI]
 public interface IPathComparer : IEqualityComparer<Path?>, IComparer<Path?>
 {
     /// <summary>

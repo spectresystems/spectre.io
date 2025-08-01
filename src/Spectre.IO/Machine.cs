@@ -4,6 +4,7 @@ namespace Spectre.IO;
 /// An implementation of <see cref="IMachine"/> that
 /// reflects the current machine.
 /// </summary>
+[PublicAPI]
 public sealed class Machine : IMachine
 {
     /// <summary>

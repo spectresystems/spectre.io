@@ -3,6 +3,7 @@
 /// <summary>
 /// Represents a processor architectures.
 /// </summary>
+[PublicAPI]
 public enum PlatformArchitecture
 {
     /// <summary>

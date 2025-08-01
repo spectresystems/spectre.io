@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Spectre.IO;
+﻿namespace Spectre.IO;
 
 /// <summary>
 /// Contains extensions for <see cref="FilePath"/>.
 /// </summary>
+[PublicAPI]
 public static class FilePathExtensions
 {
     /// <summary>
@@ -22,15 +20,8 @@ public static class FilePathExtensions
     /// <returns>A new <see cref="FilePath"/> with each environment variable replaced by its value.</returns>
     public static FilePath ExpandEnvironmentVariables(this FilePath path, IEnvironment environment)
     {
-        if (path is null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
-
-        if (environment == null)
-        {
-            throw new ArgumentNullException(nameof(environment));
-        }
+        ArgumentNullException.ThrowIfNull(path);
+        ArgumentNullException.ThrowIfNull(environment);
 
         var result = environment.ExpandEnvironmentVariables(path.FullPath);
         return new FilePath(result);

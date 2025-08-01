@@ -53,7 +53,6 @@ internal static class EnvironmentHelper
 
     public static bool IsUnix(PlatformFamily family)
     {
-        return family == PlatformFamily.Linux
-               || family == PlatformFamily.MacOs;
+        return family is PlatformFamily.Linux or PlatformFamily.MacOs;
     }
 }

@@ -3,6 +3,7 @@
 /// <summary>
 /// Represents an entry in the file system.
 /// </summary>
+[PublicAPI]
 public interface IFileSystemInfo
 {
     /// <summary>

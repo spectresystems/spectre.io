@@ -3,6 +3,7 @@
 /// <summary>
 /// Represents a search scope.
 /// </summary>
+[PublicAPI]
 public enum SearchScope
 {
     /// <summary>

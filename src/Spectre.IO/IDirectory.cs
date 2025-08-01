@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Spectre.IO;
+﻿namespace Spectre.IO;
 
 /// <summary>
 /// Represents a directory.
 /// </summary>
+[PublicAPI]
 public interface IDirectory : IFileSystemInfo
 {
     /// <summary>

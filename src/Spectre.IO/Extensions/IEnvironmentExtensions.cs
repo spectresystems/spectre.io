@@ -5,6 +5,7 @@ namespace Spectre.IO;
 /// <summary>
 /// Contains extensions for <see cref="IEnvironment"/>.
 /// </summary>
+[PublicAPI]
 public static class IEnvironmentExtensions
 {
     private static readonly Regex _regex = new Regex("%(.*?)%");
@@ -22,10 +23,7 @@ public static class IEnvironmentExtensions
     /// <returns>A string with each environment variable replaced by its value.</returns>
     public static string ExpandEnvironmentVariables(this IEnvironment environment, string text)
     {
-        if (environment is null)
-        {
-            throw new System.ArgumentNullException(nameof(environment));
-        }
+        ArgumentNullException.ThrowIfNull(environment);
 
         if (string.IsNullOrWhiteSpace(text))
         {
@@ -39,10 +37,10 @@ public static class IEnvironmentExtensions
         {
             if (match != null)
             {
-                string value = match.Groups[1].Value;
-                if (variables.ContainsKey(value))
+                var value = match.Groups[1].Value;
+                if (variables.TryGetValue(value, out var variable))
                 {
-                    text = text.Replace(match.Value, variables[value]);
+                    text = text.Replace(match.Value, variable);
                 }
             }
         }

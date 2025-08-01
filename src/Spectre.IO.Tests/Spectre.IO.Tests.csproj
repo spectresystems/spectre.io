@@ -6,12 +6,13 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup Label="StyleCop">
-    <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json"/>
+  <ItemGroup>
+    <Compile Include="..\Spectre.IO\Internal\EnvironmentHelper.cs" Link="Utilities\EnvironmentHelper.cs"/>
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Spectre.IO\Internal\EnvironmentHelper.cs" Link="Utilities\EnvironmentHelper.cs"/>
+    <ProjectReference Include="..\Spectre.IO.Testing\Spectre.IO.Testing.csproj"/>
+    <ProjectReference Include="..\Spectre.IO\Spectre.IO.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -23,15 +24,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Spectre.IO.Testing\Spectre.IO.Testing.csproj"/>
-    <ProjectReference Include="..\Spectre.IO\Spectre.IO.csproj"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Fixtures\"/>
   </ItemGroup>
 
 </Project>

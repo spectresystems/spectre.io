@@ -3,6 +3,7 @@
 /// <summary>
 /// Represents a file system.
 /// </summary>
+[PublicAPI]
 public interface IFileSystem
 {
     /// <summary>

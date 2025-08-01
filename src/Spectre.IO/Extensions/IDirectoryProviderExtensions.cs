@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Spectre.IO;
+﻿namespace Spectre.IO;
 
 /// <summary>
 /// Contains extensions for <see cref="IDirectoryProvider"/>.
 /// </summary>
+[PublicAPI]
 public static class IDirectoryProviderExtensions
 {
     /// <summary>
@@ -15,10 +14,7 @@ public static class IDirectoryProviderExtensions
     /// <returns><c>true</c> if the directory exists; otherwise, <c>false</c>.</returns>
     public static bool Exists(this IDirectoryProvider provider, DirectoryPath path)
     {
-        if (provider is null)
-        {
-            throw new System.ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
 
         var directory = provider.Retrieve(path);
         return directory.Exists;
@@ -32,10 +28,7 @@ public static class IDirectoryProviderExtensions
     /// <returns><c>true</c> if the directory is hidden; otherwise, <c>false</c>.</returns>
     public static bool IsHidden(this IDirectoryProvider provider, DirectoryPath path)
     {
-        if (provider is null)
-        {
-            throw new System.ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
 
         var directory = provider.Retrieve(path);
         return directory.Hidden;
@@ -48,10 +41,7 @@ public static class IDirectoryProviderExtensions
     /// <param name="path">The directory to be created.</param>
     public static void Create(this IDirectoryProvider provider, DirectoryPath path)
     {
-        if (provider is null)
-        {
-            throw new System.ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
 
         var directory = provider.Retrieve(path);
         directory.Create();
@@ -65,10 +55,7 @@ public static class IDirectoryProviderExtensions
     /// <param name="destination">The destination path.</param>
     public static void Move(this IDirectoryProvider provider, DirectoryPath source, DirectoryPath destination)
     {
-        if (provider is null)
-        {
-            throw new System.ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
 
         var directory = provider.Retrieve(source);
         directory.Move(destination);
@@ -82,10 +69,7 @@ public static class IDirectoryProviderExtensions
     /// <param name="recursive">Will perform a recursive delete if set to <c>true</c>.</param>
     public static void Delete(this IDirectoryProvider provider, DirectoryPath path, bool recursive)
     {
-        if (provider is null)
-        {
-            throw new System.ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
 
         var directory = provider.Retrieve(path);
         directory.Delete(recursive);
@@ -105,10 +89,7 @@ public static class IDirectoryProviderExtensions
         string filter,
         SearchScope scope)
     {
-        if (provider is null)
-        {
-            throw new System.ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
 
         var directory = provider.Retrieve(path);
         return directory.GetDirectories(filter, scope);
@@ -128,10 +109,7 @@ public static class IDirectoryProviderExtensions
         string filter,
         SearchScope scope)
     {
-        if (provider is null)
-        {
-            throw new System.ArgumentNullException(nameof(provider));
-        }
+        ArgumentNullException.ThrowIfNull(provider);
 
         var directory = provider.Retrieve(path);
         return directory.GetFiles(filter, scope);

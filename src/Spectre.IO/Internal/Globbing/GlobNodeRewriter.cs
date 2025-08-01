@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-
-namespace Spectre.IO.Internal;
+﻿namespace Spectre.IO.Internal;
 
 internal static class GlobNodeRewriter
 {
@@ -59,13 +56,10 @@ internal static class GlobNodeRewriter
         foreach (var node in nodes)
         {
             var segmentNode = node as PathNode;
-            if (segmentNode?.Segments.Count == 1)
+            if (segmentNode?.Segments is [WildcardSegment])
             {
-                if (segmentNode.Segments[0] is WildcardSegment)
-                {
-                    yield return new WildcardNode();
-                    continue;
-                }
+                yield return new WildcardNode();
+                continue;
             }
 
             yield return node;

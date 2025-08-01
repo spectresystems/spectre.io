@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Spectre.IO.Internal;
+﻿namespace Spectre.IO.Internal;
 
 internal sealed class GlobParser
 {
@@ -24,13 +20,13 @@ internal sealed class GlobParser
 
         // Parse the root.
         var items = new List<GlobNode> { ParseRoot(context) };
-        if (items.Count == 1 && items[0] is RelativeRootNode)
+        if (items is [RelativeRootNode])
         {
             items.Add(ParseNode(context));
         }
 
         // Parse all path segments.
-        while (context.TokenCount > 0 && context.CurrentToken?.Kind == GlobTokenKind.PathSeparator)
+        while (context is { TokenCount: > 0, CurrentToken.Kind: GlobTokenKind.PathSeparator })
         {
             context.Accept();
             items.Add(ParseNode(context));
@@ -174,7 +170,7 @@ internal sealed class GlobParser
         throw new NotSupportedException("Unable to parse sub segment.");
     }
 
-    private static PathSegment ParseText(GlobParserContext context)
+    private static TextSegment ParseText(GlobParserContext context)
     {
         var token = context.Accept(GlobTokenKind.Text);
         return new TextSegment(token.Value);
@@ -188,7 +184,7 @@ internal sealed class GlobParser
             : new CharacterWildcardSegment();
     }
 
-    private static PathSegment ParseBracketWildcard(GlobParserContext context)
+    private static BracketWildcardSegment ParseBracketWildcard(GlobParserContext context)
     {
         var token = context.Accept(GlobTokenKind.BracketWildcard);
         return new BracketWildcardSegment(token.Value);

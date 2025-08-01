@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.Globalization;
 
 namespace Spectre.IO.Testing;
 
@@ -14,10 +10,7 @@ internal sealed class FakeFileSystemTree
 
     public FakeFileSystemTree(IEnvironment environment)
     {
-        if (environment == null)
-        {
-            throw new ArgumentNullException(nameof(environment));
-        }
+        ArgumentNullException.ThrowIfNull(environment);
 
         if (environment.WorkingDirectory == null)
         {
@@ -57,7 +50,7 @@ internal sealed class FakeFileSystemTree
             // Calculate the current path.
             path = parent != null ? parent.Path.Combine(currentSegment) : new DirectoryPath(currentSegment);
 
-            if (!children.Directories.ContainsKey(path))
+            if (!children.Directories.TryGetValue(path, out var childDirectory))
             {
                 current = queue.Count == 0 ? directory : new FakeDirectory(this, path);
                 current.Parent = parent ?? _root;
@@ -66,7 +59,7 @@ internal sealed class FakeFileSystemTree
             }
             else
             {
-                current = children.Directories[path];
+                current = childDirectory;
             }
 
             current.Exists = true;
@@ -143,10 +136,7 @@ internal sealed class FakeFileSystemTree
             }
 
             // Remove the directory from the parent.
-            if (directory.Parent != null)
-            {
-                directory.Parent.Content.Remove(directory);
-            }
+            directory.Parent?.Content.Remove(directory);
 
             // Mark the directory as it doesn't exist.
             directory.Exists = false;
@@ -207,12 +197,12 @@ internal sealed class FakeFileSystemTree
             path = parent != null ? parent.Path.Combine(segment) : new DirectoryPath(segment);
 
             // Find the current path.
-            if (!children.Directories.ContainsKey(path))
+            if (!children.Directories.TryGetValue(path, out var directory))
             {
                 return null;
             }
 
-            current = children.Directories[path];
+            current = directory;
             children = current.Content;
         }
 
@@ -222,12 +212,9 @@ internal sealed class FakeFileSystemTree
     public FakeFile? FindFile(FilePath path)
     {
         var directory = FindDirectory(path.GetDirectory());
-        if (directory != null)
+        if (directory != null && directory.Content.Files.TryGetValue(path, out var file))
         {
-            if (directory.Content.Files.ContainsKey(path))
-            {
-                return directory.Content.Files[path];
-            }
+            return file;
         }
 
         return null;
@@ -246,9 +233,8 @@ internal sealed class FakeFileSystemTree
         {
             if (!overwrite)
             {
-                const string format = "{0} exists and overwrite is false.";
-                var message = string.Format(CultureInfo.InvariantCulture, format, destination.FullPath);
-                throw new IOException(message);
+                throw new IOException(
+                    $"File '{destination.FullPath}' exists and overwrite is set to false.");
             }
         }
 
@@ -256,14 +242,12 @@ internal sealed class FakeFileSystemTree
         var directory = FindDirectory(destination.GetDirectory());
         if (directory?.Exists != true)
         {
-            throw new DirectoryNotFoundException("The destination path {0} does not exist.");
+            throw new DirectoryNotFoundException(
+                $"The destination path '{destination.FullPath}' does not exist.");
         }
 
         // Make sure the file exist.
-        if (destinationFile == null)
-        {
-            destinationFile = new FakeFile(this, destination);
-        }
+        destinationFile ??= new FakeFile(this, destination);
 
         // Copy the data from the original file to the destination.
         using (var input = file.OpenRead())
@@ -284,16 +268,16 @@ internal sealed class FakeFileSystemTree
         var destinationFile = FindFile(destination);
         if (destinationFile?.Exists == true)
         {
-            const string format = "{0} exists. Cannot create symbolic link.";
-            var message = string.Format(CultureInfo.InvariantCulture, format, destination.FullPath);
-            throw new IOException(message);
+            throw new IOException(
+                $"The destination path '{destination.FullPath}' already exists. Cannot create symbolic link.");
         }
 
         // Directory exists?
         var directory = FindDirectory(destination.GetDirectory());
         if (directory?.Exists != true)
         {
-            throw new DirectoryNotFoundException("The destination path {0} does not exist.");
+            throw new DirectoryNotFoundException(
+                $"The destination path '{destination.FullPath}' does not exist.");
         }
 
         // Make sure the file exist.
@@ -301,9 +285,7 @@ internal sealed class FakeFileSystemTree
         {
             directory.Content.Add(new FakeFile(this, destination)
             {
-                Exists = true,
-                SymbolicLink = file,
-                Attributes = FileAttributes.ReparsePoint,
+                Exists = true, SymbolicLink = file, Attributes = FileAttributes.ReparsePoint,
             });
         }
     }
@@ -385,10 +367,7 @@ internal sealed class FakeFileSystemTree
             var directory = result.Pop();
 
             // Delete the directory.
-            if (directory.Parent != null)
-            {
-                directory.Parent.Content.Remove(directory);
-            }
+            directory.Parent?.Content.Remove(directory);
 
             // Mark the directory as it doesn't exist.
             directory.Exists = false;
@@ -406,7 +385,7 @@ internal sealed class FakeFileSystemTree
         return builder.ToString().Trim();
     }
 
-    private void Dump(IndentedStringBuilder writer, FakeDirectory directory)
+    private static void Dump(IndentedStringBuilder writer, FakeDirectory directory)
     {
         writer.AppendLine(directory.Path.GetDirectoryName());
 

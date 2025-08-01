@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Spectre.IO.Internal;
+﻿namespace Spectre.IO.Internal;
 
 internal static class PathCollapser
 {
     public static string Collapse(Path path)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         var stack = new Stack<string>();
         foreach (var segment in path.FullPath.Split('/', '\\'))

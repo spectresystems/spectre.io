@@ -1,6 +1,4 @@
-﻿using Spectre.IO.Internal;
-
-namespace Spectre.IO;
+﻿namespace Spectre.IO;
 
 internal sealed class FileProvider : IFileProvider
 {

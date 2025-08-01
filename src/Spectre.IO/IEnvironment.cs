@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace Spectre.IO;
+﻿namespace Spectre.IO;
 
 /// <summary>
 /// Represents the environment.
 /// </summary>
+[PublicAPI]
 public interface IEnvironment
 {
     /// <summary>

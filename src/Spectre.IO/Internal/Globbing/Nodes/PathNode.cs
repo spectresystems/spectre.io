@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -18,7 +17,7 @@ internal sealed class PathNode : MatchableNode
         _regex = CreateRegex(tokens, options);
 
         Segments = tokens;
-        IsIdentifier = Segments.Count == 1 && Segments[0] is TextSegment;
+        IsIdentifier = Segments is [TextSegment];
     }
 
     public override bool IsMatch(string value)

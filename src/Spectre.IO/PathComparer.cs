@@ -1,12 +1,11 @@
-﻿using System;
-using System.Linq;
-using Spectre.IO.Internal;
+﻿using Spectre.IO.Internal;
 
 namespace Spectre.IO;
 
 /// <summary>
 /// Compares <see cref="Path"/> instances.
 /// </summary>
+[PublicAPI]
 public sealed class PathComparer : IPathComparer
 {
     /// <summary>
@@ -38,10 +37,7 @@ public sealed class PathComparer : IPathComparer
     /// <param name="environment">The environment.</param>
     public PathComparer(IEnvironment environment)
     {
-        if (environment == null)
-        {
-            throw new ArgumentNullException(nameof(environment));
-        }
+        ArgumentNullException.ThrowIfNull(environment);
 
         IsCaseSensitive = environment.Platform.IsUnix();
     }
@@ -135,10 +131,7 @@ public sealed class PathComparer : IPathComparer
     /// <inheritdoc/>
     public int GetHashCode(Path? obj)
     {
-        if (obj == null)
-        {
-            throw new ArgumentNullException(nameof(obj));
-        }
+        ArgumentNullException.ThrowIfNull(obj);
 
         if (IsCaseSensitive)
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using NSubstitute;
+﻿using NSubstitute;
 using Shouldly;
 using Spectre.IO.Testing;
 using Xunit;

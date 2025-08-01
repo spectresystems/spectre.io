@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Shouldly;
+﻿using Shouldly;
 using Xunit;
 
 namespace Spectre.IO.Tests.Unit.IO;

@@ -1,10 +1,9 @@
-﻿using System;
-
-namespace Spectre.IO.Testing;
+﻿namespace Spectre.IO.Testing;
 
 /// <summary>
 /// Contains extensions for <see cref="FakeDirectory"/>.
 /// </summary>
+[PublicAPI]
 public static class FakeDirectoryExtensions
 {
     /// <summary>
@@ -15,10 +14,7 @@ public static class FakeDirectoryExtensions
     /// <returns>The same <see cref="FakeDirectory"/> instance so that multiple calls can be chained.</returns>
     public static FakeDirectory SetLastWriteTime(this FakeDirectory directory, DateTime lastWriteTime)
     {
-        if (directory == null)
-        {
-            throw new ArgumentNullException(nameof(directory));
-        }
+        ArgumentNullException.ThrowIfNull(directory);
 
         directory.LastWriteTime = lastWriteTime;
         return directory;
@@ -31,10 +27,7 @@ public static class FakeDirectoryExtensions
     /// <returns>The same <see cref="FakeDirectory"/> instance so that multiple calls can be chained.</returns>
     public static FakeDirectory Hide(this FakeDirectory directory)
     {
-        if (directory == null)
-        {
-            throw new ArgumentNullException(nameof(directory));
-        }
+        ArgumentNullException.ThrowIfNull(directory);
 
         directory.Hidden = true;
         return directory;

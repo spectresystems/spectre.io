@@ -1,13 +1,10 @@
-﻿using System;
-using System.Linq;
-
-namespace Spectre.IO.Internal;
+﻿namespace Spectre.IO.Internal;
 
 internal static class PathHelper
 {
-    public const char Backslash = '\\';
-    public const char Slash = '/';
-    public const string UncPrefix = @"\\";
+    private const char Backslash = '\\';
+    private const char Slash = '/';
+    private const string UncPrefix = @"\\";
 
     public static string Combine(params string[] paths)
     {
@@ -17,7 +14,7 @@ internal static class PathHelper
         }
 
         var current = paths[0];
-        for (int index = 1; index < paths.Length; index++)
+        for (var index = 1; index < paths.Length; index++)
         {
             current = Combine(current, paths[index]);
         }
@@ -27,15 +24,8 @@ internal static class PathHelper
 
     public static string Combine(string first, string second)
     {
-        if (first == null)
-        {
-            throw new ArgumentNullException(nameof(first));
-        }
-
-        if (second == null)
-        {
-            throw new ArgumentNullException(nameof(second));
-        }
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
 
         // Both empty?
         if (string.IsNullOrWhiteSpace(first) && string.IsNullOrWhiteSpace(second))
@@ -73,12 +63,9 @@ internal static class PathHelper
 
     public static bool HasExtension(FilePath path)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
-        for (int index = path.FullPath.Length - 1; index >= 0; index--)
+        for (var index = path.FullPath.Length - 1; index >= 0; index--)
         {
             if (path.FullPath[index] == '.')
             {
@@ -101,33 +88,22 @@ internal static class PathHelper
 
     public static string GetDirectoryName(FilePath path)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
-        if (path.Segments.Count == 0)
+        switch (path.Segments.Count)
         {
-            return string.Empty;
-        }
-
-        if (path.Segments.Count == 1)
-        {
-            if (path.IsUNC)
-            {
+            case 0:
+                return string.Empty;
+            case 1 when path.IsUNC:
                 return @"\\";
-            }
-
-            if (path.Segments[0].Length >= 1 && path.Segments[0][0] == '/')
-            {
+            case 1 when path.Segments[0].Length >= 1 && path.Segments[0][0] == '/':
                 return "/";
-            }
         }
 
         if (path.IsUNC)
         {
             var segments = path.Segments.Skip(1).Take(path.Segments.Count - 2);
-            return string.Concat(@"\\", string.Join("\\", segments));
+            return @$"\\{string.Join("\\", segments)}";
         }
 
         return string.Join("/", path.Segments.Take(path.Segments.Count - 1));
@@ -135,17 +111,14 @@ internal static class PathHelper
 
     public static string? GetFileName(FilePath path)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         if (path.Segments.Count == 0)
         {
             return null;
         }
 
-        var filename = path.Segments[path.Segments.Count - 1];
+        var filename = path.Segments[^1];
         if (path.Segments.Count == 1 && !path.IsRelative)
         {
             if (path.Segments[0].StartsWith("/", StringComparison.OrdinalIgnoreCase))
@@ -153,12 +126,9 @@ internal static class PathHelper
                 return filename.TrimStart('/');
             }
 
-            if (path.IsUNC)
-            {
-                return filename.TrimStart('\\');
-            }
-
-            return null;
+            return path.IsUNC
+                ? filename.TrimStart('\\')
+                : null;
         }
 
         return filename;
@@ -173,20 +143,14 @@ internal static class PathHelper
         }
 
         var index = filename.LastIndexOf('.');
-        if (index != -1)
-        {
-            return filename.Substring(0, index);
-        }
-
-        return filename;
+        return index != -1
+            ? filename[..index]
+            : filename;
     }
 
-    public static string? ChangeExtension(FilePath path, string extension)
+    public static string? ChangeExtension(FilePath path, string? extension)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
         if (extension == null)
         {
@@ -202,7 +166,7 @@ internal static class PathHelper
         // Make sure that the extension has a dot.
         if (!extension.StartsWith(".", StringComparison.OrdinalIgnoreCase))
         {
-            extension = string.Concat(".", extension);
+            extension = $".{extension}";
         }
 
         // Empty path?
@@ -212,7 +176,7 @@ internal static class PathHelper
             return null;
         }
 
-        for (int index = path.FullPath.Length - 1; index >= 0; index--)
+        for (var index = path.FullPath.Length - 1; index >= 0; index--)
         {
             if (filename[index] == '/')
             {
@@ -223,7 +187,7 @@ internal static class PathHelper
             if (filename[index] == '.')
             {
                 // Replace the extension.
-                return string.Concat(filename.Substring(0, index), extension);
+                return string.Concat(filename[..index], extension);
             }
         }
 
@@ -232,16 +196,13 @@ internal static class PathHelper
 
     public static string RemoveExtension(FilePath path)
     {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
+        ArgumentNullException.ThrowIfNull(path);
 
-        for (int index = path.FullPath.Length - 1; index >= 0; index--)
+        for (var index = path.FullPath.Length - 1; index >= 0; index--)
         {
             if (path.FullPath[index] == '.')
             {
-                return path.FullPath.Substring(0, index);
+                return path.FullPath[..index];
             }
 
             if (path.IsUNC && path.FullPath[index] == '\\')

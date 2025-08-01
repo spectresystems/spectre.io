@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace Spectre.IO;
 
 /// <summary>
 /// A collection of <see cref="DirectoryPath"/>.
 /// </summary>
+[PublicAPI]
 public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
 {
     private readonly HashSet<DirectoryPath> _paths;
+    private readonly IPathComparer _comparer;
 
     /// <summary>
     /// Gets the number of directories in the collection.
@@ -19,13 +18,11 @@ public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
     /// <value>The number of directories in the collection.</value>
     public int Count => _paths.Count;
 
-    internal IPathComparer Comparer { get; }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="DirectoryPathCollection"/> class.
     /// </summary>
     public DirectoryPathCollection()
-        : this(Enumerable.Empty<DirectoryPath>(), null)
+        : this([], null)
     {
     }
 
@@ -34,7 +31,7 @@ public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
     /// </summary>
     /// <param name="comparer">The comparer.</param>
     public DirectoryPathCollection(IPathComparer comparer)
-        : this(Enumerable.Empty<DirectoryPath>(), comparer)
+        : this([], comparer)
     {
     }
 
@@ -56,7 +53,7 @@ public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
     {
         ArgumentNullException.ThrowIfNull(paths);
 
-        Comparer = comparer ?? PathComparer.Default;
+        _comparer = comparer ?? PathComparer.Default;
         _paths = new HashSet<DirectoryPath>(paths, comparer);
     }
 
@@ -78,10 +75,7 @@ public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
     /// <param name="paths">The paths to add.</param>
     public void Add(IEnumerable<DirectoryPath> paths)
     {
-        if (paths == null)
-        {
-            throw new ArgumentNullException(nameof(paths));
-        }
+        ArgumentNullException.ThrowIfNull(paths);
 
         foreach (var path in paths)
         {
@@ -107,10 +101,7 @@ public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
     /// <param name="paths">The paths to remove.</param>
     public void Remove(IEnumerable<DirectoryPath> paths)
     {
-        if (paths == null)
-        {
-            throw new ArgumentNullException(nameof(paths));
-        }
+        ArgumentNullException.ThrowIfNull(paths);
 
         foreach (var path in paths)
         {
@@ -125,12 +116,9 @@ public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
     /// well as the paths in the original collection.</returns>
     public static DirectoryPathCollection operator +(DirectoryPathCollection collection, DirectoryPath path)
     {
-        if (collection == null)
-        {
-            throw new ArgumentNullException(nameof(collection));
-        }
+        ArgumentNullException.ThrowIfNull(collection);
 
-        return new DirectoryPathCollection(collection, collection.Comparer) { path };
+        return new DirectoryPathCollection(collection, collection._comparer) { path };
     }
 
     /// <summary>Adds multiple paths to the collection.</summary>
@@ -141,12 +129,9 @@ public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
         DirectoryPathCollection collection,
         IEnumerable<DirectoryPath> paths)
     {
-        if (collection == null)
-        {
-            throw new ArgumentNullException(nameof(collection));
-        }
+        ArgumentNullException.ThrowIfNull(collection);
 
-        return new DirectoryPathCollection(collection, collection.Comparer) { paths };
+        return new DirectoryPathCollection(collection, collection._comparer) { paths };
     }
 
     /// <summary>
@@ -157,12 +142,9 @@ public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
     /// <returns>A new <see cref="DirectoryPathCollection"/> that do not contain the provided path.</returns>
     public static DirectoryPathCollection operator -(DirectoryPathCollection collection, DirectoryPath path)
     {
-        if (collection == null)
-        {
-            throw new ArgumentNullException(nameof(collection));
-        }
+        ArgumentNullException.ThrowIfNull(collection);
 
-        var result = new DirectoryPathCollection(collection, collection.Comparer);
+        var result = new DirectoryPathCollection(collection, collection._comparer);
         result.Remove(path);
         return result;
     }
@@ -178,12 +160,9 @@ public sealed class DirectoryPathCollection : IEnumerable<DirectoryPath>
         DirectoryPathCollection collection,
         IEnumerable<DirectoryPath> paths)
     {
-        if (collection == null)
-        {
-            throw new ArgumentNullException(nameof(collection));
-        }
+        ArgumentNullException.ThrowIfNull(collection);
 
-        var result = new DirectoryPathCollection(collection, collection.Comparer);
+        var result = new DirectoryPathCollection(collection, collection._comparer);
         result.Remove(paths);
         return result;
     }

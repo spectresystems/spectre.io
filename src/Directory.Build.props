@@ -1,48 +1,55 @@
 <Project>
-    <PropertyGroup Label="Settings">
-      <LangVersion>13</LangVersion>
-      <ImplicitUsings>true</ImplicitUsings>
-      <Deterministic>true</Deterministic>
-      <Nullable>enable</Nullable>
-      <DebugSymbols>true</DebugSymbols>
-      <DebugType>embedded</DebugType>
-      <MinVerSkip Condition="'$(Configuration)' == 'Debug'">true</MinVerSkip>
-      <GenerateDocumentationFile>true</GenerateDocumentationFile>
-      <IsPackable>false</IsPackable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>13</LangVersion>
+    <ImplicitUsings>true</ImplicitUsings>
+    <Deterministic>true</Deterministic>
+    <Nullable>enable</Nullable>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+    <MinVerSkip Condition="'$(Configuration)' == 'Debug'">true</MinVerSkip>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
 
-    <PropertyGroup Label="Deterministic Build" Condition="'$(GITHUB_ACTIONS)' == 'true'">
-        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    </PropertyGroup>
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
 
-    <PropertyGroup Label="Package Information">
-        <Description>A library containing cross platform abstractions and implementations for IO.</Description>
-        <Company>Spectre Systems AB</Company>
-        <Copyright>Spectre Systems AB</Copyright>
-        <Authors>Patrik Svensson</Authors>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/spectresystems/spectre.io</RepositoryUrl>
-        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-        <PackageProjectUrl>https://github.com/spectresystems/spectre.io</PackageProjectUrl>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageTags>File;Directory;IO;Glob;Globbing;File system</PackageTags>
-        <PackageReleaseNotes>https://github.com/spectresystems/spectre.io/releases</PackageReleaseNotes>
-    </PropertyGroup>
+  <PropertyGroup>
+    <Description>A library containing cross platform abstractions and implementations for IO.</Description>
+    <Company>Spectre Systems AB</Company>
+    <Copyright>Spectre Systems AB</Copyright>
+    <Authors>Patrik Svensson</Authors>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/spectresystems/spectre.io</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/spectresystems/spectre.io</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>File;Directory;IO;Glob;Globbing;File system</PackageTags>
+    <PackageReleaseNotes>https://github.com/spectresystems/spectre.io/releases</PackageReleaseNotes>
+  </PropertyGroup>
 
-    <PropertyGroup Label="Source Link">
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    </PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)/stylecop.json" Link="Properties/stylecop.json"/>
+    <Compile Include="$(MSBuildThisFileDirectory)/Annotations.cs">
+      <Link>Properties/Annotations.cs</Link>
+    </Compile>
+  </ItemGroup>
 
-    <ItemGroup Label="Package References">
-        <PackageReference Include="MinVer" PrivateAssets="All"/>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
-        <PackageReference Include="StyleCop.Analyzers">
-            <PrivateAssets>All</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="Roslynator.Analyzers">
-            <PrivateAssets>All</PrivateAssets>
-        </PackageReference>
-    </ItemGroup>
+  <PropertyGroup>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All"/>
+    <PackageReference Include="StyleCop.Analyzers">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.Analyzers">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>

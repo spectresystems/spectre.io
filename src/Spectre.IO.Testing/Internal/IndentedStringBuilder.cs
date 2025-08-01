@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 internal sealed class IndentedStringBuilder
 {
@@ -34,13 +33,13 @@ internal sealed class IndentedStringBuilder
 
     public IDisposable Indent()
     {
-        _indentation += 1;
+        _indentation++;
         return new IndentationScope(() => _indentation--);
     }
 
     public IDisposable Outdent()
     {
-        _indentation -= 1;
+        _indentation--;
         return new IndentationScope(() => _indentation++);
     }
 

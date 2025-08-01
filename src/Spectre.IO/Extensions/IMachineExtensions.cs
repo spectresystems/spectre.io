@@ -3,6 +3,7 @@ namespace Spectre.IO;
 /// <summary>
 /// Contains extensions for <see cref="IMachine"/>.
 /// </summary>
+[PublicAPI]
 public static class IMachineExtensions
 {
     /// <summary>

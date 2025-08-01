@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Spectre.IO.Internal;
+﻿using Spectre.IO.Internal;
 
 namespace Spectre.IO;
 
@@ -8,6 +6,7 @@ namespace Spectre.IO;
 /// Provides properties and instance methods for working with paths.
 /// This class must be inherited.
 /// </summary>
+[PublicAPI]
 public abstract class Path : IEquatable<Path>, IComparable<Path>
 {
     private readonly string[] _segments;
@@ -97,7 +96,7 @@ public abstract class Path : IEquatable<Path>, IComparable<Path>
         IsRelative = !PathHelper.IsPathRooted(FullPath);
 
         // Extract path segments.
-        _segments = FullPath.Split(new[] { Separator }, StringSplitOptions.RemoveEmptyEntries);
+        _segments = FullPath.Split([Separator], StringSplitOptions.RemoveEmptyEntries);
         if (!IsUNC)
         {
             if (FullPath.StartsWith("/", StringComparison.OrdinalIgnoreCase) && Segments.Count > 0)
@@ -119,7 +118,7 @@ public abstract class Path : IEquatable<Path>, IComparable<Path>
                 }
                 else
                 {
-                    _segments = new[] { @"\\" };
+                    _segments = [@"\\"];
                 }
             }
         }

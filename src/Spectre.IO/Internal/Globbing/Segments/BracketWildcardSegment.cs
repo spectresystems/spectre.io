@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Spectre.IO.Internal;
+﻿namespace Spectre.IO.Internal;
 
 internal sealed class BracketWildcardSegment : PathSegment
 {

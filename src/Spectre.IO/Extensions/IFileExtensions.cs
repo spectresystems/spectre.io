@@ -1,15 +1,12 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Spectre.IO;
 
 /// <summary>
 /// Contains extension methods for <see cref="IFile"/>.
 /// </summary>
+[PublicAPI]
 public static class IFileExtensions
 {
     /// <summary>
