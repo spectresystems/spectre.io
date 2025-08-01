@@ -1,37 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <IsPackable>false</IsPackable>
-        <LangVersion>12.0</LangVersion>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
 
-    <ItemGroup Label="StyleCop">
-        <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json"/>
-    </ItemGroup>
+  <ItemGroup Label="StyleCop">
+    <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json"/>
+  </ItemGroup>
 
-    <ItemGroup>
-        <Compile Include="..\Spectre.IO\Internal\EnvironmentHelper.cs" Link="Utilities\EnvironmentHelper.cs"/>
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Spectre.IO\Internal\EnvironmentHelper.cs" Link="Utilities\EnvironmentHelper.cs"/>
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
-        <PackageReference Include="NSubstitute" Version="5.1.0"/>
-        <PackageReference Include="Shouldly" Version="4.2.1"/>
-        <PackageReference Include="xunit" Version="2.8.1" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+    <PackageReference Include="NSubstitute"/>
+    <PackageReference Include="Shouldly"/>
+    <PackageReference Include="xunit"/>
+    <PackageReference Include="xunit.runner.visualstudio">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Spectre.IO.Testing\Spectre.IO.Testing.csproj"/>
-        <ProjectReference Include="..\Spectre.IO\Spectre.IO.csproj"/>
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Spectre.IO.Testing\Spectre.IO.Testing.csproj"/>
+    <ProjectReference Include="..\Spectre.IO\Spectre.IO.csproj"/>
+  </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Fixtures\"/>
-    </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Fixtures\"/>
+  </ItemGroup>
 
 </Project>

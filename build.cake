@@ -7,7 +7,7 @@ var configuration = Argument("configuration", "Release");
 Task("Build")
     .Does(context => 
 {
-    DotNetBuild("./src/Spectre.IO.sln", new DotNetBuildSettings {
+    DotNetBuild("./src/Spectre.IO.slnx", new DotNetBuildSettings {
         Configuration = configuration,
         NoIncremental = context.HasArgument("rebuild"),
         MSBuildSettings = new DotNetMSBuildSettings()
@@ -33,7 +33,7 @@ Task("Package")
     var outputPath = MakeAbsolute(Directory("./.artifacts"));
 
     context.CleanDirectory(outputPath.FullPath);
-    context.DotNetPack($"./src/Spectre.IO.sln", new DotNetPackSettings {
+    context.DotNetPack($"./src/Spectre.IO.slnx", new DotNetPackSettings {
         ArgumentCustomization = args => args.Append($"--property:PackageOutputPath={outputPath.FullPath}"),
         Configuration = configuration,
         NoRestore = true,

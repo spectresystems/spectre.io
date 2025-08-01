@@ -1,0 +1,17 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="stylecop.json" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="Spectre.IO.Testing/Spectre.IO.Testing.csproj" />
+  <Project Path="Spectre.IO.Tests/Spectre.IO.Tests.csproj" />
+  <Project Path="Spectre.IO/Spectre.IO.csproj" />
+</Solution>
