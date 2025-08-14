@@ -47,4 +47,18 @@ public static class IEnvironmentExtensions
 
         return text;
     }
+
+    /// <summary>
+    /// Creates a uniquely named, zero-byte temporary file on disk and returns the full path of that file.
+    /// </summary>
+    /// <param name="environment">The environment.</param>
+    /// <param name="fileSystem">The file system.</param>
+    /// <returns>The created temporary file.</returns>
+    public static IFile GetTempFile(this IEnvironment environment, IFileSystem fileSystem)
+    {
+        ArgumentNullException.ThrowIfNull(environment);
+        ArgumentNullException.ThrowIfNull(fileSystem);
+
+        return fileSystem.GetTempFile(environment);
+    }
 }

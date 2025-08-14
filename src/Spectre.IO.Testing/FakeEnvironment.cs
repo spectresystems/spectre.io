@@ -186,4 +186,15 @@ public sealed class FakeEnvironment : IEnvironment
 
         WorkingDirectory = path;
     }
+
+    /// <inheritdoc/>
+    public DirectoryPath GetTempDirectory()
+    {
+        return Platform.Family switch
+        {
+            PlatformFamily.MacOs => "/var/folders/tmp",
+            PlatformFamily.Windows => HomeDirectory.Combine("AppData/Local/Temp"),
+            _ => "/tmp",
+        };
+    }
 }

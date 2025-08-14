@@ -22,4 +22,11 @@ public interface IFileSystem
     /// </summary>
     /// <returns>An <see cref="IDirectoryProvider"/> instance.</returns>
     IDirectoryProvider Directory { get; }
+
+    /// <summary>
+    /// Creates a uniquely named, zero-byte temporary file on disk and returns the full path of that file.
+    /// </summary>
+    /// <param name="environment">The environment.</param>
+    /// <returns>The created temporary file.</returns>
+    IFile GetTempFile(IEnvironment environment);
 }

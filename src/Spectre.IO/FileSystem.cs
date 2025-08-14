@@ -30,4 +30,11 @@ public sealed class FileSystem : IFileSystem
         File = new FileProvider();
         Directory = new DirectoryProvider();
     }
+
+    /// <inheritdoc/>
+    public IFile GetTempFile(IEnvironment environment)
+    {
+        var path = System.IO.Path.GetTempFileName();
+        return File.Retrieve(path);
+    }
 }

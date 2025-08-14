@@ -39,4 +39,10 @@ public interface IEnvironment
     /// </summary>
     /// <param name="path">The path to use as the working directory.</param>
     void SetWorkingDirectory(DirectoryPath path);
+
+    /// <summary>
+    /// Returns the path of the current user's temporary folder.
+    /// </summary>
+    /// <returns>The path to the temporary folder.</returns>
+    DirectoryPath GetTempDirectory();
 }

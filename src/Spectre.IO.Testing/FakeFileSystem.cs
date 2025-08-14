@@ -9,6 +9,7 @@ public sealed class FakeFileSystem : IFileSystem
     private readonly FakeFileProvider _fileProvider;
     private readonly FakeDirectoryProvider _directoryProvider;
     private readonly IEnvironment _environment;
+    private int _tempCounter;
 
     /// <inheritdoc/>
     public IPathComparer Comparer { get; }
@@ -139,6 +140,14 @@ public sealed class FakeFileSystem : IFileSystem
         }
 
         return directory;
+    }
+
+    /// <inheritdoc/>
+    public IFile GetTempFile(IEnvironment environment)
+    {
+        var count = Interlocked.Increment(ref _tempCounter);
+        var filename = environment.GetTempDirectory().CombineWithFilePath($"{count:D8}.tmp");
+        return CreateFile(filename, FileAttributes.Temporary);
     }
 
     /// <inheritdoc/>

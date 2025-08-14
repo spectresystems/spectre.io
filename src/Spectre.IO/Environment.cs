@@ -87,4 +87,11 @@ public sealed class Environment : IEnvironment
 
         SystemDirectory.SetCurrentDirectory(path.FullPath);
     }
+
+    /// <inheritdoc/>
+    public DirectoryPath GetTempDirectory()
+    {
+        var path = System.IO.Path.GetTempPath();
+        return new DirectoryPath(path);
+    }
 }
