@@ -123,6 +123,20 @@ public sealed class DirectoryPathTests
                 .And().ParamName.ShouldBe("path");
         }
 
+        [Fact]
+        public void Should_Throw_If_Path_Is_Null_When_Using_Plus_Operator()
+        {
+            // Given
+            var path = new DirectoryPath("assets");
+
+            // When
+            var result = Record.Exception(() => path + (DirectoryPath)null);
+
+            // Then
+            result.ShouldBeOfType<ArgumentNullException>()
+                .And().ParamName.ShouldBe("path");
+        }
+
         [Theory]
         [InlineData("assets/shaders", "simple.frag", "assets/shaders/simple.frag")]
         [InlineData("assets/shaders/", "simple.frag", "assets/shaders/simple.frag")]
@@ -138,6 +152,26 @@ public sealed class DirectoryPathTests
 
             // When
             var result = path.CombineWithFilePath(new FilePath(second));
+
+            // Then
+            result.FullPath.ShouldBe(expected);
+        }
+
+        [Theory]
+        [InlineData("assets/shaders", "simple.frag", "assets/shaders/simple.frag")]
+        [InlineData("assets/shaders/", "simple.frag", "assets/shaders/simple.frag")]
+        [InlineData("/assets/shaders/", "simple.frag", "/assets/shaders/simple.frag")]
+        [InlineData("assets/shaders", "test/simple.frag", "assets/shaders/test/simple.frag")]
+        [InlineData("assets/shaders/", "test/simple.frag", "assets/shaders/test/simple.frag")]
+        [InlineData("/assets/shaders/", "test/simple.frag", "/assets/shaders/test/simple.frag")]
+        [InlineData("/", "test/simple.frag", "/test/simple.frag")]
+        public void Should_Combine_Paths_Using_Plus_Operator(string first, string second, string expected)
+        {
+            // Given
+            var path = new DirectoryPath(first);
+
+            // When
+            var result = path + new FilePath(second);
 
             // Then
             result.FullPath.ShouldBe(expected);
@@ -195,6 +229,34 @@ public sealed class DirectoryPathTests
 
     public sealed class TheCombineMethod
     {
+        [Fact]
+        public void Should_Throw_If_Path_Is_Null()
+        {
+            // Given
+            var path = new DirectoryPath("assets");
+
+            // When
+            var result = Record.Exception(() => path.Combine(null));
+
+            // Then
+            result.ShouldBeOfType<ArgumentNullException>()
+                .And().ParamName.ShouldBe("path");
+        }
+
+        [Fact]
+        public void Should_Throw_If_Path_Is_Null_When_Using_Plus_Operator()
+        {
+            // Given
+            var path = new DirectoryPath("assets");
+
+            // When
+            var result = Record.Exception(() => path + (DirectoryPath)null);
+
+            // Then
+            result.ShouldBeOfType<ArgumentNullException>()
+                .And().ParamName.ShouldBe("path");
+        }
+
         [Theory]
         [InlineData("assets/shaders", "simple", "assets/shaders/simple")]
         [InlineData("assets/shaders/", "simple", "assets/shaders/simple")]
@@ -206,6 +268,22 @@ public sealed class DirectoryPathTests
 
             // When
             var result = path.Combine(new DirectoryPath(second));
+
+            // Then
+            result.FullPath.ShouldBe(expected);
+        }
+
+        [Theory]
+        [InlineData("assets/shaders", "simple", "assets/shaders/simple")]
+        [InlineData("assets/shaders/", "simple", "assets/shaders/simple")]
+        [InlineData("/assets/shaders/", "simple", "/assets/shaders/simple")]
+        public void Should_Combine_Paths_Using_Plus_Operator(string first, string second, string expected)
+        {
+            // Given
+            var path = new DirectoryPath(first);
+
+            // When
+            var result = path + new DirectoryPath(second);
 
             // Then
             result.FullPath.ShouldBe(expected);
@@ -230,20 +308,6 @@ public sealed class DirectoryPathTests
 
             // Then
             result.FullPath.ShouldBe(expected);
-        }
-
-        [Fact]
-        public void Should_Throw_If_Path_Is_Null()
-        {
-            // Given
-            var path = new DirectoryPath("assets");
-
-            // When
-            var result = Record.Exception(() => path.Combine(null));
-
-            // Then
-            result.ShouldBeOfType<ArgumentNullException>()
-                .And().ParamName.ShouldBe("path");
         }
 
         [Fact]

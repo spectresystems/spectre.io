@@ -245,4 +245,30 @@ public sealed class DirectoryPath : Path, IEquatable<DirectoryPath>, IComparable
     {
         return PathComparer.Default.GetHashCode(this);
     }
+
+    /// <summary>
+    /// Combines the current path with another <see cref="DirectoryPath"/>.
+    /// The provided <see cref="DirectoryPath"/> must be relative.
+    /// </summary>
+    /// <param name="directory">The directory.</param>
+    /// <param name="path">The path.</param>
+    /// <returns>A combination of the current path and the provided <see cref="DirectoryPath"/>.</returns>
+    public static FilePath operator +(DirectoryPath directory, FilePath path)
+    {
+        ArgumentNullException.ThrowIfNull(directory);
+        return directory.CombineWithFilePath(path);
+    }
+
+    /// <summary>
+    /// Combines the current path with another <see cref="DirectoryPath"/>.
+    /// The provided <see cref="DirectoryPath"/> must be relative.
+    /// </summary>
+    /// <param name="directory">The directory.</param>
+    /// <param name="path">The path.</param>
+    /// <returns>A combination of the current path and the provided <see cref="DirectoryPath"/>.</returns>
+    public static DirectoryPath operator +(DirectoryPath directory, DirectoryPath path)
+    {
+        ArgumentNullException.ThrowIfNull(directory);
+        return directory.Combine(path);
+    }
 }
