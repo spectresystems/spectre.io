@@ -59,11 +59,6 @@ public sealed class Environment : IEnvironment
         return SystemEnv.GetEnvironmentVariable(variable);
     }
 
-    public DirectoryPath GetSpecialPath(KnownPath path)
-    {
-        throw new NotImplementedException();
-    }
-
     public DirectoryPath GetKnownPath(KnownPath path)
     {
         return KnownPathUtilities.GetFolderPath(Platform, path);
@@ -109,4 +104,3 @@ public sealed class Environment : IEnvironment
         return new DirectoryPath(path);
     }
 }
-

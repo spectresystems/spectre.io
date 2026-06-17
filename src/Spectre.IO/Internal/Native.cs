@@ -8,7 +8,9 @@ internal static partial class Native
     public static class Unix
     {
         [DllImport("libc", SetLastError = true)]
+#pragma warning disable SA1300
         public static extern IntPtr getenv([MarshalAs(UnmanagedType.LPStr)] string name);
+#pragma warning restore SA1300
 
         public static string? GetFolder(KnownPath folder)
         {
