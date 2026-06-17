@@ -7,6 +7,7 @@
 public sealed class FakeEnvironment : IEnvironment
 {
     private readonly Dictionary<string, string?> _environmentVariables;
+    private readonly Dictionary<KnownPath, DirectoryPath> _knownPaths;
 
     /// <inheritdoc/>
     public DirectoryPath WorkingDirectory { get; private set; }
@@ -40,6 +41,8 @@ public sealed class FakeEnvironment : IEnvironment
     public FakeEnvironment(FakePlatform platform)
     {
         _environmentVariables = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
+        _knownPaths = new Dictionary<KnownPath, DirectoryPath>();
+
         Platform = platform ?? throw new ArgumentNullException(nameof(platform));
 
         switch (Platform.Family)
@@ -109,6 +112,22 @@ public sealed class FakeEnvironment : IEnvironment
     public string? GetEnvironmentVariable(string variable)
     {
         return _environmentVariables.GetValueOrDefault(variable);
+    }
+
+    /// <inheritdoc/>
+    public DirectoryPath GetKnownPath(KnownPath path)
+    {
+        return _knownPaths[path];
+    }
+
+    /// <summary>
+    /// Sets a known path.
+    /// </summary>
+    /// <param name="kind">The known path kind.</param>
+    /// <param name="path">The path.</param>
+    public void SetSpecialPath(KnownPath kind, DirectoryPath path)
+    {
+        _knownPaths[kind] = path;
     }
 
     /// <inheritdoc/>

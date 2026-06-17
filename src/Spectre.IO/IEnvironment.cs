@@ -28,6 +28,8 @@ public interface IEnvironment
     /// <returns>The value of the environment variable.</returns>
     string? GetEnvironmentVariable(string variable);
 
+    DirectoryPath GetKnownPath(KnownPath path);
+
     /// <summary>
     /// Gets all environment variables.
     /// </summary>

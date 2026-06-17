@@ -1,4 +1,8 @@
-﻿using SystemDirectory = System.IO.Directory;
+﻿using System.Globalization;
+using System.Runtime.InteropServices;
+using System.Text;
+using Spectre.IO.Internal;
+using SystemDirectory = System.IO.Directory;
 using SystemEnv = System.Environment;
 using SystemFolder = System.Environment.SpecialFolder;
 
@@ -55,6 +59,16 @@ public sealed class Environment : IEnvironment
         return SystemEnv.GetEnvironmentVariable(variable);
     }
 
+    public DirectoryPath GetSpecialPath(KnownPath path)
+    {
+        throw new NotImplementedException();
+    }
+
+    public DirectoryPath GetKnownPath(KnownPath path)
+    {
+        return KnownPathUtilities.GetFolderPath(Platform, path);
+    }
+
     /// <inheritdoc/>
     public IDictionary<string, string?> GetEnvironmentVariables()
     {
@@ -95,3 +109,4 @@ public sealed class Environment : IEnvironment
         return new DirectoryPath(path);
     }
 }
+
