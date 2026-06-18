@@ -29,5 +29,5 @@ public enum PlatformFamily
     /// <summary>
     /// Represents the FreeBSD platform family.
     /// </summary>
-    FreeBSD = 4,
+    FreeBsd = 4,
 }

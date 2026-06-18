@@ -9,6 +9,46 @@ public sealed class FakeEnvironment : IEnvironment
     private readonly Dictionary<string, string?> _environmentVariables;
     private readonly Dictionary<KnownPath, DirectoryPath> _knownPaths;
 
+    private static readonly Dictionary<PlatformFamily, Dictionary<KnownPath, DirectoryPath>> _defaultKnownPaths = new()
+    {
+        [PlatformFamily.Unknown] = new(),
+        [PlatformFamily.Windows] = new()
+        {
+            [KnownPath.ApplicationData] = new("C:/Users/JohnDoe/AppData/Roaming"),
+            [KnownPath.CommonApplicationData] = new("C:/ProgramData"),
+            [KnownPath.LocalApplicationData] = new("C:/Users/JohnDoe/AppData/Local"),
+            [KnownPath.ProgramFiles] = new("C:/Program Files"),
+            [KnownPath.ProgramFilesX86] = new("C:/Program Files (x86)"),
+            [KnownPath.Windows] = new("C:/Windows"),
+            [KnownPath.LocalTemp] = new("C:/Users/JohnDoe/AppData/Local/Temp"),
+            [KnownPath.UserProfile] = new("C:/Users/JohnDoe"),
+        },
+        [PlatformFamily.Linux] = new()
+        {
+            [KnownPath.ApplicationData] = new("/home/JohnDoe/.config"),
+            [KnownPath.CommonApplicationData] = new("/var/lib"),
+            [KnownPath.LocalApplicationData] = new("/home/JohnDoe/.local/share"),
+            [KnownPath.LocalTemp] = new("/tmp"),
+            [KnownPath.UserProfile] = new("/home/JohnDoe"),
+        },
+        [PlatformFamily.MacOs] = new()
+        {
+            [KnownPath.ApplicationData] = new("/Users/JohnDoe/Library/Application Support"),
+            [KnownPath.CommonApplicationData] = new("/Library/Application Support"),
+            [KnownPath.LocalApplicationData] = new("/Users/JohnDoe/Library/Application Support"),
+            [KnownPath.LocalTemp] = new("/tmp"),
+            [KnownPath.UserProfile] = new("/Users/JohnDoe"),
+        },
+        [PlatformFamily.FreeBsd] = new()
+        {
+            [KnownPath.ApplicationData] = new("/home/JohnDoe/.config"),
+            [KnownPath.CommonApplicationData] = new("/var/db"),
+            [KnownPath.LocalApplicationData] = new("/home/JohnDoe/.local/share"),
+            [KnownPath.LocalTemp] = new("/tmp"),
+            [KnownPath.UserProfile] = new("/home/JohnDoe"),
+        },
+    };
+
     /// <inheritdoc/>
     public DirectoryPath WorkingDirectory { get; private set; }
 
@@ -55,7 +95,7 @@ public sealed class FakeEnvironment : IEnvironment
                 WorkingDirectory = new DirectoryPath("/Working");
                 HomeDirectory = new DirectoryPath("/Users/JohnDoe");
                 break;
-            case PlatformFamily.FreeBSD:
+            case PlatformFamily.FreeBsd:
                 WorkingDirectory = new DirectoryPath("/Working");
                 HomeDirectory = new DirectoryPath("/usr/home/JohnDoe");
                 break;
@@ -65,6 +105,12 @@ public sealed class FakeEnvironment : IEnvironment
                 break;
             default:
                 throw new ArgumentException("Unknown platform family", nameof(platform));
+        }
+
+        // Create all known paths
+        foreach (var path in _defaultKnownPaths[platform.Family])
+        {
+            _knownPaths[path.Key] = path.Value;
         }
     }
 
@@ -83,7 +129,7 @@ public sealed class FakeEnvironment : IEnvironment
     /// </summary>
     /// <param name="architecture">The platform processor architecture.</param>
     /// <returns>A macOS environment.</returns>
-    public static FakeEnvironment CreateMacOSEnvironment(PlatformArchitecture architecture = PlatformArchitecture.X64)
+    public static FakeEnvironment CreateMacOsEnvironment(PlatformArchitecture architecture = PlatformArchitecture.X64)
     {
         return new FakeEnvironment(PlatformFamily.MacOs, architecture);
     }
@@ -103,9 +149,9 @@ public sealed class FakeEnvironment : IEnvironment
     /// </summary>
     /// <param name="architecture">The platform processor architecture.</param>
     /// <returns>A Windows environment.</returns>
-    public static FakeEnvironment CreateFreeBSDEnvironment(PlatformArchitecture architecture = PlatformArchitecture.X64)
+    public static FakeEnvironment CreateFreeBsdEnvironment(PlatformArchitecture architecture = PlatformArchitecture.X64)
     {
-        return new FakeEnvironment(PlatformFamily.FreeBSD, architecture);
+        return new FakeEnvironment(PlatformFamily.FreeBsd, architecture);
     }
 
     /// <inheritdoc/>
@@ -121,11 +167,20 @@ public sealed class FakeEnvironment : IEnvironment
     }
 
     /// <summary>
+    /// Gets all known paths.
+    /// </summary>
+    /// <returns>All known paths.</returns>
+    public IEnumerable<DirectoryPath> GetKnownPaths()
+    {
+        return _knownPaths.Values;
+    }
+
+    /// <summary>
     /// Sets a known path.
     /// </summary>
     /// <param name="kind">The known path kind.</param>
     /// <param name="path">The path.</param>
-    public void SetSpecialPath(KnownPath kind, DirectoryPath path)
+    public void SetKnownPath(KnownPath kind, DirectoryPath path)
     {
         _knownPaths[kind] = path;
     }

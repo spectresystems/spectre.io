@@ -24,7 +24,7 @@ internal static class EnvironmentHelper
 #if NET5_0_OR_GREATER
         if (RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
         {
-            return PlatformFamily.FreeBSD;
+            return PlatformFamily.FreeBsd;
         }
 #endif
 

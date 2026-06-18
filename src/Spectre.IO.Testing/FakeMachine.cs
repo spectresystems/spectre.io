@@ -72,6 +72,6 @@ public sealed class FakeMachine : IMachine
     /// <returns>A Windows environment.</returns>
     public static FakeMachine CreateFreeBsdMachine(PlatformArchitecture architecture = PlatformArchitecture.X64)
     {
-        return new FakeMachine(PlatformFamily.FreeBSD, architecture);
+        return new FakeMachine(PlatformFamily.FreeBsd, architecture);
     }
 }

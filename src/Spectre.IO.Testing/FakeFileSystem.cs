@@ -8,7 +8,7 @@ public sealed class FakeFileSystem : IFileSystem
 {
     private readonly FakeFileProvider _fileProvider;
     private readonly FakeDirectoryProvider _directoryProvider;
-    private readonly IEnvironment _environment;
+    private readonly FakeEnvironment _environment;
     private int _tempCounter;
 
     /// <inheritdoc/>
@@ -24,7 +24,7 @@ public sealed class FakeFileSystem : IFileSystem
     /// Initializes a new instance of the <see cref="FakeFileSystem"/> class.
     /// </summary>
     /// <param name="environment">The environment.</param>
-    public FakeFileSystem(IEnvironment environment)
+    public FakeFileSystem(FakeEnvironment environment)
     {
         var tree = new FakeFileSystemTree(environment);
 
@@ -33,6 +33,20 @@ public sealed class FakeFileSystem : IFileSystem
         _environment = environment ?? throw new ArgumentNullException(nameof(environment));
 
         Comparer = new PathComparer(_environment.Platform.IsUnix());
+    }
+
+    /// <summary>
+    /// Ensures that all known paths exist.
+    /// </summary>
+    public void EnsureKnownPathsExist()
+    {
+        foreach (var path in _environment.GetKnownPaths())
+        {
+            if (!_directoryProvider.Exists(path))
+            {
+                CreateDirectory(path);
+            }
+        }
     }
 
     /// <summary>

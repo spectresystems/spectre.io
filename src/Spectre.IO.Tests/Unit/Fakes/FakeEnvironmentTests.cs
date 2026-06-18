@@ -8,7 +8,7 @@ public class FakeEnvironmentTests
 {
     [Theory]
     [InlineData(PlatformFamily.Linux, "/tmp")]
-    [InlineData(PlatformFamily.FreeBSD, "/tmp")]
+    [InlineData(PlatformFamily.FreeBsd, "/tmp")]
     [InlineData(PlatformFamily.MacOs, "/var/folders/tmp")]
     [InlineData(PlatformFamily.Windows, "C:/Users/JohnDoe/AppData/Local/Temp")]
     public void Should_Return_Temp_Directory(PlatformFamily platform, string expected)
@@ -26,7 +26,7 @@ public class FakeEnvironmentTests
 
     [Theory]
     [InlineData(PlatformFamily.Linux, "/tmp/00000001.tmp")]
-    [InlineData(PlatformFamily.FreeBSD, "/tmp/00000001.tmp")]
+    [InlineData(PlatformFamily.FreeBsd, "/tmp/00000001.tmp")]
     [InlineData(PlatformFamily.MacOs, "/var/folders/tmp/00000001.tmp")]
     [InlineData(PlatformFamily.Windows, "C:/Users/JohnDoe/AppData/Local/Temp/00000001.tmp")]
     public void Should_Create_Temp_File(PlatformFamily family, string expected)
